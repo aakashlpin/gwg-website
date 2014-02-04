@@ -13,10 +13,12 @@ var $ = require('jquery'),
 var Marionette = require('backbone.marionette');
 
 var router = new Router({
-    controller: Controller
+    controller: new Controller()
 });
 
-var app = new Marionette.Application();
+var app = new Marionette.Application({
+    router: router
+});
 
 app.addRegions({
     content: '#content'
@@ -25,6 +27,7 @@ app.addRegions({
 module.exports = app;
 
 Backbone.history.start({
-    pushState: true
+    pushState: true,
+    hashChange: false
 });
 

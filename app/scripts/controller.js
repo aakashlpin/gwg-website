@@ -14,5 +14,8 @@ module.exports = Marionette.Controller.extend({
     },
     onBoardGuru: function () {
         GuruHandler.putHomePageView();
+    },
+    onBoardGuruSchedule: function () {
+        GuruHandler.putGuruScheduleView();
     }
 });

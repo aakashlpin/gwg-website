@@ -6,5 +6,11 @@ module.exports = {
             App             = require('../main');
 
         App.content.show(new HomePageView());
+    },
+    putGuruScheduleView: function () {
+        var SchedulePageView    = require('../views/guruSchedule'),
+            App                 = require('../main');
+
+        App.content.show(new SchedulePageView());
     }
 };

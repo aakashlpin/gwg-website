@@ -10,6 +10,7 @@ var Marionette = require('backbone.marionette');
 module.exports = Marionette.AppRouter.extend({
     appRoutes: {
         ''      : 'home',
-        'g'     : 'onBoardGuru'
+        'g'     : 'onBoardGuru',
+        'g/1'   : 'onBoardGuruSchedule'
     }
 });

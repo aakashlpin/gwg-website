@@ -5,7 +5,8 @@
 
 var Marionette = require('backbone.marionette'),
     templates = require('../templates'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    App = require('../main');
 
 module.exports = Marionette.ItemView.extend({
     className: 'site-wrapper',
@@ -13,7 +14,8 @@ module.exports = Marionette.ItemView.extend({
     events: {
         'click #triggerFacebookLogin': 'actionOnTriggerFacebookLogin',
         'keypress input': 'actionOnKeyPress',
-        'change input': 'actionOnChangeInInput'
+        'change input': 'actionOnChangeInInput',
+        'submit form': 'actionOnFormSubmit'
     },
     ui: {
         fbLoginContainer: '.fb-login-container',
@@ -119,5 +121,9 @@ module.exports = Marionette.ItemView.extend({
     },
     isValidEmail: function (inputEmail) {
         return true;
+    },
+    actionOnFormSubmit: function (e) {
+        e.preventDefault();
+        App.router.navigate('g/1', {trigger: true});
     }
 });

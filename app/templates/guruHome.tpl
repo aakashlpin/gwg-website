@@ -34,7 +34,7 @@
         </div>
         <div class="form-group text-right">
           <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-success" disabled id="next">Next</button>
+            <input type="submit" class="btn btn-success" disabled id="next" value="Next">
           </div>
         </div>
       </form>

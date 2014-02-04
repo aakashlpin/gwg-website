@@ -12,6 +12,10 @@
     </div>
 
     <div class="inner cover">
+      <h1 class="cover-heading">Welcome. Let's rock!</h1>
+      <p></p>
+      <fb:login-button data-show-faces="false" data-size="xlarge"></fb:login-button>
+
     </div>
 
     <div class="mastfoot">

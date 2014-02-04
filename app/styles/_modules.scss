@@ -1,0 +1,13 @@
+.time-slot-container {
+  > .item  {
+    float: left;
+    margin-right: 15px;
+  }
+  .time-slot-unit {
+    width: 95px;
+  }
+
+  input[type="text"].form-control {
+    background: #fff;
+  }
+}

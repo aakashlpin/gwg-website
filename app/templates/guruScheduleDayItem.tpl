@@ -1,9 +1,11 @@
 <div class="row">
   <div class="col-sm-2 text-left">
-    <p><%= dayName %></p>
+    <p class="schedule-text-middle"><%= dayName %></p>
   </div>
-  <div class="col-sm-10">
+  <div class="col-sm-7">
     <div class="daySlotsContainer"></div>
-    <a class="pull-right addNewSlot">Add New Slot</a>
+  </div>
+  <div class="col-sm-3 text-right">
+    <a class="schedule-text-middle addNewSlot">Add New Slot</a>
   </div>
 </div>

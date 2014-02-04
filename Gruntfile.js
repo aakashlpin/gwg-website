@@ -115,6 +115,20 @@ module.exports = function (grunt) {
                                 backbone: 'Backbone',
                                 underscore: '_'
                             }
+                        },
+                        bootstrap: {
+                            path: 'app/bower_components/sass-bootstrap/dist/js/bootstrap.min.js',
+                            exports: 'bootstrap',
+                            depends: {
+                                jquery: '$'
+                            }
+                        },
+                        'bootstrap.timepicker': {
+                            path: 'app/bower_components/bootstrap-formhelpers/dist/js/bootstrap-formhelpers.min.js',
+                            exports: null,
+                            depends: {
+                                bootstrap: 'bootstrap'
+                            }
                         }
                     }
                 }

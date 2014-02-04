@@ -7,9 +7,11 @@ var Marionette = require('backbone.marionette'),
     templates = require('../templates'),
     _ = require('underscore'),
     App = require('../main'),
-    Backbone = require('backbone');
+    Backbone = require('backbone'),
+    TimeSlotView = require('./guruScheduleTimeSlot');
 
 module.exports = Marionette.ItemView.extend({
+    className: 'day-slots-container',
     template: templates.guruScheduleDayItem,
     events: {
         'click .addNewSlot': 'actionOnAddNewTimeSlot'
@@ -21,6 +23,7 @@ module.exports = Marionette.ItemView.extend({
         this._initSlot();
     },
     _initSlot: function () {
+        this.ui.daySlotsContainer.html(new TimeSlotView().render().el);
 
     },
     actionOnAddNewTimeSlot: function (e) {

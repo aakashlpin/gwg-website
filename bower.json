@@ -6,5 +6,7 @@
     "modernizr": "~2.6.2",
     "jquery": "~1.10.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "bootstrap-formhelpers": "https://github.com/winmarkltd/BootstrapFormHelpers.git#~2.3.0"
+  }
 }

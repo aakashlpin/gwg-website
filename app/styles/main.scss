@@ -1,6 +1,8 @@
 $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 @import 'sass-bootstrap/lib/bootstrap';
+@import '_bootstrap-formhelpers';
+@import 'modules';
 
 .browsehappy {
     margin: 0.2em 0;
@@ -22,6 +24,10 @@ a:hover {
 
 a {
   cursor: pointer;
+}
+
+.block  {
+  display: block;
 }
 
 /* Custom default button */
@@ -230,4 +236,16 @@ img.bg {
 
 .mb-30 {
   margin-bottom: 30px;
+}
+
+.day-slots-container {
+  margin: 10px 0;
+  padding: 15px 20px;
+  background: rgba(120,120,120,0.3);
+  border-radius: 3px;
+}
+
+.schedule-text-middle {
+  line-height: 34px;
+  margin: 0;
 }

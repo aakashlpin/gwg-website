@@ -185,3 +185,45 @@ img.bg {
     width: 700px;
   }
 }
+
+@mixin center-middle($dimension) {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  right: 50%;
+  height: $dimension + px;
+  width: $dimension + px;
+  margin-top: ($dimension * -1)/2 + px;
+  margin-left: ($dimension * -1)/2 + px;
+
+}
+
+.or {
+  margin: 50px 0;
+  position: relative;
+}
+
+.or:after {
+  content: '';
+  @include center-middle(40);
+  z-index: 10;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.or:before {
+  content: 'OR';
+  @include center-middle(40);
+  z-index: 11;
+  padding: 10px;
+  color: #444;
+  text-shadow: none;
+}
+
+.fb-login-container {
+  margin: 0 0 30px 0;
+}
+
+.mb-30 {
+  margin-bottom: 30px;
+}

@@ -14,10 +14,14 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
  */
 
 /* Links */
-a,
+/*a,
 a:focus,
 a:hover {
   color: #fff;
+}*/
+
+a {
+  cursor: pointer;
 }
 
 /* Custom default button */

@@ -12,7 +12,12 @@
     </div>
 
     <div class="inner cover">
-      
+      <p class="lead">Create time slots.</p>
+      <p>People will make reservations against these timings.</p>
+
+      <div id="scheduleCreator">
+
+      </div>
     </div>
 
     <div class="mastfoot">

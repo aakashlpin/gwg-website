@@ -1,10 +1,16 @@
+$time-slot-unit-size: 95px;
+$time-slot-unit-margin: 15px;
 .time-slot-container {
   > .item  {
     float: left;
-    margin-right: 15px;
+    margin-right: $time-slot-unit-margin;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
   .time-slot-unit {
-    width: 95px;
+    width: $time-slot-unit-size;
   }
 
   input[type="text"].form-control {

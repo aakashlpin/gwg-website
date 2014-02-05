@@ -34,7 +34,8 @@
     "backbone.marionette": "~1.2.3",
     "underscore": "~1.5.2",
     "node-underscorify": "0.0.3",
-    "connect-modrewrite": "~0.5.11"
+    "connect-modrewrite": "~0.5.11",
+    "moment": "~2.5.1"
   },
   "engines": {
     "node": ">=0.8.0"

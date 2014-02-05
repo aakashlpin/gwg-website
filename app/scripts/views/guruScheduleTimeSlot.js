@@ -15,7 +15,8 @@ var Marionette = require('backbone.marionette'),
 module.exports = Marionette.ItemView.extend({
     template: templates.guruScheduleTimeSlot,
     events: {
-        'change.bfhtimepicker': 'actionOnChangeTime'
+        'change.bfhtimepicker': 'actionOnChangeTime',
+        'click .time-slot-remove': 'actionOnRemoveTimeSlot'
     },
     onRender: function () {
         var timepicker = this.$el.find('div.bfh-timepicker');
@@ -39,5 +40,11 @@ module.exports = Marionette.ItemView.extend({
         modelChanges[targetType] = targetValue;
         modelChanges['date_' + targetType] = moment(targetValue, 'hh:mm A');
         this.model.set(modelChanges);
+
+    },
+    actionOnRemoveTimeSlot: function (e) {
+        e.preventDefault();
+        this.model.destroy();
+        this.close();
     }
 });

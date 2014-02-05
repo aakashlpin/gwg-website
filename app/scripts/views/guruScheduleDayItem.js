@@ -61,6 +61,11 @@ module.exports = Marionette.ItemView.extend({
     actionOnAddNewTimeSlot: function (e) {
         e.preventDefault();
         var takenSlots = this.model.get('slots');
+        if (!takenSlots.size()) {
+            this._initSlot();
+            return;
+        }
+
         var minHour = takenSlots.max(function (takenSlot) {
             return takenSlot.get('date_endTime').hours();
         });

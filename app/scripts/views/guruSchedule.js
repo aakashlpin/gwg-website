@@ -14,6 +14,7 @@ module.exports = Marionette.ItemView.extend({
     className: 'site-wrapper',
     template: templates.guruSchedule,
     events: {
+        'click #saveSchedule': 'actionOnSaveSchedule'
     },
     ui: {
         scheduleCreatorContainer: '#scheduleCreator'
@@ -32,13 +33,18 @@ module.exports = Marionette.ItemView.extend({
             { dayCode: 'sun', dayName: 'Sunday' }
         ];
 
-        var scheduleCollection = new Backbone.Collection(daysCollection);
+        this.collection = new Backbone.Collection(daysCollection);
 
         this.subViews.scheduleCreatorDaysView = new GuruScheduleDaysView({
-            collection: scheduleCollection
+            collection: this.collection
         });
 
         this.ui.scheduleCreatorContainer.html(this.subViews.scheduleCreatorDaysView.render().el);
+
+    },
+    actionOnSaveSchedule: function (e) {
+        e.preventDefault();
+        console.log(this.collection.toJSON());
 
     },
     onClose: function () {

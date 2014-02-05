@@ -34,6 +34,10 @@ a.underline {
   display: block;
 }
 
+.addNewSlot {
+  margin-right: 15px!important;
+}
+
 /* Custom default button */
 .btn-default,
 .btn-default:hover,
@@ -273,7 +277,7 @@ img.bg {
 
     &.selected {
       text-decoration: underline;
-      color: $state-success-text;
+      color: $link-color;
     }
   }
 }

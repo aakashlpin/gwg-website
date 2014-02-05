@@ -16,14 +16,15 @@ module.exports = Marionette.ItemView.extend({
     className: 'day-slots-container',
     template: templates.guruScheduleDayItem,
     t_copyModeTemplate: templates.guruScheduleDayItemCopyMode,
+    t_noSlotsTemplate: templates.guruScheduleDayItemNoSlots,
     events: {
-        'click .addNewSlot': 'actionOnAddNewTimeSlot',
-        'click .copyModeContainer a': 'actionOnChangeCopyFromDay'
+        'click .copyModeContainer a': 'actionOnChangeCopyFromDay',
+        'click .addNewSlot'         : 'actionOnAddNewTimeSlot',
+        'click .clearAllDaySlots'   : 'actionOnClearAllDaySlots'
     },
     ui: {
         daySlotsContainer: '.daySlotsContainer',
-        copyModeContainer: '.copyModeContainer',
-        addNewSlotLink: '.addNewSlot'
+        copyModeContainer: '.copyModeContainer'
     },
     initialize: function () {
         this.subViews = {};
@@ -38,6 +39,17 @@ module.exports = Marionette.ItemView.extend({
             endTime = '10:00 AM';
 
         this.ui.daySlotsContainer.html(this._getTimeSlotView(startTime, endTime).render().el);
+
+    },
+    actionOnClearAllDaySlots: function () {
+        this.model.unset('slots');
+        this.model.set({
+            noSlots: true
+        });
+
+        this._switchMode(this.modes.COPY);
+        this.ui.copyModeContainer.html(this.t_noSlotsTemplate());
+        vent.trigger('schedule:day:slot', this.model);
 
     },
     actionOnChangeCopyFromDay: function (e) {
@@ -67,8 +79,12 @@ module.exports = Marionette.ItemView.extend({
             elemToSelect = firstChild;
             this.selectedDayCode = firstChild.data('daycode');
         }
-        //finally hightlight the appropriate child
+        //finally highlight the appropriate child
         elemToSelect.addClass('selected');
+        //mark the selectedDayCode in model
+        this.model.set({
+            selectedDayCode: this.selectedDayCode
+        });
     },
     _getTimeSlotView: function (startTime, endTime) {
         return this.subViews[endTime] = new TimeSlotView({
@@ -77,14 +93,18 @@ module.exports = Marionette.ItemView.extend({
 
     },
     _addSlot: function (startTime, endTime) {
-        if (!(this.model.get('slots') instanceof Backbone.Collection)) {
+        if (!(this.model.get('slots') instanceof Backbone.Collection) || this.model.get('noSlots')) {
             this.collection = new Backbone.Collection();
             this.collection.on('add remove', function(model) {
+                if (!this.model.get('slots').size()) {
+                    this.actionOnClearAllDaySlots();
+                }
                 vent.trigger('schedule:time:change', this.model, model);
 
             }, this);
 
             this.model.set('slots', this.collection);
+            this.model.unset('noSlots');
         }
 
         var slotToAdd = this._getModelForTimeSlot(startTime, endTime);
@@ -102,6 +122,7 @@ module.exports = Marionette.ItemView.extend({
         });
     },
     _switchMode: function (mode) {
+        this.currentMode = mode;
         switch (mode) {
             case this.modes.COPY:
                 this.ui.daySlotsContainer.empty().hide();
@@ -112,6 +133,10 @@ module.exports = Marionette.ItemView.extend({
                 this.ui.daySlotsContainer.show();
                 break;
         }
+
+        this.model.set({
+            currentMode: this.currentMode
+        });
     },
     actionOnAddNewTimeSlot: function (e) {
         e.preventDefault();

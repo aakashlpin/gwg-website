@@ -18,12 +18,16 @@
       <div id="scheduleCreator">
 
       </div>
-    </div>
 
-    <div class="mastfoot">
-      <div class="inner">
-        <p>&copy; 2014 | Guitar With Guru</p>
+      <div class="clearfix">
+        <button class="btn btn-success pull-right" id="saveSchedule">Save and Proceed</button>
       </div>
     </div>
+
+    <!--    <div class="mastfoot">
+          <div class="inner">
+            <p>&copy; 2014 | Guitar With Guru</p>
+      </div>
+    </div>-->
   </div>
 </div>

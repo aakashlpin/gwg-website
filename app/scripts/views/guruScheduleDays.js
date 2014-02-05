@@ -8,9 +8,20 @@ var Marionette = require('backbone.marionette'),
     _ = require('underscore'),
     App = require('../main'),
     Backbone = require('backbone'),
-    GuruScheduleDayItem = require('./guruScheduleDayItem');
+    GuruScheduleDayItem = require('./guruScheduleDayItem'),
+    vent = require('../vent');
 
 module.exports = Marionette.CollectionView.extend({
-    itemView: GuruScheduleDayItem
+    itemView: GuruScheduleDayItem,
+    initialize: function () {
+        this.listenTo(vent, 'schedule:time:change', this.actionOnChangeInSlots);
+    },
+    onRender: function () {
+        var firstDay = this.children.findByIndex(0);
+        firstDay.initSlot();
 
+    },
+    actionOnChangeInSlots: function (childModel, timeModel) {
+        console.log(childModel.toJSON(), timeModel.toJSON());
+    }
 });

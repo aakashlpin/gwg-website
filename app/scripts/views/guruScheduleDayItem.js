@@ -9,7 +9,8 @@ var Marionette = require('backbone.marionette'),
     App = require('../main'),
     Backbone = require('backbone'),
     TimeSlotView = require('./guruScheduleTimeSlot'),
-    moment = require('moment');
+    moment = require('moment'),
+    vent = require('../vent');
 
 module.exports = Marionette.ItemView.extend({
     className: 'day-slots-container',
@@ -23,13 +24,10 @@ module.exports = Marionette.ItemView.extend({
     initialize: function () {
         this.subViews = {};
     },
-    onRender: function () {
-        this._initSlot();
-    },
-    _initSlot: function () {
+    initSlot: function () {
         var startTime = '09:00 AM',
             endTime = '10:00 AM';
-        
+
         this.ui.daySlotsContainer.html(this._getTimeSlotView(startTime, endTime).render().el);
 
     },
@@ -41,7 +39,13 @@ module.exports = Marionette.ItemView.extend({
     },
     _addSlot: function (startTime, endTime) {
         if (!(this.model.get('slots') instanceof Backbone.Collection)) {
-            this.model.set('slots', new Backbone.Collection());
+            this.collection = new Backbone.Collection();
+            this.collection.on('add remove', function(model) {
+                vent.trigger('schedule:time:change', this.model, model);
+
+            }, this);
+
+            this.model.set('slots', this.collection);
         }
 
         var slotToAdd = this._getModelForTimeSlot(startTime, endTime);
@@ -61,8 +65,8 @@ module.exports = Marionette.ItemView.extend({
     actionOnAddNewTimeSlot: function (e) {
         e.preventDefault();
         var takenSlots = this.model.get('slots');
-        if (!takenSlots.size()) {
-            this._initSlot();
+        if (!takenSlots || !takenSlots.size()) {
+            this.initSlot();
             return;
         }
 
@@ -77,5 +81,13 @@ module.exports = Marionette.ItemView.extend({
         minHour.get('date_endTime').subtract('hours', 1);
 
         this.ui.daySlotsContainer.append(this._getTimeSlotView(startTime, endTime).render().el);
+
+    },
+    onClose: function () {
+        _.each(_.values(this.subViews), function (subView) {
+            if ('close' in subView) {
+                subView.close();
+            }
+        })
     }
 });

@@ -264,3 +264,16 @@ img.bg {
     margin-top: 0;
   }
 }
+
+.guru-schedule-copy-links {
+  a {
+    @extend .schedule-text-middle;
+    text-transform: capitalize;
+    color: #BBBBBB;
+
+    &.selected {
+      text-decoration: underline;
+      color: $state-success-text;
+    }
+  }
+}

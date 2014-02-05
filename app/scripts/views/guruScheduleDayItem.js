@@ -17,7 +17,8 @@ module.exports = Marionette.ItemView.extend({
     template: templates.guruScheduleDayItem,
     t_copyModeTemplate: templates.guruScheduleDayItemCopyMode,
     events: {
-        'click .addNewSlot': 'actionOnAddNewTimeSlot'
+        'click .addNewSlot': 'actionOnAddNewTimeSlot',
+        'click .copyModeContainer a': 'actionOnChangeCopyFromDay'
     },
     ui: {
         daySlotsContainer: '.daySlotsContainer',
@@ -39,10 +40,35 @@ module.exports = Marionette.ItemView.extend({
         this.ui.daySlotsContainer.html(this._getTimeSlotView(startTime, endTime).render().el);
 
     },
+    actionOnChangeCopyFromDay: function (e) {
+        e.preventDefault();
+        this.selectedDayCode = $(e.target).data('daycode');
+        this._manageSelectedDay();
+
+    },
     startCopyMode: function (modelsWithFilledSlots) {
         this._switchMode(this.modes.COPY);
         this.ui.copyModeContainer.html(this.t_copyModeTemplate({days: modelsWithFilledSlots}));
+        this._manageSelectedDay();
 
+    },
+    _manageSelectedDay: function () {
+        //reset selections
+        this.ui.copyModeContainer.find('a').removeClass('selected');
+        //get first child
+        var firstChild = this.ui.copyModeContainer.find('li:first-child a');
+        //set selectedDayCode
+        this.selectedDayCode = this.selectedDayCode || firstChild.data('daycode');
+        //attempt to get DOM
+        var childInDOM = this.ui.copyModeContainer.find('a[data-daycode="'+ this.selectedDayCode +'"]');
+        //if no such elem found in DOM, set selectedDayCode to first child
+        var elemToSelect = childInDOM;
+        if (!childInDOM.length) {
+            elemToSelect = firstChild;
+            this.selectedDayCode = firstChild.data('daycode');
+        }
+        //finally hightlight the appropriate child
+        elemToSelect.addClass('selected');
     },
     _getTimeSlotView: function (startTime, endTime) {
         return this.subViews[endTime] = new TimeSlotView({

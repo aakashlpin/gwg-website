@@ -15,20 +15,33 @@ var Marionette = require('backbone.marionette'),
 module.exports = Marionette.ItemView.extend({
     className: 'day-slots-container',
     template: templates.guruScheduleDayItem,
+    t_copyModeTemplate: templates.guruScheduleDayItemCopyMode,
     events: {
         'click .addNewSlot': 'actionOnAddNewTimeSlot'
     },
     ui: {
-        daySlotsContainer: '.daySlotsContainer'
+        daySlotsContainer: '.daySlotsContainer',
+        copyModeContainer: '.copyModeContainer',
+        addNewSlotLink: '.addNewSlot'
     },
     initialize: function () {
         this.subViews = {};
+        this.modes = {
+            COPY: 'copy',
+            MANUAL: 'manual'
+        };
+
     },
     initSlot: function () {
         var startTime = '09:00 AM',
             endTime = '10:00 AM';
 
         this.ui.daySlotsContainer.html(this._getTimeSlotView(startTime, endTime).render().el);
+
+    },
+    startCopyMode: function (modelsWithFilledSlots) {
+        this._switchMode(this.modes.COPY);
+        this.ui.copyModeContainer.html(this.t_copyModeTemplate({days: modelsWithFilledSlots}));
 
     },
     _getTimeSlotView: function (startTime, endTime) {
@@ -62,10 +75,23 @@ module.exports = Marionette.ItemView.extend({
             endTime: endTime
         });
     },
+    _switchMode: function (mode) {
+        switch (mode) {
+            case this.modes.COPY:
+                this.ui.daySlotsContainer.empty().hide();
+                this.ui.copyModeContainer.show();
+                break;
+            case this.modes.MANUAL:
+                this.ui.copyModeContainer.empty().hide();
+                this.ui.daySlotsContainer.show();
+                break;
+        }
+    },
     actionOnAddNewTimeSlot: function (e) {
         e.preventDefault();
         var takenSlots = this.model.get('slots');
         if (!takenSlots || !takenSlots.size()) {
+            this._switchMode(this.modes.MANUAL);
             this.initSlot();
             return;
         }

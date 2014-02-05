@@ -17,3 +17,18 @@ $time-slot-unit-margin: 15px;
     background: #fff;
   }
 }
+
+.l-h-list {
+  list-style-type: none;
+  margin: 0; padding: 0;
+  overflow: hidden;
+
+  > .item {
+    float: left;
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+
+  }
+}

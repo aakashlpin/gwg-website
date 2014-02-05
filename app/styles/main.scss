@@ -26,6 +26,10 @@ a {
   cursor: pointer;
 }
 
+a.underline {
+  text-decoration: underline;
+}
+
 .block  {
   display: block;
 }
@@ -238,6 +242,10 @@ img.bg {
   margin-bottom: 30px;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 .day-slots-container {
   margin: 10px 0;
   padding: 15px 20px;
@@ -248,4 +256,11 @@ img.bg {
 .schedule-text-middle {
   line-height: 34px;
   margin: 0;
+}
+
+.daySlotsContainer > div {
+  margin-top: 10px;
+  &:first-child {
+    margin-top: 0;
+  }
 }

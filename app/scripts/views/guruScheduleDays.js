@@ -22,6 +22,27 @@ module.exports = Marionette.CollectionView.extend({
 
     },
     actionOnChangeInSlots: function (childModel, timeModel) {
-        console.log(childModel.toJSON(), timeModel.toJSON());
+        //get all empty day models and notify them of model of days with filled slots
+        _.each(this.collection
+            .reject(function (model) {
+                //only if current child has filled slots, exclude that from current processing
+                if (childModel.get('slots').size())
+                    return model.get('dayCode') === childModel.get('dayCode');
+
+                return false;
+            }),
+            function (otherChildModel) {
+                if (!otherChildModel.get('slots') || !otherChildModel.get('slots').size()) {
+                    //if other child model is empty
+                    var otherChildView = this.children.findByModel(otherChildModel);
+                    otherChildView.startCopyMode(this._daysHavingFilledSlots());
+                }
+            }, this);
+
+    },
+    _daysHavingFilledSlots: function () {
+        return this.collection.filter(function (model) {
+            return model.get('slots') && model.get('slots').size();
+        });
     }
 });

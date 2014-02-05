@@ -124,7 +124,7 @@ module.exports = function (grunt) {
                             }
                         },
                         'bootstrap.timepicker': {
-                            path: 'app/bower_components/bootstrap-formhelpers/dist/js/bootstrap-formhelpers.min.js',
+                            path: 'app/bower_components/bootstrap-formhelpers/dist/js/bootstrap-formhelpers.js',
                             exports: null,
                             depends: {
                                 bootstrap: 'bootstrap'

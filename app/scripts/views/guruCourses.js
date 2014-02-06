@@ -10,7 +10,6 @@ var Marionette = require('backbone.marionette'),
     Backbone = require('backbone');
 
 module.exports = Marionette.ItemView.extend({
-    className: 'site-wrapper',
     template: templates.guruCourses,
     events: {
     },

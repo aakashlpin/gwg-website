@@ -60,10 +60,7 @@ body,
 }
 
 body {
-  color: #fff;
-  text-align: center;
-  text-shadow: 0 1px 3px rgba(0,0,0,.5);
-  box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+//  box-shadow: inset 0 0 100px rgba(0,0,0,.5);
 }
 
 .lead {
@@ -89,6 +86,9 @@ img.bg {
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
 .site-wrapper {
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
   display: table;
   width: 100%;
   height: 100%; /* For at least Firefox */
@@ -257,7 +257,7 @@ img.bg {
 .day-slots-container {
   margin: 10px 0;
   padding: 15px 20px;
-  background: rgba(120,120,120,0.3);
+//  background: rgba(120,120,120,0.3);
   border-radius: 3px;
 }
 

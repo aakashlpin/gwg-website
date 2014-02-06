@@ -11,7 +11,6 @@ var Marionette = require('backbone.marionette'),
     GuruScheduleDaysView = require('./guruScheduleDays');
 
 module.exports = Marionette.ItemView.extend({
-    className: 'site-wrapper',
     template: templates.guruSchedule,
     events: {
         'click #saveSchedule': 'actionOnSaveSchedule'

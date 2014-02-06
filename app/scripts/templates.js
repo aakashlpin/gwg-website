@@ -7,5 +7,6 @@ module.exports = {
     guruScheduleDayItem: require('../templates/guruScheduleDayItem.tpl'),
     guruScheduleDayItemCopyMode: require('../templates/guruScheduleDayItemCopyMode.tpl'),
     guruScheduleDayItemNoSlots: require('../templates/guruScheduleDayItemNoSlots.tpl'),
-    guruScheduleTimeSlot: require('../templates/guruScheduleTimeSlot.tpl')
+    guruScheduleTimeSlot: require('../templates/guruScheduleTimeSlot.tpl'),
+    guruCourses: require('../templates/guruCourses.tpl')
 };

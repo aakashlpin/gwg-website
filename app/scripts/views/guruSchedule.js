@@ -45,6 +45,7 @@ module.exports = Marionette.ItemView.extend({
     actionOnSaveSchedule: function (e) {
         e.preventDefault();
         console.log(this.collection.toJSON());
+        App.router.navigate('g/2', {trigger: true});
 
     },
     onClose: function () {

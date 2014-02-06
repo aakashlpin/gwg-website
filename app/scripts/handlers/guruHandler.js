@@ -12,5 +12,12 @@ module.exports = {
             App                 = require('../main');
 
         App.content.show(new SchedulePageView());
+    },
+    putGuruCourseView: function () {
+        var CoursesPageView    = require('../views/guruCourses'),
+            App                 = require('../main');
+
+        App.content.show(new CoursesPageView());
+
     }
 };

@@ -11,6 +11,7 @@ module.exports = Marionette.AppRouter.extend({
     appRoutes: {
         ''      : 'home',
         'g'     : 'onBoardGuru',
-        'g/1'   : 'onBoardGuruSchedule'
+        'g/1'   : 'onBoardGuruSchedule',
+        'g/2'   : 'onBoardGuruCourses'
     }
 });

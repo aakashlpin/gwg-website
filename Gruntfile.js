@@ -69,7 +69,7 @@ module.exports = function ( grunt ) {
                     namespace: false,
                     commonjs: true,
                     processName: function ( filename ) {
-                        return filename.replace( '<%= yeoman.app %>/templates/', '' ).replace( '.hbs', '' );
+                        return filename.replace( 'app/templates/', '' ).replace( '.hbs', '' );
                     }
                 },
                 src: "<%= yeoman.app %>/templates/**/*.hbs",
@@ -179,7 +179,7 @@ module.exports = function ( grunt ) {
             options: {
                 sassDir: stylesheetsDir,
                 cssDir: 'public',
-                relativeAssets: false,
+                relativeAssets: true,
                 assetCacheBuster: false
             },
             dist: {
@@ -371,8 +371,9 @@ module.exports = function ( grunt ) {
 
         grunt.task.run( [
             'runNode',
-            'concurrent:server',
+            'compass:server',
             'autoprefixer',
+            'handlebars',
             'browserify',
             'watch'
         ] );
@@ -381,12 +382,12 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'runNode', function () {
         grunt.util.spawn( {
             cmd: 'node',
-            agrs: [ './node_modules/nodemon/nodemon.js', 'index.js' ],
+            args: [ './node_modules/nodemon/bin/nodemon.js', 'index.js' ],
             opts: {
                 stdio: 'inherit'
             }
         }, function () {
-            grunt.fail.fatal( new Error( 'nodemon quit' ) );
+            grunt.fail.fatal( new Error( "nodemon quit" ) );
         } );
     } );
 

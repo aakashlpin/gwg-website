@@ -110,36 +110,6 @@ module.exports = function ( grunt ) {
                             path: 'node_modules/underscore/underscore.js',
                             exports: '_'
                         },
-                        backbone: {
-                            path: 'node_modules/backbone/backbone.js',
-                            exports: 'Backbone',
-                            depends: {
-                                underscore: 'underscore'
-                            }
-                        },
-                        'backbone.babysitter': {
-                            path: 'node_modules/backbone.marionette/node_modules/backbone.babysitter/lib/backbone.babysitter.js',
-                            exports: 'Backbone.Babysitter',
-                            depends: {
-                                backbone: 'Backbone'
-                            }
-                        },
-                        'backbone.wreqr': {
-                            path: 'node_modules/backbone.marionette/node_modules/backbone.wreqr/lib/backbone.wreqr.js',
-                            exports: 'Backbone.Wreqr',
-                            depends: {
-                                backbone: 'Backbone'
-                            }
-                        },
-                        'backbone.marionette': {
-                            path: 'node_modules/backbone.marionette/lib/backbone.marionette.js',
-                            exports: 'Marionette',
-                            depends: {
-                                jquery: '$',
-                                backbone: 'Backbone',
-                                underscore: '_'
-                            }
-                        },
                         bootstrap: {
                             path: 'assets/stylesheets/bower_components/sass-bootstrap/dist/js/bootstrap.min.js',
                             exports: 'bootstrap',
@@ -163,15 +133,11 @@ module.exports = function ( grunt ) {
         clean: {
             dist: {
                 files: [ {
-                    dot: true,
                     src: [
-                        '.tmp',
-                        '<%= yeoman.dist %>/*',
-                        '!<%= yeoman.dist %>/.git*'
+                        'public/*.css'
                     ]
                 } ]
-            },
-            server: '.tmp'
+            }
         },
 
         // Compiles Sass to CSS and generates necessary files if requested
@@ -184,7 +150,7 @@ module.exports = function ( grunt ) {
             },
             dist: {
                 options: {
-                    generatedImagesDir: 'public/images/generated'
+                    debugInfo: false
                 }
             },
             server: {
@@ -287,28 +253,24 @@ module.exports = function ( grunt ) {
         // By default, your `index.html`'s <!-- Usemin block --> will take care of
         // minification. These next options are pre-configured if you do not wish
         // to use the Usemin blocks.
-        // cssmin: {
-        //     dist: {
-        //         files: {
-        //             '<%= yeoman.dist %>/styles/main.css': [
-        //                 '.tmp/styles/{,*/}*.css',
-        //                 '<%= yeoman.app %>/styles/{,*/}*.css'
-        //             ]
-        //         }
-        //     }
-        // },
-        // uglify: {
-        //     dist: {
-        //         files: {
-        //             '<%= yeoman.dist %>/scripts/scripts.js': [
-        //                 '<%= yeoman.dist %>/scripts/scripts.js'
-        //             ]
-        //         }
-        //     }
-        // },
-        // concat: {
-        //     dist: {}
-        // },
+        cssmin: {
+            dist: {
+                files: {
+                    'public/main.css': [
+                        'public/{,*/}*.css'
+                    ]
+                }
+            }
+        },
+        uglify: {
+            dist: {
+                files: {
+                    'public/mergedAssets.js': [
+                        'public/mergedAssets.js'
+                    ]
+                }
+            }
+        },
 
         // Copies remaining files to places other tasks can use
         copy: {
@@ -404,10 +366,13 @@ module.exports = function ( grunt ) {
     } );
 
     grunt.registerTask( 'build', [
-        'compass:server',
+        'clean:dist',
+        'compass:dist',
         'autoprefixer',
         'handlebars',
         'browserify',
+        'uglify',
+        'cssmin',
         'forever:restart'
     ] );
 

@@ -3,3 +3,4 @@ dist
 .tmp
 .sass-cache
 assets/stylesheets/bower_components
+public/mergedAssets.js

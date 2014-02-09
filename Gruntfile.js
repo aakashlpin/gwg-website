@@ -365,7 +365,8 @@ module.exports = function ( grunt ) {
         forever: {
             options: {
                 index: 'index.js',
-                logDir: 'logs'
+                logDir: 'logs',
+                command: 'node'
             }
         }
     } );

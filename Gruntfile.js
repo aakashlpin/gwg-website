@@ -1,14 +1,7 @@
 // Generated on 2014-02-01 using generator-webapp 0.4.6
 'use strict';
 
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// use this if you want to recursively match all subfolders:
-// 'test/spec/**/*.js'
-
 var path = require( 'path' );
-
 var stylesheetsDir = 'assets/stylesheets';
 var rendrDir = 'node_modules/rendr';
 var rendrHandlebarsDir = 'node_modules/rendr-handlebars';
@@ -48,7 +41,7 @@ module.exports = function ( grunt ) {
                 }
             },
             compass: {
-                files: [ 'stylesheetsDir/{,*/}*.scss' ],
+                files: [ stylesheetsDir + '/{,*/}*.scss' ],
                 tasks: [ 'compass:server', 'autoprefixer' ],
                 options: {
                     interrupt: true
@@ -148,14 +141,14 @@ module.exports = function ( grunt ) {
                             }
                         },
                         bootstrap: {
-                            path: 'app/bower_components/sass-bootstrap/dist/js/bootstrap.min.js',
+                            path: 'assets/stylesheets/bower_components/sass-bootstrap/dist/js/bootstrap.min.js',
                             exports: 'bootstrap',
                             depends: {
                                 jquery: '$'
                             }
                         },
                         'bootstrap.timepicker': {
-                            path: 'app/bower_components/bootstrap-formhelpers/dist/js/bootstrap-formhelpers.js',
+                            path: 'assets/stylesheets/bower_components/bootstrap-formhelpers/dist/js/bootstrap-formhelpers.js',
                             exports: null,
                             depends: {
                                 bootstrap: 'bootstrap'
@@ -184,22 +177,14 @@ module.exports = function ( grunt ) {
         // Compiles Sass to CSS and generates necessary files if requested
         compass: {
             options: {
-                sassDir: '<%= yeoman.app %>/styles',
-                cssDir: '.tmp/styles',
-                generatedImagesDir: '.tmp/images/generated',
-                imagesDir: '<%= yeoman.app %>/images',
-                javascriptsDir: '<%= yeoman.app %>/scripts',
-                fontsDir: '<%= yeoman.app %>/styles/fonts',
-                importPath: '<%= yeoman.app %>/bower_components',
-                httpImagesPath: '/images',
-                httpGeneratedImagesPath: '/images/generated',
-                httpFontsPath: '/styles/fonts',
+                sassDir: stylesheetsDir,
+                cssDir: 'public',
                 relativeAssets: false,
                 assetCacheBuster: false
             },
             dist: {
                 options: {
-                    generatedImagesDir: '<%= yeoman.dist %>/images/generated'
+                    generatedImagesDir: 'public/images/generated'
                 }
             },
             server: {
@@ -217,18 +202,10 @@ module.exports = function ( grunt ) {
             dist: {
                 files: [ {
                     expand: true,
-                    cwd: '.tmp/styles/',
+                    cwd: 'public/',
                     src: '{,*/}*.css',
-                    dest: '.tmp/styles/'
+                    dest: 'public/'
                 } ]
-            }
-        },
-
-        // Automatically inject Bower components into the HTML file
-        'bower-install': {
-            app: {
-                html: '<%= yeoman.app %>/index.html',
-                ignorePath: '<%= yeoman.app %>/'
             }
         },
 
@@ -352,13 +329,6 @@ module.exports = function ( grunt ) {
                         'bower_components/modernizr/modernizr.js'
                     ]
                 } ]
-            },
-            styles: {
-                expand: true,
-                dot: true,
-                cwd: '<%= yeoman.app %>/styles',
-                dest: '.tmp/styles/',
-                src: '{,*/}*.css'
             }
         },
 
@@ -379,8 +349,7 @@ module.exports = function ( grunt ) {
         // Run some tasks in parallel to speed up build process
         concurrent: {
             server: [
-                'compass:server',
-                'copy:styles'
+                'compass:server'
             ],
             test: [
                 'copy:styles'
@@ -401,11 +370,10 @@ module.exports = function ( grunt ) {
         }
 
         grunt.task.run( [
-            'clean:server',
+            'runNode',
             'concurrent:server',
-            'browserify',
             'autoprefixer',
-            'connect:livereload',
+            'browserify',
             'watch'
         ] );
     } );
@@ -434,7 +402,7 @@ module.exports = function ( grunt ) {
         'concat',
         'cssmin',
         //        'uglify',
-        'copy:dist'
+        // 'copy:dist'
         //        'modernizr',
         //        'rev',
         //        'usemin',

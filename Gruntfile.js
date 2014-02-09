@@ -360,24 +360,16 @@ module.exports = function ( grunt ) {
                 'imagemin',
                 'svgmin'
             ]
+        },
+
+        forever: {
+            options: {
+                index: 'index.js',
+                logDir: 'logs'
+            }
         }
     } );
 
-
-    grunt.registerTask( 'serve', function ( target ) {
-        if ( target === 'dist' ) {
-            return grunt.task.run( [ 'build', 'connect:dist:keepalive' ] );
-        }
-
-        grunt.task.run( [
-            'runNode',
-            'compass:server',
-            'autoprefixer',
-            'handlebars',
-            'browserify',
-            'watch'
-        ] );
-    } );
 
     grunt.registerTask( 'runNode', function () {
         grunt.util.spawn( {
@@ -395,19 +387,27 @@ module.exports = function ( grunt ) {
         grunt.task.run( [ 'serve' ] );
     } );
 
+    grunt.registerTask( 'serve', function ( target ) {
+        if ( target === 'dist' ) {
+            return grunt.task.run( [ 'build', 'connect:dist:keepalive' ] );
+        }
+
+        grunt.task.run( [
+            'runNode',
+            'compass:server',
+            'autoprefixer',
+            'handlebars',
+            'browserify',
+            'watch'
+        ] );
+    } );
+
     grunt.registerTask( 'build', [
-        'clean:dist',
-        'useminPrepare',
-        'concurrent:dist',
+        'compass:server',
         'autoprefixer',
-        'concat',
-        'cssmin',
-        //        'uglify',
-        // 'copy:dist'
-        //        'modernizr',
-        //        'rev',
-        //        'usemin',
-        //        'htmlmin'
+        'handlebars',
+        'browserify',
+        'forever:restart'
     ] );
 
     grunt.registerTask( 'default', [

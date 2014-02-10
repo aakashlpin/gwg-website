@@ -26,7 +26,7 @@ module.exports = BaseView.extend( {
 		var startTime = '09:00 AM',
 			endTime = '10:00 AM';
 
-		this.ui.daySlotsContainer.html( this._getTimeSlotView( startTime, endTime ).render().el );
+		$(this.ui.daySlotsContainer).html( this._getTimeSlotView( startTime, endTime ).render().el );
 
 	},
 	actionOnClearAllDaySlots: function () {

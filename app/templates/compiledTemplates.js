@@ -50,11 +50,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"row\" data-daycode=\"";
-  if (stack1 = helpers.dayCode) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = (depth0 && depth0.dayCode); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\">\n  <div class=\"col-sm-2 text-left\">\n    <p class=\"schedule-text-middle\"> ";
+  buffer += "<div class=\"row\">\n  <div class=\"col-sm-2 text-left\">\n    <p class=\"schedule-text-middle\"> ";
   if (stack1 = helpers.dayName) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = (depth0 && depth0.dayName); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
   buffer += escapeExpression(stack1)

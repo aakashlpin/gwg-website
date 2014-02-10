@@ -4,14 +4,13 @@ var BaseView = require( '../base' ),
 
 module.exports = BaseView.extend( {
 	events: {
-		'click #saveSchedule': 'actionOnSaveSchedule',
+		'click #saveSchedule': 'actionOnSaveSchedule'
 	},
     postRender: function () {
-//        var firstDay = this.children.findByIndex(0);
-//        firstDay.initSlot();
+        var firstDay = this.childViews[0];
+        firstDay.initSlot();
 
-        console.log(this.childViews);
-
+        console.log(this.collection.toJSON());
     },
     actionOnToggleSlots: function (model) {
         //triggered when the noSlots property is changed

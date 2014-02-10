@@ -5,3 +5,4 @@ dist
 assets/stylesheets/bower_components
 public/mergedAssets.js
 public/main.css
+.idea

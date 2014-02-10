@@ -18,8 +18,8 @@ app.use( express.bodyParser() );
  */
 var dataAdapterConfig = {
   'default': {
-    host: 'api.github.com',
-    protocol: 'https'
+    host: 'localhost.com:3030',
+    protocol: 'http'
   }
 };
 
@@ -39,6 +39,35 @@ var server = rendr.createServer( {
  *     app.use('/my_cool_app', server);
  */
 app.use( server );
+
+
+app.get( '/days', function ( req, res ) {
+  var daysCollection = [ {
+    dayCode: 'mon',
+    dayName: 'Monday'
+  }, {
+    dayCode: 'tue',
+    dayName: 'Tuesday'
+  }, {
+    dayCode: 'wed',
+    dayName: 'Wednesday'
+  }, {
+    dayCode: 'thu',
+    dayName: 'Thursday'
+  }, {
+    dayCode: 'fri',
+    dayName: 'Friday'
+  }, {
+    dayCode: 'sat',
+    dayName: 'Saturday'
+  }, {
+    dayCode: 'sun',
+    dayName: 'Sunday'
+  } ];
+
+  res.json( daysCollection );
+
+} );
 
 /**
  * Start the Express server.

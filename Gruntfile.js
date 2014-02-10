@@ -55,8 +55,8 @@ module.exports = function ( grunt ) {
                 }
             },
             templates: {
-                files: [ '<%= yeoman.app %>/templates/*.hbs' ],
-                tasks: [ 'handlebars' ],
+                files: [ '<%= yeoman.app %>/templates/**/*.hbs' ],
+                tasks: [ 'handlebars', 'browserify' ],
                 options: {
                     interrupt: true
                 }

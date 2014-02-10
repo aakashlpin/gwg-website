@@ -1,16 +1,14 @@
 var BaseView = require( '../base' ),
-	_ = require( 'underscore'),
+    _ = require( 'underscore'),
     moment = require( 'moment' );
 
 module.exports = BaseView.extend( {
-	events: {
-		'click #saveSchedule': 'actionOnSaveSchedule'
-	},
+    events: {
+        'click #saveSchedule': 'actionOnSaveSchedule'
+    },
     postRender: function () {
         var firstDay = this.childViews[0];
         firstDay.initSlot();
-
-        console.log(this.collection.toJSON());
     },
     actionOnToggleSlots: function (model) {
         //triggered when the noSlots property is changed

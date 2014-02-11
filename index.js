@@ -1,6 +1,6 @@
 var express = require( 'express' ),
-  rendr = require( 'rendr' ),
-  app = express();
+    rendr = require( 'rendr' ),
+    app = express();
 
 /**
  * Initialize Express middleware stack.
@@ -17,17 +17,17 @@ app.use( express.bodyParser() );
  * `dataAdapter` object to the call to `rendr.createServer()`.
  */
 var dataAdapterConfig = {
-  'default': {
-    host: 'localhost.com:3030',
-    protocol: 'http'
-  }
+    'default': {
+        host: 'localhost.com:3030',
+        protocol: 'http'
+    }
 };
 
 /**
  * Initialize our Rendr server.
  */
 var server = rendr.createServer( {
-  dataAdapterConfig: dataAdapterConfig
+    dataAdapterConfig: dataAdapterConfig
 } );
 
 /**
@@ -42,30 +42,30 @@ app.use( server );
 
 
 app.get( '/days', function ( req, res ) {
-  var daysCollection = [ {
-    dayCode: 'mon',
-    dayName: 'Monday'
-  }, {
-    dayCode: 'tue',
-    dayName: 'Tuesday'
-  }, {
-    dayCode: 'wed',
-    dayName: 'Wednesday'
-  }, {
-    dayCode: 'thu',
-    dayName: 'Thursday'
-  }, {
-    dayCode: 'fri',
-    dayName: 'Friday'
-  }, {
-    dayCode: 'sat',
-    dayName: 'Saturday'
-  }, {
-    dayCode: 'sun',
-    dayName: 'Sunday'
-  } ];
+    var daysCollection = [ {
+        dayCode: 'mon',
+        dayName: 'Monday'
+    }, {
+        dayCode: 'tue',
+        dayName: 'Tuesday'
+    }, {
+        dayCode: 'wed',
+        dayName: 'Wednesday'
+    }, {
+        dayCode: 'thu',
+        dayName: 'Thursday'
+    }, {
+        dayCode: 'fri',
+        dayName: 'Friday'
+    }, {
+        dayCode: 'sat',
+        dayName: 'Saturday'
+    }, {
+        dayCode: 'sun',
+        dayName: 'Sunday'
+    } ];
 
-  res.json( daysCollection );
+    res.json( daysCollection );
 
 } );
 
@@ -73,13 +73,13 @@ app.get( '/days', function ( req, res ) {
  * Start the Express server.
  */
 function start() {
-  var port = process.env.PORT || 3030;
-  app.listen( port );
-  console.log( "server pid %s listening on port %s in %s mode",
-    process.pid,
-    port,
-    app.get( 'env' )
-  );
+    var port = process.env.PORT || 3030;
+    app.listen( port );
+    console.log( "server pid %s listening on port %s in %s mode",
+        process.pid,
+        port,
+        app.get( 'env' )
+    );
 }
 
 
@@ -88,7 +88,7 @@ function start() {
  * This makes it easier to run integration tests on ephemeral ports.
  */
 if ( require.main === module ) {
-  start();
+    start();
 }
 
 exports.app = app;

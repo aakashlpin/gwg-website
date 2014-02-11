@@ -8,7 +8,9 @@ module.exports = BaseView.extend( {
     },
     postRender: function () {
         var firstDay = this.childViews[0];
+        console.log(firstDay);
         firstDay.initSlot();
+
     },
     actionOnToggleSlots: function (model) {
         //triggered when the noSlots property is changed

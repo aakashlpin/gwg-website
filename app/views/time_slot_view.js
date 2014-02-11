@@ -35,7 +35,7 @@ module.exports = BaseView.extend( {
 	actionOnRemoveTimeSlot: function ( e ) {
 		e.preventDefault();
 		this.model.destroy();
-		this.close();
+		this.remove();
 	}
 
 } );

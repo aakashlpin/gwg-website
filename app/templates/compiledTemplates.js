@@ -44,6 +44,42 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<img class=\"bg\" src=\"/images/bg.jpg\" alt=\"\"/>\n<div class=\"site-wrapper-inner\">\n  <div class=\"cover-container\">\n    <div class=\"masthead clearfix\">\n      <div class=\"inner\">\n        <h3 class=\"masthead-brand\">Guitar With Guru</h3>\n        <ul class=\"nav masthead-nav\" id=\"primary-nav\">\n          <li class=\"active\"><a href=\"/\">Home</a></li>\n          <li><a href=\"/g\">Gurus</a></li>\n        </ul>\n      </div>\n    </div>\n\n    <div class=\"inner cover\">\n      <h1 class=\"cover-heading\">Tabs don't teach music. Teachers do.</h1>\n      <p>&nbsp;</p>\n      <p class=\"lead\">\n        Learn playing guitar (the way it's meant to be) from top notch indie guitarists across the globe.\n      </p>\n      <p class=\"lead\">Introducing one-on-one live guitar sessions</p>\n      <p>Sign up to be a part of alpha launch. It has its privileges. Besides we don't spam.</p>\n      <div class=\"row\">\n        <div class=\"col-xs-12\">\n          <div class=\"input-group input-group-lg\">\n            <input type=\"email\" class=\"form-control\" placeholder=\"Email\" id=\"email\" spellcheck=\"false\">\n              <span class=\"input-group-btn\">\n                <button class=\"btn btn-success\" type=\"button\">I'm In</button>\n              </span>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"mastfoot\">\n      <div class=\"inner\">\n        <p>&copy; 2014 | Guitar With Guru</p>\n      </div>\n    </div>\n  </div>\n</div>";
   });
 
+templates["schedule_day_copy_mode"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n    <li class=\"item\">\n      <a data-daycode=\"";
+  if (stack1 = helpers.dayCode) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = (depth0 && depth0.dayCode); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">\n        ";
+  if (stack1 = helpers.dayCode) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = (depth0 && depth0.dayCode); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\n      </a>\n    </li>\n    ";
+  return buffer;
+  }
+
+  buffer += "<div class=\"l-h-list\">\n  <p class=\"item schedule-text-middle\">Same as:  </p>\n  <ul class=\"item l-h-list guru-schedule-copy-links\">\n    ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.days), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n  </ul>\n</div>";
+  return buffer;
+  });
+
+templates["schedule_day_no_slots"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<p class=\"schedule-text-middle\">No slots</p>";
+  });
+
 templates["schedule_day_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};

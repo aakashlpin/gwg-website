@@ -1,0 +1,1 @@
+<p class="schedule-text-middle">No slots</p>

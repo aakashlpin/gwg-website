@@ -7,6 +7,6 @@
     "jquery": "~1.10.2"
   },
   "devDependencies": {
-    "bootstrap-formhelpers": "https://github.com/winmarkltd/BootstrapFormHelpers.git#~2.3.0"
+    "bootstrap-formhelpers": "https://github.com/aakashlpin/BootstrapFormHelpers/tarball/master"
   }
 }

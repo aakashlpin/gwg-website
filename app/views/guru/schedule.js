@@ -7,14 +7,15 @@ module.exports = BaseView.extend( {
         'click #saveSchedule': 'actionOnSaveSchedule'
     },
     postRender: function () {
-        var firstDay = this.childViews[0];
-        firstDay.initSlot();
-
+        //bind the events first
         _.each(this.childViews, function (childView) {
             this.listenTo(childView, 'schedule:time:change', this.actionOnChangeInSlots);
-            this.listenTo(childView, 'schedule:day:slot', this.actionOnToggleSlots);
             this.listenTo(childView, 'update:model', this.updateModelFromChild);
         }, this);
+
+        //then create the first slot
+        var firstDay = this.childViews[0];
+        firstDay.initSlot();
 
     },
     updateModelFromChild: function (model) {
@@ -24,9 +25,10 @@ module.exports = BaseView.extend( {
 
     actionOnToggleSlots: function (model) {
         //triggered when the noSlots property is changed
+        this.actionOnChangeInSlots(model);
 
     },
-    actionOnChangeInSlots: function (childModel, timeModel) {
+    actionOnChangeInSlots: function (childModel) {
         //get all empty day models and notify them of model of days with filled slots
         var filteredCollection = this.collection.reject(function (model) {
             //do not track models with noSlots set to true

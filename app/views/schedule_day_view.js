@@ -23,7 +23,6 @@ module.exports = BaseView.extend( {
 
         this.t_noSlotsTemplate = this.app.templateAdapter.getTemplate('schedule_day_no_slots');
         this.t_copyModeTemplate = this.app.templateAdapter.getTemplate('schedule_day_copy_mode');
-        
 	},
 	initSlot: function () {
 		var startTime = '09:00 AM',
@@ -81,16 +80,16 @@ module.exports = BaseView.extend( {
 	},
 	_getTimeSlotView: function ( startTime, endTime ) {
 		var TimeSlotView = BaseView.getView( 'time_slot_view' );
-		return this.subViews[ endTime ] = new TimeSlotView( {
+		return this.subViews[ endTime ] = new TimeSlotView({
 			model: this._addSlot( startTime, endTime ),
             app: this.app
-		} );
+        });
 
 	},
 	_addSlot: function ( startTime, endTime ) {
 		if ( !( this.model.get( 'slots' ) instanceof BaseCollection ) || this.model.get( 'noSlots' ) ) {
-			this.collection = new BaseCollection();
-			this.collection.on( 'add remove', function ( model ) {
+			var slotsCollection = new BaseCollection(null, {app: this.app});
+			slotsCollection.on( 'add remove', function ( model ) {
 				if ( !this.model.get( 'slots' ).size() ) {
 					this.actionOnClearAllDaySlots();
 				}
@@ -98,13 +97,12 @@ module.exports = BaseView.extend( {
 
 			}, this );
 
-			this.model.set( 'slots', this.collection );
+			this.model.set( 'slots', slotsCollection );
 			this.model.unset( 'noSlots' );
 		}
 
 		var slotToAdd = this._getModelForTimeSlot( startTime, endTime );
 		this.model.get( 'slots' ).add( slotToAdd );
-
 		return slotToAdd;
 
 	},
@@ -114,7 +112,7 @@ module.exports = BaseView.extend( {
 			date_endTime: moment( endTime, 'hh:mm A' ),
 			startTime: startTime,
 			endTime: endTime
-		} );
+		}, {app: this.app} );
 	},
 	_switchMode: function ( mode ) {
 		this.currentMode = mode;

@@ -10,6 +10,11 @@ module.exports = BaseView.extend( {
         var firstDay = this.childViews[0];
         firstDay.initSlot();
 
+        _.each(this.childViews, function (childView) {
+            this.listenTo(childView, 'schedule:time:change', this.actionOnChangeInSlots);
+            this.listenTo(childView, 'schedule:day:slot', this.actionOnToggleSlots);
+        }, this);
+
     },
     actionOnToggleSlots: function (model) {
         //triggered when the noSlots property is changed
@@ -32,11 +37,16 @@ module.exports = BaseView.extend( {
         _.each(filteredCollection, function (otherChildModel) {
             if (!otherChildModel.get('slots') || !otherChildModel.get('slots').size()) {
                 //if other child model is empty
-                var otherChildView = this.children.findByModel(otherChildModel);
+                var otherChildView = this._findByModel(otherChildModel);
                 otherChildView.startCopyMode(this._daysHavingFilledSlots());
             }
         }, this);
 
+    },
+    _findByModel: function (model) {
+        return _.find(this.childViews, function (childView) {
+            return childView.model.get('dayCode') === model.get('dayCode');
+        })
     },
     _daysHavingFilledSlots: function () {
         return this.collection.filter(function (model) {

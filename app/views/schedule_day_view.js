@@ -113,6 +113,7 @@ module.exports = BaseView.extend( {
 			startTime: startTime,
 			endTime: endTime
 		}, {app: this.app} );
+
 	},
 	_switchMode: function ( mode ) {
 		this.currentMode = mode;

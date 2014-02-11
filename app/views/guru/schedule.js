@@ -8,10 +8,14 @@ module.exports = BaseView.extend( {
     },
     postRender: function () {
         //bind the events first
-        _.each(this.childViews, function (childView) {
-            this.listenTo(childView, 'schedule:time:change', this.actionOnChangeInSlots);
-            this.listenTo(childView, 'update:model', this.updateModelFromChild);
-        }, this);
+        this.listenTo(this.app, 'schedule:time:change', this.actionOnChangeInSlots);
+        this.listenTo(this.app, 'update:model', this.updateModelFromChild);
+
+        //TODO Hack because I don't know how to get childViews by name
+        //removing the header and sidebar childViews from further processing
+        this.childViews = _.filter(this.childViews, function (childView) {
+            return !!childView.model;
+        });
 
         //then create the first slot
         var firstDay = this.childViews[0];

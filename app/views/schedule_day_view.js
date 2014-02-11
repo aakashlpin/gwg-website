@@ -30,7 +30,7 @@ module.exports = BaseView.extend( {
 
     },
     actionOnChangeInModel: function (model) {
-        this.trigger( 'update:model', model );
+        this.app.trigger( 'update:model', model );
 
     },
     initSlot: function () {
@@ -50,7 +50,7 @@ module.exports = BaseView.extend( {
 
         this._switchMode( this.modes.COPY );
         this.$el.find(this.ui.copyModeContainer).html( this.t_noSlotsTemplate() );
-        this.trigger( 'schedule:time:change', this.model );
+        this.app.trigger( 'schedule:time:change', this.model );
 
     },
     actionOnChangeCopyFromDay: function ( e ) {
@@ -104,8 +104,8 @@ module.exports = BaseView.extend( {
                 if ( !this.model.get( 'slots' ).size() ) {
                     this.actionOnClearAllDaySlots();
                 }
-                this.trigger( 'update:model', this.model );
-                this.trigger( 'schedule:time:change', this.model );
+                this.app.trigger( 'update:model', this.model );
+                this.app.trigger( 'schedule:time:change', this.model );
 
             }, this );
 

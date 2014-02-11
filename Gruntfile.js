@@ -100,6 +100,15 @@ module.exports = function ( grunt ) {
                         cwd: 'app/',
                         src: [ '**/*.js' ],
                         dest: 'app/'
+                    }, {    //following 2 mappings are needed due to a bug in rendr
+                    // https://github.com/airbnb/rendr/issues/257#issuecomment-32116673
+                        cwd: 'node_modules/rendr/client/',
+                        src: ['**/*.js'],
+                        dest: 'rendr/client/'
+                    }, {
+                        cwd: 'node_modules/rendr/shared/',
+                        src: ['**/*.js'],
+                        dest: 'rendr/shared/'
                     } ],
                     shim: {
                         jquery: {

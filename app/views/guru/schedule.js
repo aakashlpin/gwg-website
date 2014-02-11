@@ -57,13 +57,19 @@ module.exports = BaseView.extend( {
         })
     },
     _daysHavingFilledSlots: function () {
-        var collection = this.collection;
-        var daysHavingFilledSlots = collection.filter(function (model) {
+        return this.collection.filter(function (model) {
             return model.get('slots') && model.get('slots').size();
         });
 
-        return daysHavingFilledSlots;
+    },
+    actionOnSaveSchedule: function (e) {
+        e.preventDefault();
+        //TODO sync
+        console.log(this.collection.toJSON());
+        this.app.router.redirectTo('/g/courses');
+
     }
+
 } );
 
 module.exports.id = 'guru/schedule';

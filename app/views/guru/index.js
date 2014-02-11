@@ -122,9 +122,7 @@ module.exports = BaseView.extend( {
 	},
 	actionOnFormSubmit: function ( e ) {
 		e.preventDefault();
-		App.router.navigate( 'g/schedule', {
-			trigger: true
-		} );
+		this.app.router.redirectTo( '/g/schedule' );
 	}
 } );
 

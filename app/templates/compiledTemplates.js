@@ -52,14 +52,10 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n    <li class=\"item\">\n      <a data-daycode=\"";
-  if (stack1 = helpers.dayCode) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = (depth0 && depth0.dayCode); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\">\n        ";
-  if (stack1 = helpers.dayCode) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = (depth0 && depth0.dayCode); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
-  buffer += escapeExpression(stack1)
+  buffer += "\n    <li class=\"item\">\n      <a data-daycode=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.attributes)),stack1 == null || stack1 === false ? stack1 : stack1.dayCode)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">\n        "
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.attributes)),stack1 == null || stack1 === false ? stack1 : stack1.dayCode)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\n      </a>\n    </li>\n    ";
   return buffer;
   }

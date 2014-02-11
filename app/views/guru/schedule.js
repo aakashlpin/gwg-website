@@ -13,9 +13,15 @@ module.exports = BaseView.extend( {
         _.each(this.childViews, function (childView) {
             this.listenTo(childView, 'schedule:time:change', this.actionOnChangeInSlots);
             this.listenTo(childView, 'schedule:day:slot', this.actionOnToggleSlots);
+            this.listenTo(childView, 'update:model', this.updateModelFromChild);
         }, this);
 
     },
+    updateModelFromChild: function (model) {
+        this.collection.add(model, {merge: true});
+
+    },
+
     actionOnToggleSlots: function (model) {
         //triggered when the noSlots property is changed
 
@@ -49,9 +55,12 @@ module.exports = BaseView.extend( {
         })
     },
     _daysHavingFilledSlots: function () {
-        return this.collection.filter(function (model) {
+        var collection = this.collection;
+        var daysHavingFilledSlots = collection.filter(function (model) {
             return model.get('slots') && model.get('slots').size();
         });
+
+        return daysHavingFilledSlots;
     }
 } );
 

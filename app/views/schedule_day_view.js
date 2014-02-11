@@ -23,7 +23,16 @@ module.exports = BaseView.extend( {
 
         this.t_noSlotsTemplate = this.app.templateAdapter.getTemplate('schedule_day_no_slots');
         this.t_copyModeTemplate = this.app.templateAdapter.getTemplate('schedule_day_copy_mode');
+
 	},
+    preRender: function () {
+        this.model.on('change', this.actionOnChangeInModel.bind(this));
+//        this.model.get('slots').on('add remove', this.actionOnChangeInModel.bind(this));
+    },
+    actionOnChangeInModel: function (model) {
+        this.trigger( 'update:model', model );
+
+    },
 	initSlot: function () {
 		var startTime = '09:00 AM',
 			endTime = '10:00 AM';
@@ -93,6 +102,7 @@ module.exports = BaseView.extend( {
 				if ( !this.model.get( 'slots' ).size() ) {
 					this.actionOnClearAllDaySlots();
 				}
+                this.trigger( 'update:model', this.model );
 				this.trigger( 'schedule:time:change', this.model, model );
 
 			}, this );

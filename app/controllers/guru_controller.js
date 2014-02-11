@@ -12,5 +12,8 @@ module.exports = {
 		this.app.fetch( spec, function ( err, result ) {
 			callback( err, result );
 		} )
-	}
+	},
+    courses: function ( params, callback ) {
+        callback();
+    }
 };

@@ -12,7 +12,7 @@ module.exports = BaseView.extend({
     actionOnGoToLink: function (e) {
         e.preventDefault();
         var target = $(e.target);
-        this.app.router.redirectTo(target);
+        this.app.router.redirectTo(target.attr('href'));
         this.toggleActiveState(target.attr('href'));
 
     },

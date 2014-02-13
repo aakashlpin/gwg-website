@@ -8,7 +8,11 @@
     "rendr-handlebars": "~0.2.0-rc1",
     "express": "~3.4.8",
     "underscore": "~1.5.2",
-    "async": "~0.2.10"
+    "async": "~0.2.10",
+    "config": "~0.4.35",
+    "passport": "~0.2.0",
+    "js-yaml": "~3.0.1",
+    "mongoose": "~3.8.7"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

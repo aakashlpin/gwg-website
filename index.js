@@ -1,5 +1,7 @@
 var express = require( 'express' ),
     rendr = require( 'rendr' ),
+    config = require( 'config' ),
+    passport = require( 'passport' ),
     app = express();
 
 /**
@@ -11,17 +13,28 @@ app.use( express.logger() );
 app.use( express.bodyParser() );
 
 /**
- * In this simple example, the DataAdapter config, which specifies host, port, etc. of the API
- * to hit, is written inline. In a real world example, you would probably move this out to a
- * config file. Also, if you want more control over the fetching of data, you can pass your own
- * `dataAdapter` object to the call to `rendr.createServer()`.
+ * The `cookieParser` middleware is required for sessions.
  */
-var dataAdapterConfig = {
-    'default': {
-        host: 'localhost.com:3030',
-        protocol: 'http'
-    }
-};
+app.use(express.cookieParser());
+
+/**
+ * Add session support. This will populate `req.session`.
+ */
+app.use(express.session({
+    secret: config.session.secret,
+
+    /**
+     * In production apps, you should probably use something like Redis or Memcached
+     * to store sessions. Look at the `connect-redis` or `connect-memcached` modules.
+     */
+    store: null
+}));
+
+//app.use(passport.initialize());
+//app.use(passport.session());
+
+
+var dataAdapterConfig = config.api;
 
 /**
  * Initialize our Rendr server.
@@ -30,16 +43,13 @@ var server = rendr.createServer( {
     dataAdapterConfig: dataAdapterConfig
 } );
 
-/**
- * To mount Rendr, which owns its own Express instance for better encapsulation,
- * simply add `server` as a middleware onto your Express app.
- * This will add all of the routes defined in your `app/routes.js`.
- * If you want to mount your Rendr app onto a path, you can do something like:
- *
- *     app.use('/my_cool_app', server);
- */
 app.use( server );
 
+server.configure(function (rendrExpressApp) {
+//    rendrExpressApp.use(passport.initialize());
+//    rendrExpressApp.use(passport.session());
+
+});
 
 app.get( '/days', function ( req, res ) {
     var daysCollection = [ {
@@ -73,7 +83,7 @@ app.get( '/days', function ( req, res ) {
  * Start the Express server.
  */
 function start() {
-    var port = process.env.PORT || 3030;
+    var port = process.env.PORT || config.server.port;
     app.listen( port );
     console.log( "server pid %s listening on port %s in %s mode",
         process.pid,

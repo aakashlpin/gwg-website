@@ -1,0 +1,12 @@
+# Default config
+
+server:
+  port: 3030
+
+api:
+  default:
+    host: 'localhost.com:3030'
+    protocol: 'http'
+
+session:
+  secret: this should be some long random string

@@ -59,10 +59,6 @@ body,
   height: 100%;
 }
 
-body * {
-  transition: 0.2s all ease-in;
-}
-
 .lead {
   margin-bottom: 45px;
 }
@@ -283,5 +279,11 @@ img.bg {
       text-decoration: underline;
       color: $link-color;
     }
+  }
+}
+
+#signup-form {
+  input, button {
+    transition: 0.2s all ease-in;
   }
 }

@@ -2,6 +2,8 @@ var express = require( 'express' ),
     rendr = require( 'rendr' ),
     config = require( 'config' ),
     passport = require( 'passport' ),
+    mongoose = require( 'mongoose'),
+    DataAdapter = require( './server/lib/data_adapter'),
     app = express();
 
 /**
@@ -34,16 +36,14 @@ app.use(express.session({
 //app.use(passport.session());
 
 
-var dataAdapterConfig = config.api;
+//var dataAdapterConfig = config.api;
 
 /**
  * Initialize our Rendr server.
  */
 var server = rendr.createServer( {
-    dataAdapterConfig: dataAdapterConfig
+    dataAdapter: new DataAdapter()
 } );
-
-app.use( server );
 
 server.configure(function (rendrExpressApp) {
 //    rendrExpressApp.use(passport.initialize());
@@ -51,7 +51,7 @@ server.configure(function (rendrExpressApp) {
 
 });
 
-app.get( '/days', function ( req, res ) {
+app.use( '/api/-/days', function ( req, res ) {
     var daysCollection = [ {
         dayCode: 'mon',
         dayName: 'Monday'
@@ -79,9 +79,14 @@ app.get( '/days', function ( req, res ) {
 
 } );
 
+app.use( server );
+
 /**
  * Start the Express server.
  */
+
+initDB();
+
 function start() {
     var port = process.env.PORT || config.server.port;
     app.listen( port );
@@ -92,6 +97,15 @@ function start() {
     );
 }
 
+//Initialize the DB connection
+function initDB () {
+    var DB = config.DB;
+    if ( DB.USER && DB.PASSWORD ) {
+        mongoose.connect( 'mongodb://' + DB.USER + ':' + DB.PASSWORD + '@localhost/' + DB.NAME );
+    } else {
+        mongoose.connect( 'mongodb://localhost/' + DB.NAME );
+    }
+}
 
 /**
  * Only start server if this script is executed, not if it's require()'d.

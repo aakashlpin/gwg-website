@@ -3,6 +3,13 @@
 server:
   port: 3030
 
+DB:
+  USER: null
+  PASSWORD: null
+  NAME: 'gwg-dev'
+
+rendrApp:
+
 api:
   default:
     host: 'localhost.com:3030'

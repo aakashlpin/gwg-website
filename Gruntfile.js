@@ -63,6 +63,29 @@ module.exports = function ( grunt ) {
             }
         },
 
+        nodemon: {
+            dev: {
+                script: 'index.js',
+                options: {
+                    nodeArgs: ['--debug'],
+                    callback: function (nodemon) {
+                        nodemon.on('log', function (event) {
+                            console.log(event.colour);
+                        });
+                    },
+                    env: {
+                        PORT: '3030'
+                    },
+                    cwd: __dirname,
+                    ignore: ['node_modules/**'],
+                    ext: 'js',
+                    watch: ['server', 'app'],
+                    delay: 1,
+                    legacyWatch: true
+                }
+            }
+        },
+
         handlebars: {
             compile: {
                 options: {
@@ -101,7 +124,7 @@ module.exports = function ( grunt ) {
                         src: [ '**/*.js' ],
                         dest: 'app/'
                     }, {    //following 2 mappings are needed due to a bug in rendr
-                    // https://github.com/airbnb/rendr/issues/257#issuecomment-32116673
+                        // https://github.com/airbnb/rendr/issues/257#issuecomment-32116673
                         cwd: 'node_modules/rendr/client/',
                         src: ['**/*.js'],
                         dest: 'rendr/client/'
@@ -319,9 +342,10 @@ module.exports = function ( grunt ) {
 
         // Run some tasks in parallel to speed up build process
         concurrent: {
-            server: [
-                'compass:server'
-            ],
+            server: {
+                tasks: ['nodemon', 'watch'],
+                options: { logConcurrentOutput: true }
+            },
             test: [
                 'copy:styles'
             ],
@@ -342,35 +366,30 @@ module.exports = function ( grunt ) {
         }
     } );
 
-
-    grunt.registerTask( 'runNode', function () {
-        grunt.util.spawn( {
-            cmd: 'node',
-            args: [ './node_modules/nodemon/bin/nodemon.js', 'index.js' ],
-            opts: {
-                stdio: 'inherit'
-            }
-        }, function () {
-            grunt.fail.fatal( new Error( "nodemon quit" ) );
-        } );
-    } );
+    /*
+     grunt.registerTask( 'runNode', function () {
+     grunt.util.spawn( {
+     cmd: 'node',
+     args: [ './node_modules/nodemon/bin/nodemon.js', 'index.js' ],
+     opts: {
+     stdio: 'inherit'
+     }
+     }, function () {
+     grunt.fail.fatal( new Error( "nodemon quit" ) );
+     } );
+     } );*/
 
     grunt.registerTask( 'server', function () {
         grunt.task.run( [ 'serve' ] );
     } );
 
     grunt.registerTask( 'serve', function ( target ) {
-        if ( target === 'dist' ) {
-            return grunt.task.run( [ 'build', 'connect:dist:keepalive' ] );
-        }
-
         grunt.task.run( [
-            'runNode',
             'compass:server',
             'autoprefixer',
             'handlebars',
             'browserify',
-            'watch'
+            'concurrent:server'
         ] );
     } );
 

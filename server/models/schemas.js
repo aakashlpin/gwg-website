@@ -7,15 +7,14 @@ var mongoose = require('mongoose'),
 var Guru;
 
 Guru = new Schema({
+    id: String,
+    username: String,
     email: String,
+    gender: String,
+    link: String,
+    location: String,
     name: String,
-    password: String,
-    photo: String
-});
-
-Guru.pre('save', function (next) {
-    // Do something.
-    next();
+    timezone: Number
 });
 
 module.exports.GuruSchema = Guru;

@@ -19,7 +19,7 @@ module.exports = BaseView.extend( {
 		nextBtn: '#next'
 	},
 	postRender: function () {
-		window.fbAsyncInit = _.bind( function () {
+/*		window.fbAsyncInit = _.bind( function () {
 			FB.init( {
 				appId: '424544477675893',
 				status: true, // check login status
@@ -46,11 +46,11 @@ module.exports = BaseView.extend( {
 			js.async = true;
 			js.src = '//connect.facebook.net/en_US/all.js';
 			ref.parentNode.insertBefore( js, ref );
-		}( document ) );
+		}( document ) );*/
 
 	},
 	postLogin: function () {
-		FB.api( '/me', _.bind( function ( response ) {
+/*		FB.api( '/me', _.bind( function ( response ) {
 			var userData = {
 				first_name: response.first_name,
 				last_name: response.last_name,
@@ -67,15 +67,15 @@ module.exports = BaseView.extend( {
 				this.autoFillForm( userData );
 			}, this ) );
 
-		}, this ) );
+		}, this ) );*/
 	},
 	autoFillForm: function ( data ) {
-		$( this.ui.formEmail ).val( data.email ).trigger( 'change' );
-		$( this.ui.formName ).val( data.name ).trigger( 'change' );
+/*		$( this.ui.formEmail ).val( data.email ).trigger( 'change' );
+		$( this.ui.formName ).val( data.name ).trigger( 'change' );*/
 
 	},
 	actionOnTriggerFacebookLogin: function ( e ) {
-		e.preventDefault();
+/*		e.preventDefault();
 		FB.getLoginStatus( _.bind( function ( response ) {
 			if ( response.status === 'connected' ) {
 				this.postLogin();
@@ -93,17 +93,18 @@ module.exports = BaseView.extend( {
 					scope: 'email'
 				} );
 			}
-		}, this ) );
+		}, this ) );*/
 	},
 	actionOnKeyPress: function ( e ) {
-		this._toggleNextButtonVisibility();
+//		this._toggleNextButtonVisibility();
 
 	},
 	actionOnChangeInInput: function ( e ) {
-		this._toggleNextButtonVisibility();
+//		this._toggleNextButtonVisibility();
 
 	},
 	_toggleNextButtonVisibility: function () {
+/*
 		var isAllowNext = false;
 
 		$( this.ui.form ).find( 'input' ).each( function () {
@@ -115,14 +116,17 @@ module.exports = BaseView.extend( {
 		} else {
 			$( this.ui.nextBtn ).attr( 'disabled', 'disabled' );
 		}
+*/
 
 	},
 	isValidEmail: function ( inputEmail ) {
-		return true;
+//		return true;
 	},
 	actionOnFormSubmit: function ( e ) {
+/*
 		e.preventDefault();
 		this.app.router.redirectTo( '/g/schedule' );
+*/
 	}
 } );
 

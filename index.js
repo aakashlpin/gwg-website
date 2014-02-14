@@ -1,54 +1,52 @@
-var express = require( 'express' ),
-    rendr = require( 'rendr' ),
-    config = require( 'config' ),
-    passport = require( 'passport' ),
-    mongoose = require( 'mongoose'),
-    DataAdapter = require( './server/lib/data_adapter'),
-    app = express();
+var express     = require( 'express' ),
+    rendr       = require( 'rendr' ),
+    config      = require( 'config' ),
+    passport    = require( 'passport' ),
+    FBStrategy  = require( 'passport-facebook' ),
+    mongoose    = require( 'mongoose' ),
+    Guru        = require( './server/models/guru' ),
+    DataAdapter = require( './server/lib/data_adapter' ),
+    app         = express();
 
-/**
- * Initialize Express middleware stack.
- */
-app.use( express.compress() );
-app.use( express.static( __dirname + '/public' ) );
-app.use( express.logger() );
-app.use( express.bodyParser() );
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
 
-/**
- * The `cookieParser` middleware is required for sessions.
- */
-app.use(express.cookieParser());
+passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+});
 
-/**
- * Add session support. This will populate `req.session`.
- */
-app.use(express.session({
-    secret: config.session.secret,
+passport.use(new FBStrategy({
+        clientID: 424544477675893,
+        clientSecret: '1cdade0a6c1ec2038b04bb5606d4337d',
+        callbackURL: "/auth/facebook/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+        process.nextTick(function () {
+            Guru.findOrCreate(profile, function(err, user) {
+                if (err) { return done(err); }
+                done(null, user);
+            });
+        });
+    }
+));
 
-    /**
-     * In production apps, you should probably use something like Redis or Memcached
-     * to store sessions. Look at the `connect-redis` or `connect-memcached` modules.
-     */
-    store: null
-}));
+app.configure(function() {
+    app.use( express.compress() );
+    app.use( express.logger() );
+    app.use( express.cookieParser() );
+    app.use( express.bodyParser() );
+    app.use( express.methodOverride() );
+    app.use( express.session({ secret: 'keyboard cat' }) );
+    app.use( passport.initialize() );
+    app.use( passport.session() );
+    app.use( app.router );
+    app.use( express.static( __dirname + '/public' ) );
 
-//app.use(passport.initialize());
-//app.use(passport.session());
+});
 
-
-//var dataAdapterConfig = config.api;
-
-/**
- * Initialize our Rendr server.
- */
-var server = rendr.createServer( {
+var server = rendr.createServer({
     dataAdapter: new DataAdapter()
-} );
-
-server.configure(function (rendrExpressApp) {
-//    rendrExpressApp.use(passport.initialize());
-//    rendrExpressApp.use(passport.session());
-
 });
 
 app.use( '/api/-/days', function ( req, res ) {
@@ -79,11 +77,17 @@ app.use( '/api/-/days', function ( req, res ) {
 
 } );
 
-app.use( server );
+app.get('/auth/facebook', passport.authenticate('facebook'));
 
-/**
- * Start the Express server.
- */
+app.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/g' }),
+    function(req, res) {
+        // Successful authentication, redirect home.
+        res.redirect('/g/courses');
+    }
+);
+
+app.use( server );
 
 initDB();
 
@@ -107,10 +111,6 @@ function initDB () {
     }
 }
 
-/**
- * Only start server if this script is executed, not if it's require()'d.
- * This makes it easier to run integration tests on ephemeral ports.
- */
 if ( require.main === module ) {
     start();
 }

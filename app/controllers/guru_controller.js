@@ -1,17 +1,18 @@
+var _ = require('underscore');
+
 function ensureUserIsLoggedIn(actionHandler) {
     return function () {
         var router = this,
-            user = router.app.user;
+            user = router.app.get('user');
 
-        console.log(router.app);
-//        if (!user.isLoggedIn()) {
-//            router.redirectTo('/g');
-//        } else {
+        if (!_.isObject(user)){
+            router.redirectTo('/g');
+
+        } else {
             actionHandler.apply(this, arguments);
-//        }
+        }
     };
 }
-
 
 module.exports = {
 	index: function ( params, callback ) {
@@ -26,9 +27,10 @@ module.exports = {
 
 		this.app.fetch( spec, function ( err, result ) {
 			callback( err, result );
-		} )
+		});
+
 	}),
-    courses: function ( params, callback ) {
+    courses: ensureUserIsLoggedIn(function ( params, callback ) {
         callback();
-    }
+    })
 };

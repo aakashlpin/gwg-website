@@ -6,6 +6,7 @@ var express     = require( 'express' ),
     mongoose    = require( 'mongoose' ),
     Guru        = require( './server/models/guru' ),
     DataAdapter = require( './server/lib/data_adapter' ),
+    mw          = require( './server/middleware' ),
     app         = express();
 
 passport.serializeUser(function(user, done) {
@@ -40,13 +41,16 @@ app.configure(function() {
     app.use( express.session({ secret: 'keyboard cat' }) );
     app.use( passport.initialize() );
     app.use( passport.session() );
-    app.use( app.router );
     app.use( express.static( __dirname + '/public' ) );
 
 });
 
 var server = rendr.createServer({
     dataAdapter: new DataAdapter()
+});
+
+server.configure(function(rendrExpressApp) {
+    rendrExpressApp.use(mw.attachUserObject());
 });
 
 app.use( '/api/-/days', function ( req, res ) {
@@ -99,6 +103,15 @@ function start() {
         port,
         app.get( 'env' )
     );
+}
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        next();
+
+    } else {
+        res.redirect('/g');
+    }
 }
 
 //Initialize the DB connection

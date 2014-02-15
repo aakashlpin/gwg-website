@@ -32,3 +32,61 @@ $time-slot-unit-margin: 15px;
 
   }
 }
+
+.nav-steps {
+  position: relative;
+  text-align: center;
+  counter-reset: nav-steps-counter;
+  margin: 0;
+
+  &:before {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 30px;
+    border-right: 1px solid #fff;
+    left: 50%;
+    top: -30px;
+
+  }
+
+  > .item {
+    counter-increment: nav-steps-counter;
+    position: relative;
+    margin: 50px 0;
+    padding: 40px 0 20px 0;
+    p {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    &:before {
+      content: counter(nav-steps-counter);
+      height: 30px;
+      width: 30px;
+      padding: 5px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.1);
+      position: absolute;
+      top: 0;
+      left: 50%;
+      margin-left: -15px;
+    }
+
+    &:after {
+      position: absolute;
+      content: '';
+      width: 0;
+      height: 50px;
+      border-right: 1px solid #fff;
+      left: 50%;
+      bottom: -50px;
+    }
+
+    &:last-child:after {
+      display: none;
+    }
+
+  }
+}

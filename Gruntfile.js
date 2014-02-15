@@ -47,16 +47,9 @@ module.exports = function ( grunt ) {
                     interrupt: true
                 }
             },
-            styles: {
-                files: [ 'public/*.css' ],
-                tasks: [ 'newer:copy:styles', 'autoprefixer' ],
-                options: {
-                    interrupt: true
-                }
-            },
             templates: {
                 files: [ '<%= yeoman.app %>/templates/**/*.hbs' ],
-                tasks: [ 'handlebars', 'browserify' ],
+                tasks: [ 'handlebars' ],
                 options: {
                     interrupt: true
                 }
@@ -386,7 +379,6 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'serve', function ( target ) {
         grunt.task.run( [
             'compass:server',
-            'autoprefixer',
             'handlebars',
             'browserify',
             'concurrent:server'

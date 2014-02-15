@@ -3,7 +3,7 @@ var BaseView = require( '../base' ),
 	$ = require( 'jquery' );
 
 module.exports = BaseView.extend( {
-	className: 'site-wrapper',
+	className: 'guru-home',
 	events: {
 		'click #triggerFacebookLogin': 'actionOnTriggerFacebookLogin',
 		'keypress input': 'actionOnKeyPress',

@@ -12,17 +12,6 @@ $icon-font-path: "bower_components/sass-bootstrap/fonts/";
     padding: 0.2em 0;
 }
 
-/*
- * Globals
- */
-
-/* Links */
-/*a,
-a:focus,
-a:hover {
-  color: #fff;
-}*/
-
 a {
   cursor: pointer;
 }
@@ -53,6 +42,10 @@ a.underline {
 /*
  * Base structure
  */
+
+body {
+  background: #fff;
+}
 
 html,
 body,
@@ -217,37 +210,15 @@ img.bg {
 
 }
 
-.or {
-  margin: 50px 0;
-  position: relative;
-}
-
-.or:after {
-  content: '';
-  @include center-middle(40);
-  z-index: 10;
-  background: #fff;
-  border-radius: 50%;
-}
-
-.or:before {
-  content: 'OR';
-  @include center-middle(40);
-  z-index: 11;
-  padding: 10px;
-  color: #444;
-  text-shadow: none;
-}
-
-.fb-login-container {
-  margin: 0 0 30px 0;
-}
-
 .mb-10 {
   margin-bottom: 10px;
 }
 .mb-30 {
   margin-bottom: 30px;
+}
+
+.mb-60 {
+  margin-bottom: 60px;
 }
 
 .text-white {
@@ -265,7 +236,6 @@ img.bg {
 .day-slots-container {
   margin: 10px 0;
   padding: 15px 20px;
-//  background: rgba(120,120,120,0.3);
   border-radius: 3px;
 }
 
@@ -300,7 +270,13 @@ img.bg {
   }
 }
 
-.guru-home {
-  height: 100%;
+.background-green {
   background: #2ecc71;
+}
+.background-red {
+  background: #e67e22;
+}
+
+.page-block {
+  padding: 120px 0 40px 0;
 }

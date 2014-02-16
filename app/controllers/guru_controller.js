@@ -15,21 +15,21 @@ function ensureUserIsLoggedIn(actionHandler) {
 }
 
 module.exports = {
-	index: function ( params, callback ) {
-		callback();
-	},
-	schedule: ensureUserIsLoggedIn( function ( params, callback ) {
-		var spec = {
-			collection: {
-				collection: 'ScheduleDays'
-			}
-		};
+    index: function ( params, callback ) {
+        callback();
+    },
+    schedule: ensureUserIsLoggedIn( function ( params, callback ) {
+        var spec = {
+            collection: {
+                collection: 'ScheduleDays', params: {_id: this.app.get('user')._id}
+            }
+        };
 
-		this.app.fetch( spec, function ( err, result ) {
-			callback( err, result );
-		});
+        this.app.fetch( spec, function ( err, result ) {
+            callback(null, result);
+        });
 
-	}),
+    }),
     courses: ensureUserIsLoggedIn(function ( params, callback ) {
         callback();
     })

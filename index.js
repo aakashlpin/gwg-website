@@ -87,7 +87,7 @@ app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { failureRedirect: '/g' }),
     function(req, res) {
         // Successful authentication, redirect home.
-        res.redirect('/g/courses');
+        res.redirect('/g/schedule');
     }
 );
 

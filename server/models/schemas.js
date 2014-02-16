@@ -14,11 +14,19 @@ Guru = new Schema({
     link: String,
     location: String,
     name: String,
-    timezone: Number
+    timezone: Number,
+    courses: Array,
+    schedule: [{
+        day_code: String,
+        day_name: String,
+        slots: [{
+            start_time: String,
+            end_time: String
+        }]
+    }]
 });
 
 module.exports.GuruSchema = Guru;
-
 
 var Signup;
 

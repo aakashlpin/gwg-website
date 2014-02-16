@@ -55,7 +55,7 @@ module.exports = BaseView.extend( {
     },
     actionOnChangeCopyFromDay: function ( e ) {
         e.preventDefault();
-        this.selectedDayCode = $( e.target ).data( 'daycode' );
+        this.selectedDayCode = $( e.target ).data( 'day_code' );
         this._manageSelectedDay();
 
     },
@@ -73,14 +73,14 @@ module.exports = BaseView.extend( {
         //get first child
         var firstChild = this.$el.find(this.ui.copyModeContainer).find( 'li:first-child a' );
         //set selectedDayCode
-        this.selectedDayCode = this.selectedDayCode || firstChild.data( 'daycode' );
+        this.selectedDayCode = this.selectedDayCode || firstChild.data( 'day_code' );
         //attempt to get DOM
-        var childInDOM = this.$el.find(this.ui.copyModeContainer).find( 'a[data-daycode="' + this.selectedDayCode + '"]' );
+        var childInDOM = this.$el.find(this.ui.copyModeContainer).find( 'a[data-day_code="' + this.selectedDayCode + '"]' );
         //if no such elem found in DOM, set selectedDayCode to first child
         var elemToSelect = childInDOM;
         if ( !childInDOM.length ) {
             elemToSelect = firstChild;
-            this.selectedDayCode = firstChild.data( 'daycode' );
+            this.selectedDayCode = firstChild.data( 'day_code' );
         }
         //finally highlight the appropriate child
         elemToSelect.addClass( 'selected' );

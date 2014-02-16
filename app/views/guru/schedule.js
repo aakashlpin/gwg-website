@@ -39,7 +39,7 @@ module.exports = BaseView.extend( {
             if (model.get('noSlots')) return true;
             //only if current child has filled slots, exclude that from current processing
             if (childModel.get('slots') && childModel.get('slots').size()) {
-                return model.get('dayCode') === childModel.get('dayCode');
+                return model.get('day_code') === childModel.get('day_code');
             }
 
             //allow the element to be passed.
@@ -57,7 +57,7 @@ module.exports = BaseView.extend( {
     },
     _findByModel: function (model) {
         return _.find(this.childViews, function (childView) {
-            return childView.model.get('dayCode') === model.get('dayCode');
+            return childView.model.get('day_code') === model.get('day_code');
         })
     },
     _daysHavingFilledSlots: function () {

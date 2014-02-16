@@ -90,10 +90,10 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n    <li class=\"item\">\n      <a data-daycode=\""
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.attributes)),stack1 == null || stack1 === false ? stack1 : stack1.dayCode)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+  buffer += "\n    <li class=\"item\">\n      <a data-day_code=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.attributes)),stack1 == null || stack1 === false ? stack1 : stack1.day_code)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">\n        "
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.attributes)),stack1 == null || stack1 === false ? stack1 : stack1.dayCode)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.attributes)),stack1 == null || stack1 === false ? stack1 : stack1.day_code)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\n      </a>\n    </li>\n    ";
   return buffer;
   }
@@ -121,8 +121,8 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 
   buffer += "<div class=\"row\">\n  <div class=\"col-sm-2 text-left\">\n    <p class=\"schedule-text-middle\"> ";
-  if (stack1 = helpers.dayName) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = (depth0 && depth0.dayName); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
+  if (stack1 = helpers.day_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = (depth0 && depth0.day_name); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
   buffer += escapeExpression(stack1)
     + "</p>\n  </div>\n  <div class=\"col-sm-7\">\n    <div class=\"daySlotsContainer\"></div>\n    <div class=\"copyModeContainer\"></div>\n  </div>\n  <div class=\"col-sm-3 text-right\">\n    <a class=\"schedule-text-middle addNewSlot\" title=\"Add New Slot\"><i class=\"glyphicon glyphicon-plus\"></i></a>\n    <a class=\"schedule-text-middle clearAllDaySlots\" title=\"Remove All Slots\"><i class=\"glyphicon glyphicon-trash\"></i></a>\n  </div>\n</div>";
   return buffer;

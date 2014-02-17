@@ -3,17 +3,7 @@ var mongoose = require('mongoose'),
     Signup;
 _ = require('underscore');
 
-SignupSchema.statics.get = function (req, api, callback) {
-    callback();
-
-};
-
-SignupSchema.statics.put = function (req, api, callback) {
-    callback();
-
-};
-
-SignupSchema.statics.post = function (req, api, callback) {
+SignupSchema.statics.post = function (req, callback) {
     var data, signup;
     data = _.pick(req.body, ['email']);
 
@@ -30,11 +20,6 @@ SignupSchema.statics.post = function (req, api, callback) {
         }
 
     });
-};
-
-SignupSchema.statics.del = function (req, api, callback) {
-    callback();
-
 };
 
 Signup = mongoose.model('Signup', SignupSchema);

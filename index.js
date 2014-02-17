@@ -1,11 +1,12 @@
 var express     = require( 'express' ),
-    rendr       = require( 'rendr' ),
+    exphbs      = require( 'express3-handlebars' ),
+    namespace   = require( 'express-namespace'),
     config      = require( 'config' ),
     passport    = require( 'passport' ),
     FBStrategy  = require( 'passport-facebook' ),
     mongoose    = require( 'mongoose' ),
     Guru        = require( './server/models/guru' ),
-    DataAdapter = require( './server/lib/data_adapter' ),
+    models      = require( './server/models'),
     mw          = require( './server/middleware' ),
     app         = express();
 
@@ -41,59 +42,36 @@ app.configure(function() {
     app.use( express.session({ secret: 'keyboard cat' }) );
     app.use( passport.initialize() );
     app.use( passport.session() );
+    app.use( app.router );
     app.use( express.static( __dirname + '/public' ) );
-
+    app.engine( 'handlebars', exphbs({defaultLayout: 'main'}) );
+    app.set( 'view engine', 'handlebars' );
 });
 
-var server = rendr.createServer({
-    dataAdapter: new DataAdapter()
+app.get('/', function(req, res) {
+    res.render('home');
 });
 
-server.configure(function(rendrExpressApp) {
-    rendrExpressApp.use(mw.attachUserObject());
+app.namespace('/auth', function() {
+    app.get('/facebook', passport.authenticate('facebook'));
+
+    app.get('/facebook/callback',
+        passport.authenticate('facebook', { failureRedirect: '/g' }),
+        function(req, res) {
+            // Successful authentication, redirect home.
+            res.redirect('/g/schedule');
+        }
+    );
 });
 
-app.use( '/api/-/days', function ( req, res ) {
-    var daysCollection = [ {
-        dayCode: 'mon',
-        dayName: 'Monday'
-    }, {
-        dayCode: 'tue',
-        dayName: 'Tuesday'
-    }, {
-        dayCode: 'wed',
-        dayName: 'Wednesday'
-    }, {
-        dayCode: 'thu',
-        dayName: 'Thursday'
-    }, {
-        dayCode: 'fri',
-        dayName: 'Friday'
-    }, {
-        dayCode: 'sat',
-        dayName: 'Saturday'
-    }, {
-        dayCode: 'sun',
-        dayName: 'Sunday'
-    } ];
-
-    res.json( daysCollection );
-
-} );
-
-app.get('/auth/facebook', passport.authenticate('facebook'));
-
-app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', { failureRedirect: '/g' }),
-    function(req, res) {
-        // Successful authentication, redirect home.
-        res.redirect('/g/schedule');
-    }
-);
-
-app.use( server );
-
-initDB();
+app.namespace('/api', function() {
+    app.post('/signup', function(req, res) {
+        var SignupModel = models.Signup;
+        SignupModel.post(req, function(err, data) {
+            res.json(data);
+        });
+    });
+});
 
 function start() {
     var port = process.env.PORT || config.server.port;
@@ -124,8 +102,7 @@ function initDB () {
     }
 }
 
-if ( require.main === module ) {
-    start();
-}
+initDB();
+start();
 
 exports.app = app;

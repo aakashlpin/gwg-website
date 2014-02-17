@@ -2,10 +2,9 @@
 'use strict';
 
 var path = require( 'path' );
-var stylesheetsDir = 'assets/stylesheets';
-var rendrDir = 'node_modules/rendr';
-var rendrHandlebarsDir = 'node_modules/rendr-handlebars';
-var rendrModulesDir = rendrDir + '/node_modules';
+var scssDir = 'public/stylesheets/scss';
+var cssDir = 'public/stylesheets/css';
+var scriptsDir = 'public/scripts';
 
 module.exports = function ( grunt ) {
 
@@ -17,13 +16,6 @@ module.exports = function ( grunt ) {
 
     // Define the configuration for all the tasks
     grunt.initConfig( {
-
-        // Project settings
-        yeoman: {
-            // Configurable paths
-            app: 'app',
-            dist: 'dist'
-        },
 
         // Watches files for changes and runs tasks based on the changed files
         watch: {
@@ -41,15 +33,8 @@ module.exports = function ( grunt ) {
                 }
             },
             compass: {
-                files: [ stylesheetsDir + '/{,*/}*.scss' ],
+                files: [ scssDir + '/{,*/}*.scss' ],
                 tasks: [ 'compass:server', 'autoprefixer' ],
-                options: {
-                    interrupt: true
-                }
-            },
-            templates: {
-                files: [ '<%= yeoman.app %>/templates/**/*.hbs' ],
-                tasks: [ 'handlebars' ],
                 options: {
                     interrupt: true
                 }
@@ -80,74 +65,51 @@ module.exports = function ( grunt ) {
         },
 
         handlebars: {
-            compile: {
+            guru_schedule: {
                 options: {
                     namespace: false,
-                    commonjs: true,
+                    commonjs: false,
                     processName: function ( filename ) {
-                        return filename.replace( 'app/templates/', '' ).replace( '.hbs', '' );
+                        return filename
+                            .replace( 'views/client/guru/schedule/', '' )
+                            .replace( '.handlebars', '' );
                     }
                 },
-                src: "<%= yeoman.app %>/templates/**/*.hbs",
-                dest: "<%= yeoman.app %>/templates/compiledTemplates.js",
-                filter: function ( filepath ) {
-                    var filename = path.basename( filepath );
-                    // Exclude files that begin with '__' from being sent to the client,
-                    // i.e. __layout.hbs.
-                    return filename.slice( 0, 2 ) !== '__';
-                }
+                src: "views/client/guru/schedule/*.handlebars",
+                dest: "public/guruScheduleTemplates.js"
             }
         },
 
 
         //browserify config
         browserify: {
-            basic: {
-                src: [
-                    'app/**/*.js'
-                ],
-                dest: 'public/mergedAssets.js',
+            guru_schedule: {
+                src: [scriptsDir + '/guru/schedule/*.js'],
+                dest: 'public/guru_schedule.js',
                 options: {
-                    debug: true,
-                    alias: [
-                        'node_modules/rendr-handlebars/index.js:rendr-handlebars'
-                    ],
-                    aliasMappings: [ {
-                        cwd: 'app/',
-                        src: [ '**/*.js' ],
-                        dest: 'app/'
-                    }, {    //following 2 mappings are needed due to a bug in rendr
-                        // https://github.com/airbnb/rendr/issues/257#issuecomment-32116673
-                        cwd: 'node_modules/rendr/client/',
-                        src: ['**/*.js'],
-                        dest: 'rendr/client/'
-                    }, {
-                        cwd: 'node_modules/rendr/shared/',
-                        src: ['**/*.js'],
-                        dest: 'rendr/shared/'
-                    } ],
-                    shim: {
-                        jquery: {
-                            path: 'node_modules/jquery/dist/cdn/jquery-2.1.0.min.js',
-                            exports: '$'
-                        },
-                        underscore: {
-                            path: 'node_modules/underscore/underscore.js',
-                            exports: '_'
-                        },
-                        bootstrap: {
-                            path: 'assets/stylesheets/bower_components/sass-bootstrap/dist/js/bootstrap.min.js',
-                            exports: 'bootstrap',
-                            depends: {
-                                jquery: '$'
-                            }
-                        },
-                        'bootstrap.timepicker': {
-                            path: 'assets/stylesheets/bower_components/bootstrap-formhelpers/dist/js/bootstrap-formhelpers.js',
-                            exports: null,
-                            depends: {
-                                bootstrap: 'bootstrap'
-                            }
+                    debug: true
+                },
+                shim: {
+                    jquery: {
+                        path: 'node_modules/jquery/dist/cdn/jquery-2.1.0.min.js',
+                        exports: '$'
+                    },
+                    underscore: {
+                        path: 'node_modules/underscore/underscore.js',
+                        exports: '_'
+                    },
+                    bootstrap: {
+                        path: 'public/bower_components/sass-bootstrap/dist/js/bootstrap.min.js',
+                        exports: 'bootstrap',
+                        depends: {
+                            jquery: '$'
+                        }
+                    },
+                    'bootstrap.timepicker': {
+                        path: 'public/bower_components/bootstrap-formhelpers/dist/js/bootstrap-formhelpers.js',
+                        exports: null,
+                        depends: {
+                            bootstrap: 'bootstrap'
                         }
                     }
                 }
@@ -159,7 +121,7 @@ module.exports = function ( grunt ) {
             dist: {
                 files: [ {
                     src: [
-                        'public/*.css'
+                        cssDir + '*.css'
                     ]
                 } ]
             }
@@ -168,8 +130,8 @@ module.exports = function ( grunt ) {
         // Compiles Sass to CSS and generates necessary files if requested
         compass: {
             options: {
-                sassDir: stylesheetsDir,
-                cssDir: 'public',
+                sassDir: scssDir,
+                cssDir: cssDir,
                 relativeAssets: true,
                 assetCacheBuster: false
             },
@@ -187,106 +149,26 @@ module.exports = function ( grunt ) {
 
         // Add vendor prefixed styles
         autoprefixer: {
-            options: {
-
-            },
             dist: {
                 files: [ {
                     expand: true,
-                    cwd: 'public/',
+                    cwd: cssDir + '/',
                     src: '{,*/}*.css',
-                    dest: 'public/'
+                    dest: cssDir
                 } ]
             }
         },
 
-        // Renames files for browser caching purposes
-        rev: {
-            dist: {
-                files: {
-                    src: [
-                        '<%= yeoman.dist %>/scripts/{,*/}*.js',
-                        '<%= yeoman.dist %>/styles/{,*/}*.css',
-                        '<%= yeoman.dist %>/images/{,*/}*.{gif,jpeg,jpg,png,webp}',
-                        '<%= yeoman.dist %>/styles/fonts/{,*/}*.*'
-                    ]
-                }
-            }
-        },
-
-        // Reads HTML for usemin blocks to enable smart builds that automatically
-        // concat, minify and revision files. Creates configurations in memory so
-        // additional tasks can operate on them
-        useminPrepare: {
-            options: {
-                dest: '<%= yeoman.dist %>'
-            },
-            html: '<%= yeoman.app %>/index.html'
-        },
-
-        // Performs rewrites based on rev and the useminPrepare configuration
-        usemin: {
-            options: {
-                assetsDirs: [ '<%= yeoman.dist %>' ]
-            },
-            html: [ '<%= yeoman.dist %>/{,*/}*.{html,tpl}' ],
-            css: [ '<%= yeoman.dist %>/styles/{,*/}*.css' ]
-        },
-
-        // The following *-min tasks produce minified files in the dist folder
-        imagemin: {
-            dist: {
-                files: [ {
-                    expand: true,
-                    cwd: '<%= yeoman.app %>/images',
-                    src: '{,*/}*.{gif,jpeg,jpg,png}',
-                    dest: '<%= yeoman.dist %>/images'
-                } ]
-            }
-        },
-        svgmin: {
-            dist: {
-                files: [ {
-                    expand: true,
-                    cwd: '<%= yeoman.app %>/images',
-                    src: '{,*/}*.svg',
-                    dest: '<%= yeoman.dist %>/images'
-                } ]
-            }
-        },
-        htmlmin: {
-            dist: {
-                options: {
-                    collapseBooleanAttributes: true,
-                    collapseWhitespace: true,
-                    removeAttributeQuotes: true,
-                    removeCommentsFromCDATA: true,
-                    removeEmptyAttributes: true,
-                    removeOptionalTags: true,
-                    removeRedundantAttributes: true,
-                    useShortDoctype: true
-                },
-                files: [ {
-                    expand: true,
-                    cwd: '<%= yeoman.dist %>',
-                    src: '{,*/}*.{html,tpl}',
-                    dest: '<%= yeoman.dist %>'
-                } ]
-            }
-        },
-
-        // By default, your `index.html`'s <!-- Usemin block --> will take care of
-        // minification. These next options are pre-configured if you do not wish
-        // to use the Usemin blocks.
         cssmin: {
             dist: {
                 files: {
-                    'public/main.css': [
-                        'public/{,*/}*.css'
+                    'public/stylesheets/css/main.css': [
+                        cssDir + '/{,*/}*.css'
                     ]
                 }
             }
         },
+
         uglify: {
             dist: {
                 files: {
@@ -319,20 +201,6 @@ module.exports = function ( grunt ) {
             }
         },
 
-
-        // Generates a custom Modernizr build that includes only the tests you
-        // reference in your app
-        modernizr: {
-            devFile: '<%= yeoman.app %>/bower_components/modernizr/modernizr.js',
-            outputFile: '<%= yeoman.dist %>/bower_components/modernizr/modernizr.js',
-            files: [
-                '<%= yeoman.dist %>/scripts/{,*/}*.js',
-                '<%= yeoman.dist %>/styles/{,*/}*.css',
-                '!<%= yeoman.dist %>/scripts/vendor/*'
-            ],
-            uglify: true
-        },
-
         // Run some tasks in parallel to speed up build process
         concurrent: {
             server: {
@@ -359,28 +227,11 @@ module.exports = function ( grunt ) {
         }
     } );
 
-    /*
-     grunt.registerTask( 'runNode', function () {
-     grunt.util.spawn( {
-     cmd: 'node',
-     args: [ './node_modules/nodemon/bin/nodemon.js', 'index.js' ],
-     opts: {
-     stdio: 'inherit'
-     }
-     }, function () {
-     grunt.fail.fatal( new Error( "nodemon quit" ) );
-     } );
-     } );*/
-
-    grunt.registerTask( 'server', function () {
-        grunt.task.run( [ 'serve' ] );
-    } );
-
     grunt.registerTask( 'serve', function ( target ) {
         grunt.task.run( [
             'compass:server',
-            'handlebars',
-            'browserify',
+//            'handlebars',
+//            'browserify',
             'concurrent:server'
         ] );
     } );
@@ -389,8 +240,8 @@ module.exports = function ( grunt ) {
         'clean:dist',
         'compass:dist',
         'autoprefixer',
-        'handlebars',
-        'browserify',
+//        'handlebars',
+//        'browserify',
         'uglify',
         'cssmin',
         'forever:restart'

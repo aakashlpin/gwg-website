@@ -4,7 +4,10 @@
   "dependencies": {
     "sass-bootstrap": "~3.0.0",
     "modernizr": "~2.6.2",
-    "jquery": "~1.10.2"
+    "jquery": "~1.10.2",
+    "marionette": "~1.6.2",
+    "handlebars": "~1.3.0",
+    "moment": "~2.5.1"
   },
   "devDependencies": {
     "bootstrap-formhelpers": "https://github.com/aakashlpin/BootstrapFormHelpers/tarball/master"

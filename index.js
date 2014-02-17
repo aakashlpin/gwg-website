@@ -52,6 +52,25 @@ app.get('/', function(req, res) {
     res.render('home');
 });
 
+app.get('/g', function(req, res) {
+    if (req.isAuthenticated()) {
+        res.redirect('/g/schedule');
+
+    } else {
+        res.render('guru_home');
+    }
+});
+
+app.namespace('/g', function() {
+    app.get('/schedule', ensureAuthenticated, function(req, res) {
+        res.render('guru_schedule', {schedule: req.user.schedule});
+    });
+
+    app.get('/courses', ensureAuthenticated, function(req, res) {
+        res.render('guru_courses');
+    });
+});
+
 app.namespace('/auth', function() {
     app.get('/facebook', passport.authenticate('facebook'));
 
@@ -65,6 +84,10 @@ app.namespace('/auth', function() {
 });
 
 app.namespace('/api', function() {
+    app.get('/user', function(req, res) {
+        res.json(req.user);
+    });
+
     app.post('/signup', function(req, res) {
         var SignupModel = models.Signup;
         SignupModel.post(req, function(err, data) {

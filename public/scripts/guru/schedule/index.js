@@ -16,7 +16,8 @@ var TimeSlotComponent = React.createClass({
 
     },
     removeTimeSlot: function() {
-        console.log('ought to remove it, bro! Later.');
+        this.props.onSlotRemove(this.props.dayCode, this.props.data);
+
     },
     render: function() {
         return (
@@ -83,6 +84,22 @@ var DayComponent = React.createClass({
         });
 
     },
+    handleOnSlotRemove: function(dayCode, timeSlot) {
+        var dayObject = this.props.data;
+
+        dayObject.slots = _.reject(dayObject.slots, function(slot) {
+            return ((slot.startTime === timeSlot.startTime)
+                && (slot.endTime === timeSlot.endTime)
+                );
+        });
+
+        if (!dayObject.slots.length) {
+            dayObject.noSlots = true;
+        }
+
+        this.props.onDayChange(dayCode, dayObject);
+
+    },
     getChild: function() {
         if (this.props.data.currentMode === 'copy') {
             return (
@@ -98,8 +115,8 @@ var DayComponent = React.createClass({
         } else {
             if (!this.props.data.noSlots) {
                 var dom = this.props.data.slots.map(function(slot) {
-                    return (<TimeSlotComponent data={slot} key={slot.startTime}/>)
-                });
+                    return (<TimeSlotComponent data={slot} key={slot.startTime} onSlotRemove={this.handleOnSlotRemove}/>)
+                }, this);
 
                 return (<div className="daySlotsContainer">{dom}</div>);
 

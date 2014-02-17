@@ -42,7 +42,11 @@ var TimeSlotComponent = React.createClass({
 
 var DayComponent = React.createClass({
     getInitialState: function() {
-        return {takenSlots: this.props.data.slots};
+        return {
+            takenSlots: this.props.data.slots,
+            noSlots: this.props.data.noSlots,
+            currentMode: this.props.data.currentMode
+        };
     },
     addTimeSlot: function() {
         var minTimeSlotEndTime = _.max(this.state.takenSlots, function(takenSlot) {
@@ -60,6 +64,8 @@ var DayComponent = React.createClass({
             endTime = '09:00 AM';
         }
 
+        this.state.takenSlots = this.state.takenSlots || [];
+
         this.state.takenSlots.push({
             date_startTime: moment(startTime, 'hh:mm A'),
             date_endTime: moment(endTime, 'hh:mm A'),
@@ -67,31 +73,43 @@ var DayComponent = React.createClass({
             endTime: endTime
         });
 
-        this.setState({takenSlots: this.state.takenSlots});
+        this.setState({
+            takenSlots: this.state.takenSlots,
+            noSlots: false
+        });
 
     },
     removeAllTimeSlots: function() {
-
-    },
-    componentDidMount: function() {
-    },
-    render: function() {
-        var existingTimeSlotsDOM = this.state.takenSlots.map(function(slot) {
-            return (<TimeSlotComponent data={slot} />);
+        this.setState({
+            takenSlots: [],
+            noSlots: true
         });
 
+    },
+    getChild: function() {
+        if (!this.state.noSlots) {
+            return this.state.takenSlots.map(function(slot) {
+                return (
+                    <div className="daySlotsContainer">
+                        <TimeSlotComponent data={slot} />
+                    </div>);
+            });
+        } else {
+            return (
+                <div>
+                    <p class="schedule-text-middle">No slots</p>
+                </div>
+                );
+        }
+    },
+    render: function() {
         return (
             <div className="row">
                 <div className="col-sm-2 text-left">
                     <p className="schedule-text-middle">{this.props.data.day_name}</p>
                 </div>
                 <div className="col-sm-7">
-                    <div className="daySlotsContainer" ref="daySlotsContainer">
-                    {existingTimeSlotsDOM}
-                    </div>
-                    <div className="copyModeContainer" ref="copyModeContainer">
-
-                    </div>
+                {this.getChild()}
                 </div>
                 <div className="col-sm-3 text-right">
                     <a className="schedule-text-middle addNewSlot" title="Add New Slot"

@@ -20,9 +20,12 @@ Guru = new Schema({
         day_code: String,
         day_name: String,
         slots: [{
-            start_time: String,
-            end_time: String
-        }]
+            startTime: String,
+            endTime: String
+        }],
+        noSlots: Boolean,
+        currentMode: String,
+        selectedDayCode: String
     }]
 });
 

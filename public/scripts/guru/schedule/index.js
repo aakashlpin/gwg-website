@@ -41,65 +41,75 @@ var TimeSlotComponent = React.createClass({
 });
 
 var DayComponent = React.createClass({
-    getInitialState: function() {
-        return {
-            takenSlots: this.props.data.slots,
-            noSlots: this.props.data.noSlots,
-            currentMode: this.props.data.currentMode
-        };
-    },
     addTimeSlot: function() {
-        var minTimeSlotEndTime = _.max(this.state.takenSlots, function(takenSlot) {
-            return takenSlot.date_endTime.hours();
-        }), startTime, endTime;
+        var minTimeSlotEndTime = _.max(this.props.data.slots, function(takenSlot) {
+                return moment(takenSlot.endTime, 'hh:mm A').hours();
+
+            })
+            , startTime
+            , endTime;
 
         if (_.isObject(minTimeSlotEndTime)) {
             startTime = minTimeSlotEndTime.endTime;
-            endTime = minTimeSlotEndTime.date_endTime.add('hours', 1).format('hh:mm A');
-            //undo changes done to the original object
-            minTimeSlotEndTime.date_endTime.subtract('hours', 1);
+            endTime = moment(minTimeSlotEndTime.endTime, 'hh:mm A').add('hours', 1).format('hh:mm A');
 
         } else {
             startTime = '08:00 AM';
             endTime = '09:00 AM';
         }
 
-        this.state.takenSlots = this.state.takenSlots || [];
-
-        this.state.takenSlots.push({
-            date_startTime: moment(startTime, 'hh:mm A'),
-            date_endTime: moment(endTime, 'hh:mm A'),
+        this.props.data.slots.push({
             startTime: startTime,
             endTime: endTime
         });
 
-        this.setState({
-            takenSlots: this.state.takenSlots,
-            noSlots: false
+        this.props.data.noSlots = false;
+        this.props.data.currentMode = 'manual';
+
+        this.props.onDayChange(this.props.data.day_code, {
+            slots: this.props.data.slots,
+            noSlots: this.props.data.noSlots,
+            currentMode: this.props.data.currentMode
         });
 
     },
     removeAllTimeSlots: function() {
-        this.setState({
-            takenSlots: [],
-            noSlots: true
+        this.props.data.slots = [];
+        this.props.data.noSlots = true;
+
+        this.props.onDayChange(this.props.data.day_code, {
+            slots: this.props.data.slots,
+            noSlots: this.props.data.noSlots
         });
 
     },
     getChild: function() {
-        if (!this.state.noSlots) {
-            return this.state.takenSlots.map(function(slot) {
-                return (
-                    <div className="daySlotsContainer">
-                        <TimeSlotComponent data={slot} />
-                    </div>);
-            });
-        } else {
+        if (this.props.data.currentMode === 'copy') {
             return (
-                <div>
-                    <p class="schedule-text-middle">No slots</p>
+                <div className="copyModeContainer">
+                    <div className="l-h-list">
+                        <p className="item schedule-text-middle">Same as:  </p>
+                        <ul className="item l-h-list guru-schedule-copy-links">
+                        </ul>
+                    </div>
                 </div>
                 );
+
+        } else {
+            if (!this.props.data.noSlots) {
+                var dom = this.props.data.slots.map(function(slot) {
+                    return (<TimeSlotComponent data={slot} key={slot.startTime}/>)
+                });
+
+                return (<div className="daySlotsContainer">{dom}</div>);
+
+            } else {
+                return (
+                    <div className="copyModeContainer">
+                        <p className="schedule-text-middle">No slots</p>
+                    </div>
+                    );
+            }
         }
     },
     render: function() {
@@ -131,7 +141,7 @@ var DaysList = React.createClass({
         return {data: []};
     },
     componentWillMount: function() {
-        //make the ajax call
+        //make the call to reflect the user currently logged in
         $.ajax({
             url: '/api/user',
             dataType: 'json',
@@ -143,13 +153,39 @@ var DaysList = React.createClass({
             }.bind(this)
         })
     },
+    componentDidMount: function() {
+
+    },
+    saveData: function() {
+        console.log(this.state.data);
+
+    },
+    handleOnChange: function(dayCode, properties) {
+        this.setState({'data': _.map(this.state.data, function(dayObject) {
+            if (dayObject.day_code === dayCode) {
+                for (var property in properties) {
+                    if (properties.hasOwnProperty(property)) {
+                        dayObject[property] = properties[property];
+                    }
+                }
+            }
+            return dayObject;})
+        });
+    },
     render: function() {
         var dayNodes = this.state.data.map(function(dayData) {
-            return <DayComponent data={dayData} key={dayData._id} />
-        });
+            return <DayComponent data={dayData} key={dayData._id} onDayChange={this.handleOnChange}/>
+        }, this);
 
         return (
-            <div>{dayNodes}</div>
+            <div>
+            {dayNodes}
+                <div className="clearfix mb-30">
+                    <button className="btn btn-success pull-right" id="saveSchedule" onClick={this.saveData}>
+                    Save and Proceed
+                    </button>
+                </div>
+            </div>
             )
     }
 });

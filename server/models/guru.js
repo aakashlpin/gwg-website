@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
     GuruSchema = require('./schemas').GuruSchema,
-    winston = require('winston'),
+    moment = require('moment'),
     Guru;
 _ = require('underscore');
 
@@ -10,9 +10,6 @@ var outputFilename = './my.txt';
 
 
 GuruSchema.statics.get = function(req, api, callback) {
-//    winston.add(winston.transports.File, { filename: 'guru.log' });
-//    winston.remove(winston.transports.Console);
-    console.log(req);
     fs.writeFile(outputFilename, JSON.stringify(req), function(err) {
         if(err) {
             console.log(err);
@@ -38,9 +35,6 @@ GuruSchema.statics.post = function(req, api, callback) {
 
     Guru = new this(data);
     Guru.save(callback);
-
-
-
 };
 
 GuruSchema.statics.put = function(req, api, callback) {
@@ -85,25 +79,49 @@ GuruSchema.statics.findOrCreate = function(profile, callback) {
 
         dataOfInterest.schedule = [ {
             day_code: 'mon',
-            day_name: 'Monday'
+            day_name: 'Monday',
+            slots: [{
+                startTime: '08:00 AM',
+                endTime: '09:00 AM'
+            }],
+            currentMode: 'manual',
+            noSlots: false
         }, {
             day_code: 'tue',
-            day_name: 'Tuesday'
+            day_name: 'Tuesday',
+            currentMode: 'copy',
+            selectedDayCode: 'mon',
+            noSlots: false
         }, {
             day_code: 'wed',
-            day_name: 'Wednesday'
+            day_name: 'Wednesday',
+            currentMode: 'copy',
+            selectedDayCode: 'mon',
+            noSlots: false
         }, {
             day_code: 'thu',
-            day_name: 'Thursday'
+            day_name: 'Thursday',
+            currentMode: 'copy',
+            selectedDayCode: 'mon',
+            noSlots: false
         }, {
             day_code: 'fri',
-            day_name: 'Friday'
+            day_name: 'Friday',
+            currentMode: 'copy',
+            selectedDayCode: 'mon',
+            noSlots: false
         }, {
             day_code: 'sat',
-            day_name: 'Saturday'
+            day_name: 'Saturday',
+            currentMode: 'copy',
+            selectedDayCode: 'mon',
+            noSlots: false
         }, {
             day_code: 'sun',
-            day_name: 'Sunday'
+            day_name: 'Sunday',
+            currentMode: 'copy',
+            selectedDayCode: 'mon',
+            noSlots: false
         } ];
 
         var data = new self(dataOfInterest);

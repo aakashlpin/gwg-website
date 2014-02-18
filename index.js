@@ -106,6 +106,13 @@ app.namespace('/api', function() {
     });
 });
 
+app.get('/logout', function(req, res) {
+    req.logout();
+    req.session.destroy();
+    res.redirect('/g');
+
+});
+
 function start() {
     var port = process.env.PORT || config.server.port;
     app.listen( port );

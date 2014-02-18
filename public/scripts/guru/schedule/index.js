@@ -213,12 +213,27 @@ var DaysList = React.createClass({
                     }
                 }
             }
-            return dayObject;})
+
+            if (dayObject.currentMode === 'copy') {
+                var copyModeData = this.getCopyModeData(dayObject);
+                if (copyModeData.length) {
+                    //if the selectedDayCode is not found in the list of copy mode items
+                    if (!_.isObject(_.find(copyModeData, function(copyModeObject) {
+                        return dayObject.selectedDayCode === copyModeObject.day_code;
+                    }, this))) {
+                        //then set the first item in the list of available copy modes as selected
+                        dayObject.selectedDayCode = copyModeData[0].day_code;
+                    }
+                }
+            }
+
+            return dayObject}, this)
         });
     },
     getCopyModeData: function(dayObject) {
         if (dayObject.currentMode !== 'copy') {
-            return null;
+            //for the sake of returning a common data structure
+            return [];
         }
 
         return this.state.data.filter(function(dataDayObject) {

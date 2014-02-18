@@ -73,7 +73,7 @@ app.get('/g', function(req, res) {
 
 app.namespace('/g', function() {
     app.get('/schedule', ensureAuthenticated, function(req, res) {
-        res.render('guru_schedule', {schedule: req.user.schedule});
+        res.render('guru_schedule', {user: req.user});
     });
 
     app.get('/courses', ensureAuthenticated, function(req, res) {

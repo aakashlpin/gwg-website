@@ -77,7 +77,7 @@ app.namespace('/g', function() {
     });
 
     app.get('/courses', ensureAuthenticated, function(req, res) {
-        res.render('guru_courses');
+        res.render('guru_courses', {user: req.user});
     });
 });
 

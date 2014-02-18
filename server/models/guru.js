@@ -63,6 +63,7 @@ GuruSchema.statics.del = function(req, api, callback) {
 
 
 GuruSchema.statics.findOrCreate = function(profile, callback) {
+    console.log(profile);
     var dataOfInterest = _.pick(profile._json,
         ['id', 'name', 'gender', 'link', 'email', 'location', 'timezone', 'username']
     );

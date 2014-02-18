@@ -82,7 +82,7 @@ app.namespace('/g', function() {
 });
 
 app.namespace('/auth', function() {
-    app.get('/facebook', passport.authenticate('facebook'));
+    app.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
 
     app.get('/facebook/callback',
         passport.authenticate('facebook', { failureRedirect: '/g' }),

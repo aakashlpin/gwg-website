@@ -1,15 +1,15 @@
 $icon-font-path: "../../bower_components/sass-bootstrap/fonts/";
-
+$brand-primary: #865C33;
 @import '../../bower_components/sass-bootstrap/lib/bootstrap';
 @import 'bootstrap-formhelpers';
 @import 'font-awesome/scss/font-awesome';
 @import 'modules';
 
 .browsehappy {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
 }
 
 a {
@@ -38,6 +38,12 @@ a.underline {
   border: 1px solid #fff;
 }
 
+@media (min-width: 768px) {
+  .navbar-nav > li > a {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
 
 /*
  * Base structure

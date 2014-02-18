@@ -168,7 +168,7 @@ var DayComponent = React.createClass({
             <div className="day-slots-container">
                 <div className="row">
                     <div className="col-sm-2 text-left">
-                        <p className="schedule-text-middle">{this.props.data.day_name}</p>
+                        <p className="text-bold schedule-text-middle">{this.props.data.day_name}</p>
                     </div>
                     <div className="col-sm-7">
                 {this.getChild()}

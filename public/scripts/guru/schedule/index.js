@@ -112,30 +112,39 @@ var DayComponent = React.createClass({
     },
     getChild: function() {
         if (this.props.data.currentMode === 'copy') {
-            var copyModeDOM = this.props.copyModeData.map(function(copyModeDataItem) {
-                return (
-                    <li className="item" key={copyModeDataItem.day_code}>
-                        <a
-                        className={copyModeDataItem.day_code === this.props.data.selectedDayCode ? 'selected': ''}
-                        data-day_code={copyModeDataItem.day_code}
-                        onClick={this.handleClickOnCopyModeChange}
-                        >
+            if (!this.props.data.noSlots) {
+                var copyModeDOM = this.props.copyModeData.map(function(copyModeDataItem) {
+                    return (
+                        <li className="item" key={copyModeDataItem.day_code}>
+                            <a
+                            className={copyModeDataItem.day_code === this.props.data.selectedDayCode ? 'selected': ''}
+                            data-day_code={copyModeDataItem.day_code}
+                            onClick={this.handleClickOnCopyModeChange}
+                            >
                             {copyModeDataItem.day_code}
-                        </a>
-                    </li>
-                    )
-            }, this);
+                            </a>
+                        </li>
+                        )
+                }, this);
 
-            return (
-                <div className="copyModeContainer">
-                    <div className="l-h-list">
-                        <p className="item schedule-text-middle">Same as:  </p>
-                        <ul className="item l-h-list guru-schedule-copy-links">
+                return (
+                    <div className="copyModeContainer">
+                        <div className="l-h-list">
+                            <p className="item schedule-text-middle">Same as:  </p>
+                            <ul className="item l-h-list guru-schedule-copy-links">
                         {copyModeDOM}
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                );
+                    );
+            } else {
+                return (
+                    <div className="copyModeContainer">
+                        <p className="schedule-text-middle">No slots</p>
+                    </div>
+                    );
+
+            }
 
         } else {
             if (!this.props.data.noSlots) {
@@ -223,6 +232,16 @@ var DaysList = React.createClass({
                     }, this))) {
                         //then set the first item in the list of available copy modes as selected
                         dayObject.selectedDayCode = copyModeData[0].day_code;
+                    }
+                    dayObject.noSlots = false;
+
+                } else {
+                    var atleastOneDayWithSlotsExists = _.find(this.state.data, function(dataObject) {
+                        return dataObject.slots.length;
+                    });
+
+                    if (!atleastOneDayWithSlotsExists) {
+                        dayObject.noSlots = true;
                     }
                 }
             }

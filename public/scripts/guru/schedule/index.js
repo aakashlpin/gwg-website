@@ -100,13 +100,36 @@ var DayComponent = React.createClass({
         this.props.onDayChange(dayCode, dayObject);
 
     },
+    handleClickOnCopyModeChange: function(e) {
+        var target = $(e.target);
+        var dayCode = target.data('day_code');
+        this.props.onDayChange(this.props.data.day_code, {
+            selectedDayCode: dayCode
+        });
+
+    },
     getChild: function() {
         if (this.props.data.currentMode === 'copy') {
+            var copyModeDOM = this.props.copyModeData.map(function(copyModeDataItem) {
+                return (
+                    <li className="item" key={copyModeDataItem.day_code}>
+                        <a
+                        className={copyModeDataItem.day_code === this.props.data.selectedDayCode ? 'selected': ''}
+                        data-day_code={copyModeDataItem.day_code}
+                        onClick={this.handleClickOnCopyModeChange}
+                        >
+                            {copyModeDataItem.day_code}
+                        </a>
+                    </li>
+                    )
+            }, this);
+
             return (
                 <div className="copyModeContainer">
                     <div className="l-h-list">
                         <p className="item schedule-text-middle">Same as:  </p>
                         <ul className="item l-h-list guru-schedule-copy-links">
+                        {copyModeDOM}
                         </ul>
                     </div>
                 </div>
@@ -189,9 +212,27 @@ var DaysList = React.createClass({
             return dayObject;})
         });
     },
+    getCopyModeData: function(dayObject) {
+        if (dayObject.currentMode !== 'copy') {
+            return null;
+        }
+
+        return this.state.data.filter(function(dataDayObject) {
+            return ((!dataDayObject.noSlots)    //should not be in noSlots mode
+                && (dataDayObject.day_code !== dayObject.day_code)  //exclude the current dayObject
+                && (dataDayObject.currentMode !== 'copy')   //exclude the copy mode guys
+                );
+        });
+
+    },
     render: function() {
         var dayNodes = this.state.data.map(function(dayData) {
-            return <DayComponent data={dayData} key={dayData._id} onDayChange={this.handleOnChange}/>
+            var copyModeData = this.getCopyModeData(dayData);
+            return (
+                <DayComponent data={dayData} key={dayData._id} onDayChange={this.handleOnChange}
+                copyModeData={copyModeData}
+                />
+                );
         }, this);
 
         return (

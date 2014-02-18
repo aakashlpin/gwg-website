@@ -77,10 +77,12 @@ var DayComponent = React.createClass({
     removeAllTimeSlots: function() {
         this.props.data.slots = [];
         this.props.data.noSlots = true;
+        this.props.data.currentMode = 'manual';
 
         this.props.onDayChange(this.props.data.day_code, {
             slots: this.props.data.slots,
-            noSlots: this.props.data.noSlots
+            noSlots: this.props.data.noSlots,
+            currentMode: this.props.data.currentMode
         });
 
     },
@@ -154,22 +156,24 @@ var DayComponent = React.createClass({
     },
     render: function() {
         return (
-            <div className="row">
-                <div className="col-sm-2 text-left">
-                    <p className="schedule-text-middle">{this.props.data.day_name}</p>
-                </div>
-                <div className="col-sm-7">
+            <div className="day-slots-container">
+                <div className="row">
+                    <div className="col-sm-2 text-left">
+                        <p className="schedule-text-middle">{this.props.data.day_name}</p>
+                    </div>
+                    <div className="col-sm-7">
                 {this.getChild()}
-                </div>
-                <div className="col-sm-3 text-right">
-                    <a className="schedule-text-middle addNewSlot" title="Add New Slot"
-                    onClick={this.addTimeSlot}>
-                        <i className="glyphicon glyphicon-plus"></i>
-                    </a>
-                    <a className="schedule-text-middle clearAllDaySlots" title="Remove All Slots"
-                    onClick={this.removeAllTimeSlots}>
-                        <i className="glyphicon glyphicon-trash"></i>
-                    </a>
+                    </div>
+                    <div className="col-sm-3 text-right">
+                        <a className="schedule-text-middle addNewSlot" title="Add New Slot"
+                        onClick={this.addTimeSlot}>
+                            <i className="glyphicon glyphicon-plus"></i>
+                        </a>
+                        <a className="schedule-text-middle clearAllDaySlots" title="Remove All Slots"
+                        onClick={this.removeAllTimeSlots}>
+                            <i className="glyphicon glyphicon-trash"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
             );

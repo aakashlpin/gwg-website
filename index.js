@@ -8,7 +8,11 @@ var express     = require( 'express' ),
     Guru        = require( './server/models/guru' ),
     models      = require( './server/models'),
     mw          = require( './server/middleware' ),
-    app         = express();
+    app         = express(),
+    redis       = require( 'redis' ),
+    RedisStore  = require( 'connect-redis' )(express);
+
+redisDB = redis.createClient(config.redis.port, config.redis.host);
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -19,8 +23,8 @@ passport.deserializeUser(function(obj, done) {
 });
 
 passport.use(new FBStrategy({
-        clientID: 424544477675893,
-        clientSecret: '1cdade0a6c1ec2038b04bb5606d4337d',
+        clientID: config.facebook.clientID,
+        clientSecret: config.facebook.clientSecret,
         callbackURL: "/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done) {
@@ -34,16 +38,22 @@ passport.use(new FBStrategy({
 ));
 
 app.configure(function() {
+    app.use( express.static( __dirname + '/public' ) );
     app.use( express.compress() );
     app.use( express.logger() );
     app.use( express.cookieParser() );
     app.use( express.bodyParser() );
     app.use( express.methodOverride() );
-    app.use( express.session({ secret: 'keyboard cat' }) );
+    app.use( express.session({
+        secret: config.session.secret,
+        cookie: {
+            maxAge:86400000
+        },
+        store: new RedisStore()
+    }) );
     app.use( passport.initialize() );
     app.use( passport.session() );
     app.use( app.router );
-    app.use( express.static( __dirname + '/public' ) );
     app.engine( 'handlebars', exphbs({defaultLayout: 'main'}) );
     app.set( 'view engine', 'handlebars' );
 });

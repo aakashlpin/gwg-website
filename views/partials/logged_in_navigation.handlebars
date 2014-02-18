@@ -1,4 +1,16 @@
-<ul class="nav nav-pills nav-stacked">
+<ul class="nav nav-pills nav-stacked" id="sidebar-nav">
   <li><a href="/g/schedule">Schedule</a></li>
   <li><a href="/g/courses">Courses</a></li>
 </ul>
+
+<script>
+  var currentPathname = window.location.pathname;
+  var domElem = document
+      .querySelector('#sidebar-nav a[href="'+ currentPathname +'"]')
+      .parentNode;
+
+  if (domElem.classList)
+    domElem.classList.add('active');
+  else
+    domElem.className += ' active';
+</script>

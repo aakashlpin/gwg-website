@@ -1,22 +1,41 @@
 var mongoose = require('mongoose'),
-    GuruSchema = require('./schemas').GuruSchema,
-    moment = require('moment'),
-    Guru;
+    Schema = mongoose.Schema,
+    Mixed = Schema.Types.Mixed,
+    ObjectId = Schema.ObjectId,
+    Course = require('./course');
+
 _ = require('underscore');
 
-var fs = require('fs');
+var Guru, GuruSchema;
 
-var outputFilename = './my.txt';
+GuruSchema = new Schema({
+    id: String,
+    username: String,
+    email: String,
+    gender: String,
+    link: String,
+    location: String,
+    name: String,
+    timezone: Number,
+    courses: [{
+        type: ObjectId,
+        ref: 'Course'
+    }],
+    schedule: [{
+        day_code: String,
+        day_name: String,
+        slots: [{
+            startTime: String,
+            endTime: String
+        }],
+        noSlots: Boolean,
+        currentMode: String,
+        selectedDayCode: String
+    }]
+});
 
 
 GuruSchema.statics.get = function(req, api, callback) {
-    fs.writeFile(outputFilename, JSON.stringify(req), function(err) {
-        if(err) {
-            console.log(err);
-        } else {
-            console.log("JSON saved to ");
-        }
-    });
     var id = req.param._id;
     if (id) {
         this.findById(id).exec(callback);
@@ -27,14 +46,6 @@ GuruSchema.statics.get = function(req, api, callback) {
             .exec(callback);
     }
 
-};
-
-GuruSchema.statics.post = function(req, api, callback) {
-    var data, Guru;
-    data = _.pick(req.body, ['title', 'body']);
-
-    Guru = new this(data);
-    Guru.save(callback);
 };
 
 GuruSchema.statics.put = function(req, api, callback) {
@@ -51,19 +62,7 @@ GuruSchema.statics.put = function(req, api, callback) {
 
 };
 
-GuruSchema.statics.del = function(req, api, callback) {
-    var id = req.param('id');
-    if (!id) return callback('Cannot delete without id');
-
-    this.update({_id: id}, {del: true}, callback);
-
-
-
-};
-
-
 GuruSchema.statics.findOrCreate = function(profile, callback) {
-    console.log(profile);
     var dataOfInterest = _.pick(profile._json,
         ['id', 'name', 'gender', 'link', 'email', 'location', 'timezone', 'username']
     );

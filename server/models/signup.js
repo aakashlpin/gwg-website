@@ -1,7 +1,13 @@
 var mongoose = require('mongoose'),
-    SignupSchema = require('./schemas').SignupSchema,
+    Schema = mongoose.Schema,
+    SignupSchema,
     Signup;
+
 _ = require('underscore');
+
+SignupSchema = new Schema({
+    email: {type: String, index: { unique: true} }
+});
 
 SignupSchema.statics.post = function (req, callback) {
     var data, signup;

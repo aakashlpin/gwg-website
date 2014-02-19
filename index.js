@@ -104,6 +104,13 @@ app.namespace('/api', function() {
             res.json(data);
         });
     });
+
+    app.post('/course', function(req, res) {
+        var CourseModel = models.Course;
+        CourseModel.post(req, function(err, data) {
+            res.json(data);
+        });
+    });
 });
 
 app.get('/logout', function(req, res) {

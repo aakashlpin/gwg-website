@@ -3,7 +3,7 @@ var fs = require('fs'),
 
 fs.readdirSync(__dirname).forEach(function(filename) {
     var name = path.basename(filename, '.js');
-    if (name === 'index' || name === 'schemas') {
+    if (name === 'index') {
         return;
     }
 

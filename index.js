@@ -79,6 +79,10 @@ app.namespace('/g', function() {
     app.get('/courses', ensureAuthenticated, function(req, res) {
         res.render('guru_courses', {user: req.user});
     });
+
+    app.get('/bank', ensureAuthenticated, function(req, res) {
+        res.render('guru_bank', {user: req.user});
+    });
 });
 
 app.namespace('/auth', function() {

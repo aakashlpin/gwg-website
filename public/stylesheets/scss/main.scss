@@ -1,8 +1,13 @@
 $icon-font-path: "../../bower_components/sass-bootstrap/fonts/";
 $brand-primary: #865C33;
+$font-family-sans-serif: "droid-sans";
+$font-family-serif: "museo-slab";
+$border-radius-base: 3px;
+$border-radius-small: 2px;
 @import '../../bower_components/sass-bootstrap/lib/bootstrap';
 @import 'bootstrap-formhelpers';
 @import 'font-awesome/scss/font-awesome';
+@import 'typography';
 @import 'modules';
 
 .browsehappy {
@@ -14,6 +19,10 @@ $brand-primary: #865C33;
 
 a {
   cursor: pointer;
+}
+
+p {
+  font-family: $font-family-serif;
 }
 
 a.underline {
@@ -98,7 +107,9 @@ img.bg {
   margin-left: auto;
   margin-right: auto;
 }
-
+.cover-heading {
+  font-family: "pragmatica-web";
+}
 /* Padding for spacing */
 .inner {
   padding: 30px;
@@ -222,28 +233,35 @@ img.bg {
 .mb-30 {
   margin-bottom: 30px;
 }
-
+.mb-40 {
+  margin-bottom: 40px;
+}
 .mb-60 {
   margin-bottom: 60px;
 }
+
+.mt-0 {
+  margin-top: 0px;
+}
 .mt-20 {
   margin-top: 20px;
+}
+
+.mr-20 {
+  margin-right: 20px;
 }
 
 .pad-10 {
   padding: 10px;
 }
 
-.text-white {
-  color: #fff;
-}
-
-.text-bold {
-  font-weight: bold;
-}
-
 .capitalize {
   text-transform: capitalize;
+}
+
+.inline-block {
+  display: inline-block;
+  vertical-align: bottom;
 }
 
 .day-slots-container {

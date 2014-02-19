@@ -112,6 +112,23 @@ $time-slot-unit-margin: 15px;
   .feature-item-desc {
     color: #34495E;
     font-size: 15px;
-//    margin-bottom: 30px;
+    //    margin-bottom: 30px;
+  }
+}
+
+.v-flat-list {
+  > .item {
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    padding: 15px 10px;
+    background: #f9f9f9;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    border-radius: $border-radius-base;
+
+    .text-item-heading {
+      margin-top: 0;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
   }
 }

@@ -94,7 +94,7 @@ app.namespace('/auth', function() {
 });
 
 app.namespace('/api', function() {
-    app.get('/user', function(req, res) {
+    app.get('/user', ensureAuthenticated, function(req, res) {
         res.json(req.user);
     });
 
@@ -105,9 +105,16 @@ app.namespace('/api', function() {
         });
     });
 
-    app.post('/course', function(req, res) {
+    app.post('/guru/course', ensureAuthenticated, function(req, res) {
         var CourseModel = models.Course;
         CourseModel.post(req, function(err, data) {
+            res.json(data);
+        });
+    });
+
+    app.get('/guru/courses', ensureAuthenticated, function(req, res) {
+        var CourseModel = models.Course;
+        CourseModel.getByCreator(req, function(err, data) {
             res.json(data);
         });
     });

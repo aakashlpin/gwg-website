@@ -12,7 +12,11 @@ CourseSchema = new Schema({
     _creator: {type: ObjectId, ref: 'Guru'},
     name: String,
     description: String,
-    target_audience: [],
+    target_audience: [{
+        id: String,
+        selected: Boolean,
+        name: String
+    }],
     classes: Number,
     fee: Number
 });
@@ -26,6 +30,11 @@ CourseSchema.statics.post = function (req, callback) {
 
     Course = new this(data);
     Course.save(callback);
+};
+
+CourseSchema.statics.getByCreator = function(req, callback) {
+    var guruId = req.user._id;
+    this.find({_creator: guruId}, callback);
 };
 
 Course = mongoose.model('Course', CourseSchema);

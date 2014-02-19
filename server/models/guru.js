@@ -17,10 +17,6 @@ GuruSchema = new Schema({
     location: String,
     name: String,
     timezone: Number,
-    courses: [{
-        type: ObjectId,
-        ref: 'Course'
-    }],
     schedule: [{
         day_code: String,
         day_name: String,

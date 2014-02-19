@@ -1,6 +1,18 @@
 /*** @jsx React.DOM */
 
 var RadioGroupComponent = React.createClass({
+    handleChange: function(itemKey, id) {
+        this.props.itemValue.value = this.props.itemValue.value.map(function(radioItem) {
+            return {
+                id: radioItem.id,
+                name: radioItem.name,
+                selected: radioItem.id === id
+            }
+        }, this);
+
+        this.props.handleStateChange(itemKey, this.props.itemValue);
+
+    },
     render: function() {
         var itemKey = this.props.itemKey;
         var stateForItem = this.props.itemValue;
@@ -14,16 +26,19 @@ var RadioGroupComponent = React.createClass({
                         id={radioItem.id}
                         value={radioItem.id}
                         checked={radioItem.selected}
+                        onChange={this.handleChange.bind(this, itemKey, radioItem.id)}
                         />
                     {radioItem.name}
                     </label>
                 </div>
                 )
-        });
+        }, this);
 
         return (
             <div className="form-group">
-                <label className="control-label col-sm-3" htmlFor={itemKey}>{stateForItem.name}</label>
+                <label className="control-label col-sm-3" htmlFor={itemKey}>
+                {stateForItem.name}
+                </label>
                 <div className="col-sm-7">
                 {radioGroupDOM}
                 </div>
@@ -33,41 +48,34 @@ var RadioGroupComponent = React.createClass({
 });
 
 var TextBoxComponent = React.createClass({
-    handleChangeInTextBox: function(itemKey) {
+    handleChangeInTextBox: function(itemKey, e) {
+        this.props.itemValue.value = e.target.value;
+        this.props.handleStateChange(itemKey, this.props.itemValue);
 
     },
-    _getInputWithRequired: function() {
+    _getLabelForItem: function(stateForItem) {
+        if (stateForItem.required) {
+            return stateForItem.name
+        } else {
+            return stateForItem.name + ' (optional)'
+        }
+
+    },
+    _getInput: function() {
         var itemKey = this.props.itemKey;
         var stateForItem = this.props.itemValue;
         return (
             <div className="form-group">
-                <label className="control-label col-sm-3" htmlFor={itemKey}>{stateForItem.name}</label>
-                <div className="col-sm-7">
-                    <input
-                    className="form-control"
-                    name={itemKey}
-                    id={itemKey}
-                    required="required"
-                    value={stateForItem.value}
-                    onChange={this.handleChangeInTextBox.bind(this, itemKey)}
-                    />
-                </div>
-            </div>
-            )
-
-    },
-    _getInputWithoutRequired: function() {
-        var itemKey = this.props.itemKey;
-        var stateForItem = this.props.itemValue;
-        return (
-            <div className="form-group">
-                <label className="control-label col-sm-3" htmlFor={itemKey}>{stateForItem.name}</label>
+                <label className="control-label col-sm-3" htmlFor={itemKey}>
+                {this._getLabelForItem.call(this, stateForItem)}
+                </label>
                 <div className="col-sm-7">
                     <input
                     className="form-control"
                     name={itemKey}
                     id={itemKey}
                     value={stateForItem.value}
+                    required={stateForItem.required}
                     onChange={this.handleChangeInTextBox.bind(this, itemKey)}
                     />
                 </div>
@@ -76,12 +84,27 @@ var TextBoxComponent = React.createClass({
 
     },
     render: function() {
-        var stateForItem = this.props.itemValue;
-        if (stateForItem.required) {
-            return this._getInputWithRequired();
-        } else {
-            return this._getInputWithoutRequired();
-        }
+        return this._getInput();
+    }
+});
+
+var StaticComponent = React.createClass({
+    render: function() {
+        var itemKey = this.props.itemKey,
+            stateForItem = this.props.itemValue;
+
+        return (
+            <div className="form-group">
+                <label className="control-label col-sm-3" htmlFor={itemKey}>
+                {stateForItem.name}
+                </label>
+                <div className="col-sm-7">
+                    <p className="form-control-static">
+                        {stateForItem.value}
+                    </p>
+                </div>
+            </div>
+            )
     }
 });
 
@@ -90,6 +113,7 @@ var BankManagement = React.createClass({
         return {
             country: {
                 name: 'Country',
+                required: true,
                 value: 'India'
             },
             mode_of_payment: {
@@ -107,11 +131,11 @@ var BankManagement = React.createClass({
             },
             beneficiary_name: {
                 name: 'Beneficiary Name',
-                required: false,
+                required: true,
                 value: ''
             },
             account_number: {
-                name: 'Account Name',
+                name: 'Account Number',
                 required: true,
                 value: ''
             },
@@ -145,13 +169,28 @@ var BankManagement = React.createClass({
     componentWillMount: function() {
         //TODO fetch the bank data for this creator and preFill, if exists
     },
+    handleStateChange: function(itemKey, itemValue) {
+        var setStateObject = {};
+        setStateObject[itemKey] = itemValue;
+        this.setState(setStateObject);
+
+    },
     _getFormComponents: function() {
         return _.keys(this.state).map(function(itemKey) {
-            if (itemKey === 'mode_of_payment') {
-                return <RadioGroupComponent itemKey={itemKey} itemValue={this.state[itemKey]} />
-            } else {
-                return <TextBoxComponent itemKey={itemKey} itemValue={this.state[itemKey]}/>
+            switch (itemKey) {
+                case 'mode_of_payment':
+                    return <RadioGroupComponent itemKey={itemKey} itemValue={this.state[itemKey]}
+                    handleStateChange={this.handleStateChange} />
+                    break;
+                case 'country':
+                    return <StaticComponent itemKey={itemKey} itemValue={this.state[itemKey]} />
+                    break;
+
+                default:
+                    return <TextBoxComponent itemKey={itemKey} itemValue={this.state[itemKey]}
+                    handleStateChange={this.handleStateChange} />
             }
+
         }, this);
 
     },
@@ -164,6 +203,9 @@ var BankManagement = React.createClass({
                 <h4>Bank Details</h4>
                 <form className="form-horizontal" role="form" onSubmit={this.handleNewCourseFormSubmit}>
                 {this._getFormComponents()}
+                    <div className="clearfix">
+                        <button type="submit" className="btn btn-success pull-right">Save</button>
+                    </div>
                 </form>
             </div>
             );

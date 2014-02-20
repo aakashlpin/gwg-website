@@ -35,7 +35,7 @@ var CourseManagement = React.createClass({
                 this.toggleAddCourseForm();
             }
         }.bind(this));
-        
+
     },
     toggleAddCourseForm: function() {
         $(this.getDOMNode())
@@ -160,20 +160,16 @@ var CourseManagement = React.createClass({
         return (
             <div>
                 <div className="row">
-                    <div className="col-md-8">
+                    <div className="col-md-9">
                         <h3>Manage Courses</h3>
-                        <div className="row">
-                            <div className="col-md-9">
-                                <p className="text-light">
-                                These courses will be a part of your online academy.
-                                </p>
-                                <p className="text-light">
-                                * When we are close to launch, we'll let you create full-fledged course plans.
-                                </p>
-                            </div>
-                        </div>
+                        <p className="text-light">
+                        These courses will be a part of your online academy.
+                        </p>
+                        <p className="text-light gwg-callout gwg-callout-info">
+                        * When we are close to launch, we'll let you create full-fledged course plans.
+                        </p>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <div className="pull-right">
                             <div style={mt60}></div>
                             <a id="addNewCourse" onClick={this.toggleAddCourseForm}>

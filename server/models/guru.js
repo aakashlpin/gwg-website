@@ -27,25 +27,43 @@ GuruSchema = new Schema({
         noSlots: Boolean,
         currentMode: String,
         selectedDayCode: String
-    }]
+    }],
+    extras: {
+        band_name: String,
+        about_me: [
+            {
+                type: String
+            }
+        ],
+        links: [
+            {
+                type: String
+            }
+        ]
+    }
 });
 
-GuruSchema.statics.put = function(req, callback) {
+GuruSchema.statics.put = function(req, fields, callback) {
     var id, update, data, options, Guru;
     id = req.user._id;
 
     if (!id) return callback('Cannot update without user id');
 
     update = {_id: id};
-    data = _.pick(req.body, ['schedule']);
+    data = _.pick(req.body, fields);
     options = {};
 
     this.update(update, data, options, callback);
 
 };
 
-GuruSchema.statics.getSchedule = function(req, callback) {
-    this.findOne({_id: req.user._id}, {schedule: 1}, callback);
+GuruSchema.statics.get = function(req, fields, callback) {
+    var fieldObject = {};
+    _.each(fields, function(field) {
+        fieldObject[field] = 1;
+    });
+
+    this.findOne({_id: req.user._id}, fieldObject, callback);
 };
 
 GuruSchema.statics.findOrCreate = function(profile, callback) {
@@ -60,6 +78,7 @@ GuruSchema.statics.findOrCreate = function(profile, callback) {
         }
 
         if (user) {
+            user.exists = true;    //send a note to client to not start the on-boarding experience
             return callback(null, user);
         }
 

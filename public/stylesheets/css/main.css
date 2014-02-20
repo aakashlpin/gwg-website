@@ -12722,3 +12722,16 @@ img.bg {
 .page-block {
   padding: 40px 0 40px 0;
 }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003316}}
+.gwg-callout-info {
+  background-color: #f4f8fa;
+  border-color: #5bc0de;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003321}}
+.gwg-callout {
+  margin: 20px 0;
+  padding: 20px;
+  border-left: 3px solid #eee;
+}

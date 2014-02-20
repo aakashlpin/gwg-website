@@ -7,24 +7,22 @@
       {{> "logged_in_navigation"}}
     </div>
     <div class="col-md-9">
-      <h3>Manage Schedule</h3>
-      <p class="text-light">
-        People will make reservations against these timings.
+      {{#if user.exists}}
+        <h3 class="text-success">
+          <i class="fa fa-thumbs-o-up"></i> Great to have you on board, {{user.name}}!
+        </h3>
+      {{/if}}
+      <h3>Profile</h3>
+      <p class="gwg-callout gwg-callout-info text-light">
+        * Tell us a bit about yourself. This will help us feature you on our homepage.
       </p>
-      <p class="text-light gwg-callout gwg-callout-info">
-        * When we are close to launch, we'll let you fine tune schedule for each date.
-      </p>
-
-      <div id="scheduleCreator">
-      </div>
+      <div id="profileManagement"></div>
     </div>
   </div>
 </div>
 <script src="/bower_components/underscore/underscore-min.js"></script>
 <script src="/bower_components/jquery/jquery.min.js"></script>
-<script src="/bower_components/moment/min/moment.min.js"></script>
 <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="/bower_components/bootstrap-formhelpers/dist/js/bootstrap-formhelpers.min.js"></script>
 <script src="/bower_components/react/react.js"></script>
 <script src="/bower_components/react/JSXTransformer.js"></script>
-<script type="text/jsx" src="/scripts/guru/schedule.js"></script>
+<script type="text/jsx" src="/scripts/guru/profile.js"></script>

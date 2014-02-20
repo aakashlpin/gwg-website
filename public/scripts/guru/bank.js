@@ -235,13 +235,9 @@ var BankManagement = React.createClass({
         return (
             <div className="pad-10">
                 <h3>Bank Details</h3>
-                <div className="row mb-30">
-                    <div className="col-md-8">
-                        <p className="text-light">
-                            Enter correct information here to ensure timely payments to your account.
-                        </p>
-                    </div>
-                </div>
+                <p className="text-light gwg-callout gwg-callout-info mb-30">
+                Enter correct information here to ensure timely payments to your account.
+                </p>
                 <form className="form-horizontal" role="form" onSubmit={this.handleNewCourseFormSubmit}>
                 {this._getFormComponents()}
                     <div className="clearfix">

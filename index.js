@@ -82,6 +82,11 @@ app.namespace('/g', function() {
     app.get('/bank', ensureAuthenticated, function(req, res) {
         res.render('guru_bank', {user: req.user});
     });
+
+    app.get('/profile', ensureAuthenticated, function(req, res) {
+        res.render('guru_profile', {user: _.extend({}, req.user, {exists: true})});
+    });
+
 });
 
 app.namespace('/auth', function() {
@@ -91,7 +96,11 @@ app.namespace('/auth', function() {
         passport.authenticate('facebook', { failureRedirect: '/g' }),
         function(req, res) {
             // Successful authentication, redirect home.
-            res.redirect('/g/schedule');
+            if (req.user.exists) {
+                res.redirect('/g/schedule');
+            } else {
+                res.redirect('/g/profile');
+            }
         }
     );
 });
@@ -138,16 +147,30 @@ app.namespace('/api', function() {
 
     app.get('/guru/schedule', ensureAuthenticated, function(req, res) {
         var GuruModel = models.Guru;
-        GuruModel.getSchedule(req, function(err, data) {
+        GuruModel.get(req, ['schedule'], function(err, data) {
             res.json(data);
         })
     });
 
     app.post('/guru/schedule', ensureAuthenticated, function(req, res) {
         var GuruModel = models.Guru;
-        GuruModel.put(req, function(err, data) {
+        GuruModel.put(req, ['schedule'], function(err, data) {
             res.json(data);
-        })
+        });
+    });
+
+    app.post('/guru/profile', ensureAuthenticated, function(req, res) {
+        var GuruModel = models.Guru;
+        GuruModel.put(req, ['extras'], function(err, data) {
+            res.json(data);
+        });
+    });
+
+    app.get('/guru/profile', ensureAuthenticated, function(req, res) {
+        var GuruModel = models.Guru;
+        GuruModel.get(req, ['extras'], function(err, data) {
+            res.json(data);
+        });
     });
 });
 

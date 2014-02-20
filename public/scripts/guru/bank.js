@@ -168,6 +168,8 @@ var BankManagement = React.createClass({
     },
     componentWillMount: function() {
         $.getJSON('/api/guru/bank', function(data) {
+            if (!data) return;
+
             _.each(_.keys(data), function(bankItem) {
                 if (bankItem === 'mode_of_payment') {
                     this.state[bankItem].value = _.map(this.state[bankItem].value, function(paymentItem) {

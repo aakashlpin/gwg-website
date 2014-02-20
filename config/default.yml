@@ -1,5 +1,3 @@
-# Default config
-
 server:
   port: 3030
 
@@ -14,6 +12,7 @@ session:
 facebook:
   clientID: 424544477675893
   clientSecret: '1cdade0a6c1ec2038b04bb5606d4337d'
+  host: 'http://localhost.com:3000'
 
 redis:
   host: 'localhost'

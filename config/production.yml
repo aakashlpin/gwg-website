@@ -11,7 +11,8 @@ session:
 
 facebook:
   clientID: 1409632195960125
-  clientSecret: '92319b5f16b03c80cb8fbf1c9deb5a5f'
+  clientSecret: '5126a40dd1cb8f00f55e7434a3dfcbb2'
+  host: 'http://guitarwith.guru'
 
 redis:
   host: 'localhost'

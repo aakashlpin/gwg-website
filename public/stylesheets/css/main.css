@@ -12342,26 +12342,27 @@ td.visible-print {
   padding: 14px;
   text-align: center;
   margin-bottom: 60px;
-  min-height: 200px;
+  min-height: 220px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/_modules\.scss}line{font-family:\00003102}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/_modules\.scss}line{font-family:\00003103}}
 .feature-item .feature-item-icon {
   font-size: 40px;
   margin-bottom: 15px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/_modules\.scss}line{font-family:\00003107}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/_modules\.scss}line{font-family:\00003108}}
 .feature-item .feature-item-title {
   color: #34495E;
   font-size: 20px;
   font-weight: bold;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/_modules\.scss}line{font-family:\00003112}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/_modules\.scss}line{font-family:\00003113}}
 .feature-item .feature-item-desc {
   color: #34495E;
   font-size: 15px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/_modules\.scss}line{font-family:\00003120}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/_modules\.scss}line{font-family:\00003121}}
 .v-flat-list > .item {
   margin-bottom: 30px;
   border: 1px solid #ddd;
@@ -12370,7 +12371,7 @@ td.visible-print {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   border-radius: 3px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/_modules\.scss}line{font-family:\00003128}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/_modules\.scss}line{font-family:\00003129}}
 .v-flat-list > .item .text-item-heading {
   margin-top: 0;
   text-transform: uppercase;

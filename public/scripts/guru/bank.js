@@ -232,7 +232,14 @@ var BankManagement = React.createClass({
     render: function() {
         return (
             <div className="pad-10">
-                <h4>Bank Details</h4>
+                <h3>Bank Details</h3>
+                <div className="row mb-30">
+                    <div className="col-md-8">
+                        <p className="text-light">
+                            Enter correct information here to ensure timely payments to your account.
+                        </p>
+                    </div>
+                </div>
                 <form className="form-horizontal" role="form" onSubmit={this.handleNewCourseFormSubmit}>
                 {this._getFormComponents()}
                     <div className="clearfix">

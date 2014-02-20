@@ -6,12 +6,13 @@ DB:
   PASSWORD: null
   NAME: 'gwg'
 
-rendrApp:
-
-api:
-  default:
-    host: 'localhost.com:3030'
-    protocol: 'http'
-
 session:
-  secret: this should be some long random string
+  secret: 'guitar with guru is how you spell gwg'
+
+facebook:
+  clientID: 1409632195960125
+  clientSecret: '92319b5f16b03c80cb8fbf1c9deb5a5f'
+
+redis:
+  host: 'localhost'
+  port: 6379

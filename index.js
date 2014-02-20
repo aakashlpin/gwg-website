@@ -7,7 +7,6 @@ var express     = require( 'express' ),
     mongoose    = require( 'mongoose' ),
     Guru        = require( './server/models/guru' ),
     models      = require( './server/models'),
-    mw          = require( './server/middleware' ),
     app         = express(),
     redis       = require( 'redis' ),
     RedisStore  = require( 'connect-redis' )(express);
@@ -135,6 +134,20 @@ app.namespace('/api', function() {
         BankModel.getByCreator(req, function(err, data) {
             res.json(data);
         });
+    });
+
+    app.get('/guru/schedule', ensureAuthenticated, function(req, res) {
+        var GuruModel = models.Guru;
+        GuruModel.getSchedule(req, function(err, data) {
+            res.json(data);
+        })
+    });
+
+    app.post('/guru/schedule', ensureAuthenticated, function(req, res) {
+        var GuruModel = models.Guru;
+        GuruModel.put(req, function(err, data) {
+            res.json(data);
+        })
     });
 });
 

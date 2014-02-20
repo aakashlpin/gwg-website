@@ -30,32 +30,22 @@ GuruSchema = new Schema({
     }]
 });
 
-
-GuruSchema.statics.get = function(req, api, callback) {
-    var id = req.param._id;
-    if (id) {
-        this.findById(id).exec(callback);
-    } else {
-        this
-            .find()
-            .where('del', false)
-            .exec(callback);
-    }
-
-};
-
-GuruSchema.statics.put = function(req, api, callback) {
+GuruSchema.statics.put = function(req, callback) {
     var id, update, data, options, Guru;
-    id = req.param('id');
+    id = req.user._id;
 
-    if (!id) return callback('Cannot update without id');
+    if (!id) return callback('Cannot update without user id');
 
     update = {_id: id};
-    data = _.pick(req.body, ['title', 'body']);
+    data = _.pick(req.body, ['schedule']);
     options = {};
 
     this.update(update, data, options, callback);
 
+};
+
+GuruSchema.statics.getSchedule = function(req, callback) {
+    this.findOne({_id: req.user._id}, {schedule: 1}, callback);
 };
 
 GuruSchema.statics.findOrCreate = function(profile, callback) {

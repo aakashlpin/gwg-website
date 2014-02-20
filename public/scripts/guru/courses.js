@@ -30,8 +30,12 @@ var CourseManagement = React.createClass({
     },
     componentWillMount: function() {
         $.getJSON('/api/guru/courses', function(courses) {
-            this.setState({courses: courses})
+            this.setState({courses: courses});
+            if (!this.state.courses.length) {
+                this.toggleAddCourseForm();
+            }
         }.bind(this));
+        
     },
     toggleAddCourseForm: function() {
         $(this.getDOMNode())
@@ -39,7 +43,7 @@ var CourseManagement = React.createClass({
             .find('input#name').focus();
 
     },
-    _resetForm: function(e) {
+    _resetForm: function() {
         this.state.new_course = this._getEmptyFormData();
         this.setState({new_course: this.state.new_course});
 
@@ -118,8 +122,9 @@ var CourseManagement = React.createClass({
 
     },
     render: function() {
-        var hide = {display:'none'};
-        var mt58 = {'margin-top': 58};
+        var hide    = {display:'none'},
+            mt60    = {'margin-top': 60};
+
         var targetAudienceChecks = this.state.new_course.target_audience.map(function(target) {
             return (
                 <label className="checkbox-inline" htmlFor={target.id}>
@@ -154,16 +159,27 @@ var CourseManagement = React.createClass({
 
         return (
             <div>
-                <div className="clearfix">
-                    <div className="pull-left">
+                <div className="row">
+                    <div className="col-md-8">
                         <h3>Manage Courses</h3>
-                        <p>These courses will be shown in search results.</p>
+                        <div className="row">
+                            <div className="col-md-9">
+                                <p className="text-light">
+                                These courses will be a part of your online academy.
+                                </p>
+                                <p className="text-light">
+                                * When we are close to launch, we'll let you create full-fledged course plans.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div className="pull-right">
-                        <div style={mt58}></div>
-                        <a id="addNewCourse" onClick={this.toggleAddCourseForm}>
-                            <i className="fa fa-plus-circle"></i> Add New Course
-                        </a>
+                    <div className="col-md-4">
+                        <div className="pull-right">
+                            <div style={mt60}></div>
+                            <a id="addNewCourse" onClick={this.toggleAddCourseForm}>
+                                <i className="fa fa-plus-circle"></i> Add New Course
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div id="courseFormContainer" className="text-left" style={hide}>

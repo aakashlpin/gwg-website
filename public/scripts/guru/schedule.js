@@ -194,23 +194,19 @@ var DaysList = React.createClass({
         return {data: []};
     },
     componentWillMount: function() {
-        //make the call to reflect the user currently logged in
-        $.ajax({
-            url: '/api/user',
-            dataType: 'json',
-            success: function(data) {
-                this.setState({data: data.schedule});
-            }.bind(this),
-            error: function(xhr, status, err) {
-                console.log('/api/user error ', status, err.toString());
-            }.bind(this)
-        })
-    },
-    componentDidMount: function() {
+        $.getJSON('/api/guru/schedule', function(data) {
+            this.setState({data: data.schedule});
+        }.bind(this));
 
     },
     saveData: function() {
-        console.log(this.state.data);
+        $.post('/api/guru/schedule', {schedule: this.state.data}, function(res) {
+            $(this.getDOMNode()).find('#saveSchedule')
+                .html('Saved')
+                .toggleClass('btn-success btn-primary')
+            ;
+
+        }.bind(this));
 
     },
     handleOnChange: function(dayCode, properties) {
@@ -278,7 +274,7 @@ var DaysList = React.createClass({
             {dayNodes}
                 <div className="clearfix mb-30">
                     <button className="btn btn-success pull-right" id="saveSchedule" onClick={this.saveData}>
-                    Save and Proceed
+                    Save
                     </button>
                 </div>
             </div>

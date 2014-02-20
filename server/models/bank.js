@@ -29,13 +29,29 @@ BankSchema.statics.post = function (req, callback) {
     //assign the creator field from req object
     data._creator = req.user._id;
 
-    Bank = new this(data);
-    Bank.save(callback);
+    this.findOne({account_number: data.account_number}, function(err, bankData) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (bankData) {
+            //update the existing records
+            var update = {account_number: data.account_number},
+                options = {};
+
+            this.update(update, data, options, callback);
+
+        } else {
+            Bank = new this(data);
+            Bank.save(callback);
+
+        }
+    }.bind(this));
 };
 
 BankSchema.statics.getByCreator = function(req, callback) {
     var guruId = req.user._id;
-    this.find({_creator: guruId}, callback);
+    this.findOne({_creator: guruId}, callback);
 };
 
 Bank = mongoose.model('Bank', BankSchema);

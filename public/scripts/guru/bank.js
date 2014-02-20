@@ -167,7 +167,23 @@ var BankManagement = React.createClass({
         }
     },
     componentWillMount: function() {
-        //TODO fetch the bank data for this creator and preFill, if exists
+        $.getJSON('/api/guru/bank', function(data) {
+            _.each(_.keys(data), function(bankItem) {
+                if (bankItem === 'mode_of_payment') {
+                    this.state[bankItem].value = _.map(this.state[bankItem].value, function(paymentItem) {
+                        paymentItem.selected = (paymentItem.id === data[bankItem]);
+                        return paymentItem;
+                    }, this);
+
+                } else {
+                    if (this.state[bankItem]) {
+                        this.state[bankItem].value = data[bankItem];
+                    }
+                }
+            }, this);
+
+            this.setState(this.state);
+        }.bind(this));
     },
     handleStateChange: function(itemKey, itemValue) {
         var setStateObject = {};
@@ -194,8 +210,20 @@ var BankManagement = React.createClass({
         }, this);
 
     },
-    handleNewCourseFormSubmit: function() {
+    handleNewCourseFormSubmit: function(e) {
+        e.preventDefault();
+        var payload = {};
+        _.each(_.keys(this.state), function(bankItem) {
+            if (bankItem === 'mode_of_payment') {
+                payload[bankItem] = _.find(this.state[bankItem].value, function(val){ return val.selected }).id;
+            } else {
+                payload[bankItem] = this.state[bankItem].value;
+            }
+        }, this);
 
+        $.post('/api/guru/bank', payload, function(res) {
+            console.log(res);
+        });
     },
     render: function() {
         return (

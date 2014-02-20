@@ -122,6 +122,20 @@ app.namespace('/api', function() {
             res.json(data);
         });
     });
+
+    app.post('/guru/bank', ensureAuthenticated, function(req, res) {
+        var BankModel = models.Bank;
+        BankModel.post(req, function(err, data) {
+            res.json(data);
+        });
+    });
+
+    app.get('/guru/bank', ensureAuthenticated, function(req, res) {
+        var BankModel = models.Bank;
+        BankModel.getByCreator(req, function(err, data) {
+            res.json(data);
+        });
+    });
 });
 
 app.get('/logout', function(req, res) {

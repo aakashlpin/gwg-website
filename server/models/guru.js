@@ -77,11 +77,6 @@ GuruSchema.statics.findOrCreate = function(profile, callback) {
             return callback(err, null);
         }
 
-        if (user) {
-            user.exists = true;    //send a note to client to not start the on-boarding experience
-            return callback(null, user);
-        }
-
         dataOfInterest.schedule = [ {
             day_code: 'mon',
             day_name: 'Monday',

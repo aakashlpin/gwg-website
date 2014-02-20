@@ -7,11 +7,6 @@
       {{> "logged_in_navigation"}}
     </div>
     <div class="col-md-9">
-      {{#if user.exists}}
-        <h3 class="text-success">
-          <i class="fa fa-thumbs-o-up"></i> Great to have you on board, {{user.name}}!
-        </h3>
-      {{/if}}
       <h3>Profile</h3>
       <p class="gwg-callout gwg-callout-info text-light">
         * Tell us a bit about yourself. This will help us feature you on our homepage.
@@ -20,6 +15,7 @@
     </div>
   </div>
 </div>
+{{> logged_in_footer}}
 <script src="/bower_components/underscore/underscore-min.js"></script>
 <script src="/bower_components/jquery/jquery.min.js"></script>
 <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>

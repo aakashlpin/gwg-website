@@ -84,7 +84,7 @@ app.namespace('/g', function() {
     });
 
     app.get('/profile', ensureAuthenticated, function(req, res) {
-        res.render('guru_profile', {user: _.extend({}, req.user, {exists: true})});
+        res.render('guru_profile', {user: req.user});
     });
 
 });

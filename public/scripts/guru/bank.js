@@ -222,8 +222,12 @@ var BankManagement = React.createClass({
         }, this);
 
         $.post('/api/guru/bank', payload, function(res) {
-            console.log(res);
-        });
+            if (res) {
+                $(this.getDOMNode()).find('[type="submit"]')
+                    .toggleClass('btn-success btn-primary').html('Saved');
+
+            }
+        }.bind(this));
     },
     render: function() {
         return (

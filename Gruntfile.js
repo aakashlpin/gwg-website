@@ -41,6 +41,17 @@ module.exports = function ( grunt ) {
             }
         },
 
+        imagemin: {                          // Task
+            dynamic: {                         // Another target
+                files: [{
+                    expand: true,                  // Enable dynamic expansion
+                    cwd: 'public/images/',                   // Src matches are relative to this path
+                    src: ['**/*.{png,jpg,gif}'],   // Actual patterns to match
+                    dest: 'public/images/'                  // Destination path prefix
+                }]
+            }
+        },
+
         nodemon: {
             dev: {
                 script: 'index.js',
@@ -60,58 +71,6 @@ module.exports = function ( grunt ) {
                     watch: ['server', 'app'],
                     delay: 1,
                     legacyWatch: true
-                }
-            }
-        },
-
-        handlebars: {
-            guru_schedule: {
-                options: {
-                    namespace: false,
-                    commonjs: false,
-                    processName: function ( filename ) {
-                        return filename
-                            .replace( 'views/client/guru/schedule/', '' )
-                            .replace( '.handlebars', '' );
-                    }
-                },
-                src: "views/client/guru/schedule/*.handlebars",
-                dest: "public/guruScheduleTemplates.js"
-            }
-        },
-
-
-        //browserify config
-        browserify: {
-            guru_schedule: {
-                src: [scriptsDir + '/guru/schedule/*.js'],
-                dest: 'public/guru_schedule.js',
-                options: {
-                    debug: true
-                },
-                shim: {
-                    jquery: {
-                        path: 'node_modules/jquery/dist/cdn/jquery-2.1.0.min.js',
-                        exports: '$'
-                    },
-                    underscore: {
-                        path: 'node_modules/underscore/underscore.js',
-                        exports: '_'
-                    },
-                    bootstrap: {
-                        path: 'public/bower_components/sass-bootstrap/dist/js/bootstrap.min.js',
-                        exports: 'bootstrap',
-                        depends: {
-                            jquery: '$'
-                        }
-                    },
-                    'bootstrap.timepicker': {
-                        path: 'public/bower_components/bootstrap-formhelpers/dist/js/bootstrap-formhelpers.js',
-                        exports: null,
-                        depends: {
-                            bootstrap: 'bootstrap'
-                        }
-                    }
                 }
             }
         },

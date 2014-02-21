@@ -70,6 +70,10 @@ app.get('/g', function(req, res) {
     }
 });
 
+app.get('/about', function(req, res) {
+    res.render('about');
+});
+
 app.namespace('/g', function() {
     app.get('/schedule', ensureAuthenticated, function(req, res) {
         res.render('guru_schedule', {user: req.user});

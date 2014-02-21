@@ -231,19 +231,13 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'serve', function ( target ) {
         grunt.task.run( [
             'compass:server',
-//            'handlebars',
-//            'browserify',
             'concurrent:server'
         ] );
     } );
 
     grunt.registerTask( 'build', [
-        'clean:dist',
         'compass:dist',
         'autoprefixer',
-//        'handlebars',
-//        'browserify',
-        'uglify',
         'cssmin',
         'forever:restart'
     ] );

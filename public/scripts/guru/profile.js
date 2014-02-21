@@ -137,8 +137,10 @@ var ProfileManagement = React.createClass({
             <div className="pad-10">
                 <form className="form-horizontal" role="form" onSubmit={this.handleProfileFormSubmit}>
                 {this._getFormComponents()}
-                    <div className="clearfix">
-                        <button type="submit" className="btn btn-success pull-right">Save</button>
+                    <div className="form-group">
+                        <div className="col-sm-offset-3 col-sm-9">
+                            <button type="submit" className="btn btn-success">Save</button>
+                        </div>
                     </div>
                 </form>
             </div>

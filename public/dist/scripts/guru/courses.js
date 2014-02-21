@@ -242,9 +242,11 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                                 targetAudienceChecks
                                 )
                             ),
-                            React.DOM.div( {className:"clearfix mb-30"}, 
-                                React.DOM.button( {type:"submit", className:"btn btn-success pull-right", id:"saveSchedule"}, "Save"),
-                                React.DOM.a( {className:"pull-right btn btn-link mr-20", onClick:this._resetForm}, "Cancel")
+                            React.DOM.div( {className:"form-group"}, 
+                                React.DOM.div( {className:"col-sm-offset-3 col-sm-9"}, 
+                                    React.DOM.button( {type:"submit", className:"btn btn-success mr-20", id:"saveSchedule"}, "Save"),
+                                    React.DOM.a( {className:"btn btn-link", onClick:this._resetForm}, "Cancel")
+                                )
                             )
                         )
                     )

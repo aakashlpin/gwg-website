@@ -242,9 +242,11 @@ var CourseManagement = React.createClass({
                                 {targetAudienceChecks}
                                 </div>
                             </div>
-                            <div className="clearfix mb-30">
-                                <button type="submit" className="btn btn-success pull-right" id="saveSchedule">Save</button>
-                                <a className="pull-right btn btn-link mr-20" onClick={this._resetForm}>Cancel</a>
+                            <div className="form-group">
+                                <div className="col-sm-offset-3 col-sm-9">
+                                    <button type="submit" className="btn btn-success mr-20" id="saveSchedule">Save</button>
+                                    <a className="btn btn-link" onClick={this._resetForm}>Cancel</a>
+                                </div>
                             </div>
                         </form>
                     </div>

@@ -121,7 +121,7 @@ module.exports = function ( grunt ) {
             dist: {
                 files: [ {
                     src: [
-                        cssDir + '*.css'
+                        cssDir + '/*.css'
                     ]
                 } ]
             }
@@ -236,6 +236,7 @@ module.exports = function ( grunt ) {
     } );
 
     grunt.registerTask( 'build', [
+        'clean:dist',
         'compass:dist',
         'autoprefixer',
         'cssmin',

@@ -69,7 +69,7 @@ var ProfileManagement = React.createClass({
                     'Before joining Metallica I formed and named the band Exodus.'
             },
             band_name: {
-                name: 'Name any band you have been associated with',
+                name: 'Name a band you have been associated with',
                 value: '',
                 formElement: 'input',
                 placeholder: 'Metallica'

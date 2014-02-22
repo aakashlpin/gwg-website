@@ -2,6 +2,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     Mixed = Schema.Types.Mixed,
     ObjectId = Schema.ObjectId,
+    config = require ('config'),
     Course = require('./course');
 
 _ = require('underscore');
@@ -132,6 +133,14 @@ GuruSchema.statics.findOrCreate = function(profile, callback) {
         var data = new self(dataOfInterest);
         data.save(callback);
     });
+};
+
+GuruSchema.statics.getAll = function(req, callback) {
+    if (req.user.email !== config.admin.email) {
+        return callback('Unauthorized');
+    }
+
+    this.find(callback);
 };
 
 Guru = mongoose.model('Guru', GuruSchema);

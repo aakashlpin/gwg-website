@@ -1,0 +1,134 @@
+<div style="color: #fff">
+  <img class="bg" src="/images/bg.jpg" alt=""/>
+  <div class="container">
+    <div class="inner">
+      <div class="clearfix">
+        <h3 class="masthead-brand">
+          <img src="/images/home-logo.png" alt="guitar with guru" height="80px;"/>
+        </h3>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-3" id="user_signups">
+        <h3>User Signups</h3>
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Email</th>
+          </tr>
+          </thead>
+          {{#each users}}
+            <tr>
+              <th>{{email}}</th>
+            </tr>
+          {{/each}}
+        </table>
+      </div>
+      <div class="col-sm-9" id="guru_signups">
+        <h3>Guru Signups</h3>
+        <div class="panel-group" id="accordion">
+          {{#each gurus}}
+            <div class="panel panel-default" style="color: #555">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#g_{{id}}">
+                    {{name}} - {{email}}
+                  </a>
+                </h4>
+              </div>
+              <div id="g_{{id}}" class="panel-collapse collapse in">
+                <div class="panel-body">
+                  <table class="table">
+                    <tr>
+                      <td>Facebook Profile Link: </td>
+                      <td><a href="{{link}}">{{link}}</a></td>
+                    </tr>
+                    <tr>
+                      <td>Gender / Location: </td>
+                      <td>{{gender}} / {{location}}</td>
+                    </tr>
+                    <tr>
+                      <td>About me: </td>
+                      <td>{{extras.about_me}}</td>
+                    </tr>
+                    <tr>
+                      <td>Band name: </td>
+                      <td>{{extras.band_name}}</td>
+                    </tr>
+                    <tr>
+                      <td>Links: </td>
+                      <td>
+                        {{#each extras.links}}
+                          <div>
+                            <a href="{{this}}">{{this}}</a>
+                          </div>
+                        {{/each}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Courses</td>
+                      <td>
+                        <table class="table">
+                          <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Audience</th>
+                            <th>Sessions</th>
+                            <th>Fee</th>
+                          </tr>
+                          </thead>
+                          {{#each courses}}
+                            <tr>
+                              <td>{{this.name}}</td>
+                              <td>{{this.description}}</td>
+                              <td>{{#each this.target_audience}}
+                                {{#if this.selected}}{{this.name}}{{/if}}
+                              {{/each}}</td>
+                              <td>{{classes}}</td>
+                              <td>{{fee}}</td>
+                            </tr>
+                          {{/each}}
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Schedule</td>
+                      <td>
+                        <table class="table">
+                          <thead>
+                          <tr>
+                            <th>Day</th>
+                            <th>No slots</th>
+                            <th>Mode</th>
+                            <th>Slots</th>
+                            <th>Selected Day</th>
+                          </tr>
+                          </thead>
+                          {{#each schedule}}
+                            <tr>
+                              <td>{{this.day_name}}</td>
+                              <td>{{this.noSlots}}</td>
+                              <td>{{this.currentMode}}</td>
+                              <td>{{#each this.slots}}
+                                {{this.startTime}} to {{this.endTime}}
+                              {{/each}}</td>
+                              <td>{{this.selectedDayCode}}</td>
+                            </tr>
+                          {{/each}}
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>

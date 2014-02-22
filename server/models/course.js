@@ -33,7 +33,8 @@ CourseSchema.statics.post = function (req, callback) {
 };
 
 CourseSchema.statics.getByCreator = function(req, callback) {
-    var guruId = req.user._id;
+    //if coming via a req, use that object. Else, req would correspond to a an Id
+    var guruId = req.user ? req.user._id : req;
     this.find({_creator: guruId}, callback);
 };
 

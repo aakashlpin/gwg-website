@@ -17,3 +17,6 @@ facebook:
 redis:
   host: 'localhost'
   port: 6379
+
+admin:
+  email: 'aakash.lpin@gmail.com'

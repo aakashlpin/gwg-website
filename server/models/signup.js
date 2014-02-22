@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
+    config = require ('config'),
     SignupSchema,
     Signup;
 
@@ -8,6 +9,14 @@ _ = require('underscore');
 SignupSchema = new Schema({
     email: {type: String, index: { unique: true} }
 });
+
+SignupSchema.statics.getAll = function(req, callback) {
+    if (req.user.email !== config.admin.email) {
+        return callback('Unauthorized');
+    }
+
+    this.find(callback);
+};
 
 SignupSchema.statics.post = function (req, callback) {
     var data, signup;

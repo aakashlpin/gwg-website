@@ -148,7 +148,7 @@ module.exports = function ( grunt ) {
                     {
                         expand: true,
                         cwd: 'public/scripts/guru',
-                        src: ['**/*.jsx'],
+                        src: ['**/*.js'],
                         dest: 'public/dist/scripts/guru',
                         ext: '.js'
                     }

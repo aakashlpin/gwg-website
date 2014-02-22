@@ -130,7 +130,7 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                 React.DOM.label( {className:"checkbox-inline", htmlFor:target.id}, 
                     React.DOM.input( {type:"checkbox", id:target.id, name:"target_audience",
                     value:target.id, checked:target.selected,
-                    onChange:this._handleCheckboxChange.bind(this, target.id)}), " ", target.name
+                    onChange:this._handleCheckboxChange.bind(this, target.id)}), target.name
                 )
                 );
         }, this);
@@ -144,8 +144,8 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                             React.DOM.p( {className:"text-light"}, course.description)
                         ),
                         React.DOM.div( {className:"col-md-5"}, 
-                            React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Classes: " ), " ", course.classes),
-                            React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Fee: " ), " ", React.DOM.i( {className:"fa fa-rupee"}), " ", course.fee),
+                            React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Classes: " ), course.classes),
+                            React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Fee: " ), React.DOM.i( {className:"fa fa-rupee"}), course.fee),
                             React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Audience: " ),
                                 React.DOM.ul( {className:"l-h-list inline-block"}, 
                                 this._getTargetAudience.call(this, course)
@@ -163,17 +163,17 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                     React.DOM.div( {className:"col-md-9"}, 
                         React.DOM.h3(null, "Manage Courses"),
                         React.DOM.p( {className:"text-light"}, 
-                        "These courses will be a part of your online academy."
+                        " These courses will be a part of your online academy. "
                         ),
                         React.DOM.p( {className:"text-light gwg-callout gwg-callout-info"}, 
-                        "* When we are close to launch, we'll let you create full-fledged course plans."
+                        " * When we are close to launch, we'll let you create full-fledged course plans. "
                         )
                     ),
                     React.DOM.div( {className:"col-md-3"}, 
                         React.DOM.div( {className:"pull-right"}, 
                             React.DOM.div( {style:mt60}),
                             React.DOM.a( {id:"addNewCourse", onClick:this.toggleAddCourseForm}, 
-                                React.DOM.i( {className:"fa fa-plus-circle"}), " Add New Course"
+                                React.DOM.i( {className:"fa fa-plus-circle"}), " Add New Course "
                             )
                         )
                     )

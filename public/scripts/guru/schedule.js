@@ -272,10 +272,14 @@ var DaysList = React.createClass({
         return (
             <div>
             {dayNodes}
-                <div className="text-center mb-30">
-                    <button className="btn btn-success" id="saveSchedule" onClick={this.saveData}>
-                    Save
-                    </button>
+                <div className="day-slots-container">
+                    <div className="row">
+                        <div className="col-sm-7 col-sm-offset-2">
+                            <button className="btn btn-success" id="saveSchedule" onClick={this.saveData}>
+                            Save
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             )

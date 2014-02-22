@@ -130,7 +130,7 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
                 return (
                     React.DOM.div( {className:"copyModeContainer"}, 
                         React.DOM.div( {className:"l-h-list"}, 
-                            React.DOM.p( {className:"item schedule-text-middle"}, "Same as:  "  ),
+                            React.DOM.p( {className:"item schedule-text-middle"}, "Same as: "  ),
                             React.DOM.ul( {className:"item l-h-list guru-schedule-copy-links"}, 
                         copyModeDOM
                             )
@@ -272,9 +272,13 @@ var DaysList = React.createClass({displayName: 'DaysList',
         return (
             React.DOM.div(null, 
             dayNodes,
-                React.DOM.div( {className:"text-center mb-30"}, 
-                    React.DOM.button( {className:"btn btn-success", id:"saveSchedule", onClick:this.saveData}, 
-                    "Save"
+                React.DOM.div( {className:"day-slots-container"}, 
+                    React.DOM.div( {className:"row"}, 
+                        React.DOM.div( {className:"col-sm-7 col-sm-offset-2"}, 
+                            React.DOM.button( {className:"btn btn-success", id:"saveSchedule", onClick:this.saveData}, 
+                            " Save "
+                            )
+                        )
                     )
                 )
             )

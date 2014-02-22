@@ -236,7 +236,7 @@ var BankManagement = React.createClass({displayName: 'BankManagement',
             React.DOM.div(null, 
                 React.DOM.h3(null, "Bank Details"),
                 React.DOM.p( {className:"text-light gwg-callout gwg-callout-info mb-30"}, 
-                "Enter correct information here to ensure timely payments to your account."
+                " Enter correct information here to ensure timely payments to your account. "
                 ),
                 React.DOM.form( {className:"form-horizontal", role:"form", onSubmit:this.handleNewCourseFormSubmit}, 
                 this._getFormComponents(),

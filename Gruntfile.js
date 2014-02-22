@@ -19,9 +19,16 @@ module.exports = function ( grunt ) {
 
         // Watches files for changes and runs tasks based on the changed files
         watch: {
-            js: {
-                files: [ '<%= yeoman.app %>/**/*.js' ],
-                tasks: [ 'browserify' ],
+            ui_js: {
+                files: [ 'public/scripts/**/*.js' ],
+                tasks: [ 'react' ],
+                options: {
+                    interrupt: true
+                }
+            },
+            server_js: {
+                files: [ 'server/**/*.js', 'views/**/*.handlebars' ],
+                tasks: [ 'nodemon' ],
                 options: {
                     interrupt: true
                 }
@@ -34,7 +41,7 @@ module.exports = function ( grunt ) {
             },
             compass: {
                 files: [ scssDir + '/{,*/}*.scss' ],
-                tasks: [ 'compass:server', 'autoprefixer' ],
+                tasks: [ 'compass:server' ],
                 options: {
                     interrupt: true
                 }
@@ -68,7 +75,7 @@ module.exports = function ( grunt ) {
                     cwd: __dirname,
                     ignore: ['node_modules/**'],
                     ext: 'js',
-                    watch: ['server', 'app'],
+                    watch: ['server', 'views'],
                     delay: 1,
                     legacyWatch: true
                 }
@@ -129,47 +136,12 @@ module.exports = function ( grunt ) {
             }
         },
 
-        uglify: {
-            dist: {
-                files: {
-                    'public/mergedAssets.js': [
-                        'public/mergedAssets.js'
-                    ]
-                }
-            }
-        },
-
-        // Copies remaining files to places other tasks can use
-        copy: {
-            dist: {
-                files: [ {
-                    expand: true,
-                    dot: true,
-                    cwd: '<%= yeoman.app %>',
-                    dest: '<%= yeoman.dist %>',
-                    src: [
-                        '*.{ico,png,txt}',
-                        '.htaccess',
-                        'images/{,*/}*.webp',
-                        '{,*/}*.{html,tpl}',
-                        'styles/fonts/{,*/}*.*',
-                        '*.js',
-                        'bower_components/sass-bootstrap/fonts/*.*',
-                        'bower_components/modernizr/modernizr.js'
-                    ]
-                } ]
-            }
-        },
-
         // Run some tasks in parallel to speed up build process
         concurrent: {
             server: {
                 tasks: ['nodemon', 'watch'],
                 options: { logConcurrentOutput: true }
             },
-            test: [
-                'copy:styles'
-            ],
             dist: [
                 'compass',
                 'copy:styles',
@@ -183,6 +155,20 @@ module.exports = function ( grunt ) {
                 index: 'index.js',
                 logDir: 'logs',
                 command: 'node'
+            }
+        },
+
+        react: {
+            dynamic_mappings: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'public/scripts/guru',
+                        src: ['**/*.jsx'],
+                        dest: 'public/dist/scripts/guru',
+                        ext: '.js'
+                    }
+                ]
             }
         }
     } );

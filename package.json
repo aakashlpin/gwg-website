@@ -41,7 +41,8 @@
     "grunt-contrib-handlebars": "~0.6.1",
     "nodemon": "~1.0.14",
     "grunt-forever": "~0.4.1",
-    "grunt-nodemon": "~0.2.0"
+    "grunt-nodemon": "~0.2.0",
+    "grunt-react": "^0.6.0"
   },
   "engines": {
     "node": ">=0.8.0"

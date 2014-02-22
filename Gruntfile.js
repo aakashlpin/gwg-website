@@ -26,13 +26,6 @@ module.exports = function ( grunt ) {
                     interrupt: true
                 }
             },
-            server_js: {
-                files: [ 'server/**/*.js', 'views/**/*.handlebars' ],
-                tasks: [ 'nodemon' ],
-                options: {
-                    interrupt: true
-                }
-            },
             gruntfile: {
                 files: [ 'Gruntfile.js' ],
                 options: {
@@ -64,17 +57,9 @@ module.exports = function ( grunt ) {
                 script: 'index.js',
                 options: {
                     nodeArgs: ['--debug'],
-                    callback: function (nodemon) {
-                        nodemon.on('log', function (event) {
-                            console.log(event.colour);
-                        });
-                    },
-                    env: {
-                        PORT: '3030'
-                    },
                     cwd: __dirname,
                     ignore: ['node_modules/**'],
-                    ext: 'js',
+                    ext: 'js, handlebars',
                     watch: ['server', 'views'],
                     delay: 1,
                     legacyWatch: true
@@ -108,8 +93,7 @@ module.exports = function ( grunt ) {
             },
             server: {
                 options: {
-                    debugInfo: true,
-                    watch: true
+                    debugInfo: true
                 }
             }
         },

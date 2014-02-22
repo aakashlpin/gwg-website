@@ -95,7 +95,7 @@ app.namespace('/g', function() {
 });
 
 app.namespace('/admin', function() {
-    app.get('/signups', function(req, res) {
+    app.get('/signups', ensureAuthenticated, function(req, res) {
         if (req.user.email !== config.admin.email) {
             res.redirect('/g');
             return;

@@ -18,6 +18,7 @@ GuruSchema = new Schema({
     location: String,
     name: String,
     timezone: Number,
+    is_guru: { type: Boolean, default: true },  //updated: field to allow/ reject person as a guru
     schedule: [{
         day_code: String,
         day_name: String,

@@ -7,7 +7,9 @@ var mongoose = require('mongoose'),
 _ = require('underscore');
 
 SignupSchema = new Schema({
-    email: {type: String, index: { unique: true} }
+    email: {type: String, index: { unique: true} },
+    signed_up_at: { type: Date, default: Date.now },    //updated
+    spam: { type: Boolean, default: false } //updated: TODO build an admin function to mark email as spam
 });
 
 SignupSchema.statics.getAll = function(req, callback) {

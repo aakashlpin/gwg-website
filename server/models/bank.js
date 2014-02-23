@@ -29,14 +29,14 @@ BankSchema.statics.post = function (req, callback) {
     //assign the creator field from req object
     data._creator = req.user._id;
 
-    this.findOne({account_number: data.account_number}, function(err, bankData) {
+    this.findOne({_creator: data._creator}, function(err, bankData) {
         if (err) {
             return callback(err);
         }
 
         if (bankData) {
             //update the existing records
-            var update = {account_number: data.account_number},
+            var update = {_creator: data._creator},
                 options = {};
 
             this.update(update, data, options, callback);

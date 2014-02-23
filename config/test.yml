@@ -1,0 +1,2 @@
+DB:
+  path: 'mongodb://localhost/gwg-test'

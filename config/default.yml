@@ -2,9 +2,7 @@ server:
   port: 3030
 
 DB:
-  USER: null
-  PASSWORD: null
-  NAME: 'gwg-dev'
+  path: 'mongodb://localhost/gwg-dev'
 
 session:
   secret: 'guitar with guru is how you spell gwg'

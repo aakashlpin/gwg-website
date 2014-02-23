@@ -58,6 +58,10 @@ server {
     proxy_pass http://gwg;
   }
 
+  location /auth/soundcloud/callback.html {
+    try_files /callback.html @notfound;
+  }
+
   location @notfound {
     try_files /404.html =404;
   }

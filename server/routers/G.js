@@ -21,6 +21,11 @@ var routes = [
         path: '/profile',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAuthenticated, GuruController.getProfileHandler]
+    },
+    {
+        path: '/apps',
+        httpMethod: 'GET',
+        middleware: [RouteUtils.ensureAuthenticated, GuruController.getAppsHandler]
     }
 ];
 

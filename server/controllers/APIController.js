@@ -68,6 +68,20 @@ module.exports = {
             res.json(data);
         });
 
+    },
+    postGuruSoundCloudHandler: function(req, res) {
+        var GuruModel = models.Guru;
+        GuruModel.put(req, ['soundcloud'], function(err, data) {
+            res.json(data);
+        });
+
+    },
+    getGuruSoundCloudHandler: function(req, res) {
+        var GuruModel = models.Guru;
+        GuruModel.get(req, ['soundcloud'], function(err, data) {
+            res.json(data);
+        });
+
     }
 
 

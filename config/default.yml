@@ -18,3 +18,9 @@ redis:
 
 admin:
   email: 'aakash.lpin@gmail.com'
+
+soundcloud:
+  clientID: 'e63a38724fcd2b664ca141aeb20e6fd0'
+  clientSecret: '06de11d34179c3375b1ec1a29e41e039'
+  userAuth: 'https://soundcloud.com/connect'
+  token: 'https://api.soundcloud.com/oauth2/token'

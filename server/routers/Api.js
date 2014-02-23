@@ -51,6 +51,16 @@ var routes = [
         path: '/guru/profile',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAuthenticated, APIController.getGuruProfileHandler]
+    },
+    {
+        path: '/guru/soundcloud',
+        httpMethod: 'POST',
+        middleware: [RouteUtils.ensureAuthenticated, APIController.postGuruSoundCloudHandler]
+    },
+    {
+        path: '/guru/soundcloud',
+        httpMethod: 'GET',
+        middleware: [RouteUtils.ensureAuthenticated, APIController.getGuruSoundCloudHandler]
     }
 ];
 

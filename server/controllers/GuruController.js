@@ -10,5 +10,8 @@ module.exports = {
     },
     getProfileHandler: function(req, res) {
         res.render('guru_profile', {user: req.user});
+    },
+    getAppsHandler: function(req, res) {
+        res.render('guru_apps', {user: req.user});
     }
 };

@@ -32,16 +32,13 @@ GuruSchema = new Schema({
     }],
     extras: {
         band_name: String,
-        about_me: [
-            {
-                type: String
-            }
-        ],
-        links: [
-            {
-                type: String
-            }
-        ]
+        about_me: [{type: String}],
+        links: [{type: String}]
+    },
+    soundcloud: {
+        connected: {type: Boolean, default: false}, //has soundcloud been connected?
+        permalink_url: {type: String},  //link to pass on to embed widget
+        is_shown: {type: Boolean, default: false}    //is widget enabled in profile?
     }
 });
 

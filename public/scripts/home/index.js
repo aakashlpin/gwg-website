@@ -1,19 +1,34 @@
 document.addEventListener('DOMContentLoaded', function() {
     var form = document.querySelector('#signup-form');
-    form.addEventListener('submit', handleFormSubmit);
+    form && form.addEventListener('submit', handleFormSubmit);
 });
+
+var Request = function(method, url) {
+    this.instance = new XMLHttpRequest();
+    this.instance.open(method, url, true);
+
+};
+
+function validateEmail(email) {
+    if (!email.length) return false;
+    if ((email.indexOf('@') <= 0) ||
+        (email.indexOf('.') <= 0) ||
+        (email.indexOf('@') > email.lastIndexOf('.'))) return false;
+
+    return true;
+}
+
+function getRequest() {
+    return new Request('post', '/api/signup');
+}
 
 function handleFormSubmit(e) {
     e.preventDefault();
     var emailInput = document.querySelector('#signup-form [type="email"]');
     var email = emailInput.value.trim();
-    if (!email.length) return;
-    if ((email.indexOf('@') <= 0) ||
-        (email.indexOf('.') <= 0) ||
-        (email.indexOf('@') > email.lastIndexOf('.'))) return;
+    if (!validateEmail(email)) return;
 
-    var request = new XMLHttpRequest;
-    request.open('post', '/api/signup', true);
+    var request = getRequest().instance;
 
     request.onload = formSuccessHandler.bind(this);
     request.onerror = formErrorHandler;

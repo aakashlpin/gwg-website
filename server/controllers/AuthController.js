@@ -52,7 +52,7 @@ module.exports = {
         scope: 'https://www.googleapis.com/auth/userinfo.email ' +
             'https://www.googleapis.com/auth/userinfo.profile ' +
             'https://www.googleapis.com/auth/youtube.readonly',
-        accessType: 'offline'}),
+        accessType: 'offline'}),    //sending this option gives back a refresh token
     passportGoogleAuthCallbackMiddleWare: passport.authenticate('google', { failureRedirect: '/g' }),
 
     authCallbackMiddleWare: function(req, res) {

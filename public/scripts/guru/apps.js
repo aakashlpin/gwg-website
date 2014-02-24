@@ -117,7 +117,108 @@ var SoundCloudComponent = React.createClass({
     }
 });
 
+var YoutubeComponent = React.createClass({
+    getInitialState: function() {
+        //TODO create a data model similar to the response from youtube.
+        //TODO populate this data to populate UI 
+        return {
+
+        };
+    },
+    handleGPlusClientLoad: function() {
+        gapi.client.setApiKey(this.props.data.apiKey);
+        this.checkAuth();
+
+    },
+    checkAuth: function() {
+        gapi.auth.authorize({
+            client_id: this.props.data.clientId,
+            scope: this.props.data.scopes,
+            immediate: true
+        }, this.handleAuthResult.bind(this));
+
+    },
+    handleAuthResult: function(authResult) {
+//    var authorizeButton = document.getElementById('authorize-button');
+        if (authResult && !authResult.error) {
+//            authorizeButton.style.visibility = 'hidden';
+            this.makeApiCall();
+        } else {
+            //TODO
+//            authorizeButton.style.visibility = '';
+//            authorizeButton.onclick = handleAuthClick;
+        }
+
+    },
+    makeApiCall: function() {
+        gapi.client.load('youtube', 'v3', function() {
+            var request = gapi.client.youtube.channels.list({
+                mine: true,
+                part: 'contentDetails'
+            });
+
+            request.execute(function(response) {
+                var playlistId = response.result.items[0].contentDetails.relatedPlaylists.uploads;
+
+                var request = gapi.client.youtube.playlistItems.list({
+                    playlistId: playlistId,
+                    part: 'snippet'
+                });
+
+                request.execute(function(response) {
+                    // Go through response.result.playlistItems to view list of uploaded videos.
+
+                });
+
+            });
+
+        });
+    },
+    handleAuthClick: function(event) {
+        gapi.auth.authorize({
+            client_id: this.props.data.clientId,
+            scope: this.props.data.scopes,
+            immediate: true
+        }, this.handleAuthResult.bind(this));
+
+        return false;
+
+    },
+    componentWillMount: function() {
+        this.callbackName = "youtube" + Math.floor(Math.random() * 1000000);
+        //create a random global for the library to be able to call it
+        window[this.callbackName] = this.handleGPlusClientLoad;
+        $.ajax({
+            url: function(){
+                return 'https://apis.google.com/js/client.js?onload=' + this.callbackName
+            }.call(this),
+            crossDomain: true,
+            dataType: 'script'
+        });
+
+    },
+    render: function() {
+        return (
+            <div className="has-min-height">
+            </div>
+            );
+
+    }
+});
+
 React.renderComponent(
     <SoundCloudComponent />,
-    document.getElementById('appsManagement')
+    document.getElementById('soundCloudAppManagement')
 );
+
+var youtubeData = {
+    clientId: '1008229016606-s7fjods4mi2h1me6bdh9mapv8154lmem.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDdvmhjlHnK7rR2RaGy_1dVCbtDZ6Sr1fM',
+    scopes: 'https://www.googleapis.com/auth/youtube.readonly'
+};
+
+React.renderComponent(
+    <YoutubeComponent data={youtubeData} />,
+    document.getElementById('youtubeAppManagement')
+);
+

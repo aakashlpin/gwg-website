@@ -91,10 +91,16 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
         if (user) {
             //depending on the provider, update the access_token and refresh_token fields
             var updateOnLoginData = {}, updateOnLoginOptions = {};
-            updateOnLoginData[profile.provider] = {
-                access_token: accessToken,
-                refresh_token: refreshToken
-            };
+            updateOnLoginData[profile.provider] = {};
+            updateOnLoginData[profile.provider].access_token = accessToken;
+            //check for refresh token
+            if (refreshToken) {
+                //if exists, use it
+                updateOnLoginData[profile.provider].refresh_token = refreshToken;
+            } else if(user[profile.provider].refresh_token) {
+                //else use the existing token for db request
+                updateOnLoginData[profile.provider].refresh_token = user[profile.provider].refresh_token;
+            }
 
             if (profile.provider === 'facebook') {
                 updateOnLoginData.picture = '//graph.facebook.com/'+ user.username +'/picture';
@@ -104,6 +110,9 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
             }
 
             self.findOneAndUpdate(emailQuery, updateOnLoginData, updateOnLoginOptions, function(err, updatedUser) {
+                if (err) {
+                    console.error(err);
+                }
                 updatedUser.exists = true;    //send a note to client to not start the on-boarding experience
                 callback(null, updatedUser);
             });

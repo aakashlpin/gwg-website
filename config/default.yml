@@ -12,6 +12,11 @@ facebook:
   clientSecret: '5126a40dd1cb8f00f55e7434a3dfcbb2'
   host: 'http://guitarwith.guru'
 
+google:
+  clientID: '1008229016606-s7fjods4mi2h1me6bdh9mapv8154lmem.apps.googleusercontent.com'
+  clientSecret: 'UrV8nwt9M9K9iyO5zqc6KYW7'
+  host: 'http://guitarwith.guru'
+
 redis:
   host: 'localhost'
   port: 6379

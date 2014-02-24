@@ -5,12 +5,22 @@ var routes = [
     {
         path: '/facebook',
         httpMethod: 'GET',
-        middleware: [AuthController.passportAuthMiddleWare]
+        middleware: [AuthController.passportFBAuthMiddleWare]
     },
     {
         path: '/facebook/callback',
         httpMethod: 'GET',
-        middleware: [AuthController.passportAuthCallbackMiddleWare, AuthController.authCallbackMiddleWare]
+        middleware: [AuthController.passportFBAuthCallbackMiddleWare, AuthController.authCallbackMiddleWare]
+    },
+    {
+        path: '/google',
+        httpMethod: 'GET',
+        middleware: [AuthController.passportGoogleAuthMiddleWare]
+    },
+    {
+        path: '/google/callback',
+        httpMethod: 'GET',
+        middleware: [AuthController.passportGoogleAuthCallbackMiddleWare, AuthController.authCallbackMiddleWare]
     }
 ];
 

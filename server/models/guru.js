@@ -13,12 +13,14 @@ GuruSchema = new Schema({
     id: String,
     username: String,
     email: String,
+    alternate_email: String,
     gender: String,
     link: String,
-    location: String,
+    location: { id: {type: String}, name: {type: String} },
     name: String,
     timezone: Number,
     is_guru: { type: Boolean, default: true },  //updated: field to allow/ reject person as a guru
+    picture: String,
     schedule: [{
         day_code: String,
         day_name: String,
@@ -39,6 +41,13 @@ GuruSchema = new Schema({
         connected: {type: Boolean, default: false}, //has soundcloud been connected?
         permalink_url: {type: String},  //link to pass on to embed widget
         is_shown: {type: Boolean, default: false}    //is widget enabled in profile?
+    },
+    facebook: {
+        access_token: {type: String}    //facebook doesn't send refresh tokens
+    },
+    google: {
+        access_token: {type: String},
+        refresh_token: {type: String}
     }
 });
 
@@ -65,20 +74,41 @@ GuruSchema.statics.get = function(req, fields, callback) {
     this.findOne({_id: req.user._id}, fieldObject, callback);
 };
 
-GuruSchema.statics.findOrCreate = function(profile, callback) {
+GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, callback) {
     var dataOfInterest = _.pick(profile._json,
-        ['id', 'name', 'gender', 'link', 'email', 'location', 'timezone', 'username']
+        ['id', 'name', 'gender', 'link', 'email', 'location', 'timezone', 'username', 'picture']
     );
 
-    var self = this;
-    this.findOne({email: dataOfInterest.email}, function(err, user) {
+    var self = this,
+        email = dataOfInterest.email,
+        emailQuery = {$or: [{email: email}, {alternate_email: email}]};
+
+    this.findOne(emailQuery, function(err, user) {
         if (err) {
             return callback(err, null);
         }
 
         if (user) {
-            user.exists = true;    //send a note to client to not start the on-boarding experience
-            return callback(null, user);
+            //depending on the provider, update the access_token and refresh_token fields
+            var updateOnLoginData = {}, updateOnLoginOptions = {};
+            updateOnLoginData[profile.provider] = {
+                access_token: accessToken,
+                refresh_token: refreshToken
+            };
+
+            if (profile.provider === 'facebook') {
+                updateOnLoginData.picture = '//graph.facebook.com/'+ user.username +'/picture';
+
+            } else if (profile.provider === 'google') {
+                updateOnLoginData.picture = dataOfInterest.picture;
+            }
+
+            self.findOneAndUpdate(emailQuery, updateOnLoginData, updateOnLoginOptions, function(err, updatedUser) {
+                updatedUser.exists = true;    //send a note to client to not start the on-boarding experience
+                callback(null, updatedUser);
+            });
+
+            return;
         }
 
         dataOfInterest.schedule = [ {

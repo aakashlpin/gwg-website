@@ -1,7 +1,8 @@
-var config      = require( 'config' ),
-    passport    = require( 'passport' ),
-    FBStrategy  = require( 'passport-facebook'),
-    models      = require( '../models')
+var config          = require( 'config' ),
+    passport        = require( 'passport' ),
+    FBStrategy      = require( 'passport-facebook' ),
+    GoogleStrategy  = require( 'passport-google-oauth' ).OAuth2Strategy,
+    models          = require( '../models' )
     ;
 
 
@@ -19,22 +20,40 @@ module.exports = {
                 clientID: config.facebook.clientID,
                 clientSecret: config.facebook.clientSecret,
                 callbackURL: config.facebook.host + "/auth/facebook/callback"
-            },
-            function(accessToken, refreshToken, profile, done) {
-                process.nextTick(function () {
-                    var Guru = models.Guru;
-                    Guru.findOrCreate(profile, function(err, user) {
-                        if (err) { return done(err); }
-                        done(null, user);
-                    });
-                });
-            }
+            }, commonStrategyHandler
         ));
+
+        passport.use(new GoogleStrategy({
+                clientID: config.google.clientID,
+                clientSecret: config.google.clientSecret,
+                callbackURL: config.google.host + "/auth/google/callback"
+            }, commonStrategyHandler
+        ));
+
+        function commonStrategyHandler(accessToken, refreshToken, profile, done) {
+            process.nextTick(function () {
+                var Guru = models.Guru;
+                Guru.findOrCreate(accessToken, refreshToken, profile, function(err, user) {
+                    if (err) { return done(err); }
+                    done(null, user);
+                });
+            });
+        }
     },
     //single line middleware(s)
     //declaring here to have single point of reference to passport
-    passportAuthMiddleWare: passport.authenticate('facebook', { scope: ['email'] }),
-    passportAuthCallbackMiddleWare: passport.authenticate('facebook', { failureRedirect: '/g' }),
+
+    // passport facebook
+    passportFBAuthMiddleWare: passport.authenticate('facebook', { scope: ['email'] }),
+    passportFBAuthCallbackMiddleWare: passport.authenticate('facebook', { failureRedirect: '/g' }),
+
+    // passport google
+    passportGoogleAuthMiddleWare: passport.authenticate('google', {
+        scope: 'https://www.googleapis.com/auth/userinfo.email ' +
+            'https://www.googleapis.com/auth/userinfo.profile ' +
+            'https://www.googleapis.com/auth/youtube.readonly',
+        accessType: 'offline'}),
+    passportGoogleAuthCallbackMiddleWare: passport.authenticate('google', { failureRedirect: '/g' }),
 
     authCallbackMiddleWare: function(req, res) {
         if (req.user.exists) {

@@ -180,6 +180,29 @@ var DayComponent = React.createClass({
             }
         }
     },
+    getRowActionItemIcon: function() {
+        if (this.props.data.currentMode === 'copy') {
+            return (
+                <i className="fa fa-clock-o"></i>
+                )
+        } else if (this.props.data.noSlots) {
+            return (
+                <i className="fa fa-edit"></i>
+                )
+        }
+        return (
+            <i className="glyphicon glyphicon-plus"></i>
+            )
+    },
+    getRowActionItemIconTitle: function() {
+        if (this.props.data.currentMode === 'copy') {
+            return "Create time slots";
+        } else if (this.props.data.noSlots) {
+            return "Create slots";
+        }
+        return "Add new slot";
+
+    },
     render: function() {
         return (
             <div className="day-slots-container">
@@ -191,9 +214,9 @@ var DayComponent = React.createClass({
                 {this.getChild()}
                     </div>
                     <div className="col-sm-3 text-right">
-                        <a className="schedule-text-middle addNewSlot" title="Add New Slot"
+                        <a className="schedule-text-middle addNewSlot" title={this.getRowActionItemIconTitle()}
                         onClick={this.addTimeSlot}>
-                            <i className="glyphicon glyphicon-plus"></i>
+                        {this.getRowActionItemIcon()}
                         </a>
                         <a className="schedule-text-middle clearAllDaySlots" title="Remove All Slots"
                         onClick={this.removeAllTimeSlots}>
@@ -309,7 +332,11 @@ var DaysList = React.createClass({
                     </div>
                     );
             } else {
-                return (<Loading />);
+                return (
+                    <div className="has-min-height">
+                        <Loading />
+                    </div>
+                    );
             }
         }.bind(this);
 
@@ -320,7 +347,11 @@ var DaysList = React.createClass({
                 People will make reservations against these timings.
                 </p>
                 <p className="text-light gwg-callout gwg-callout-info">
-                * When we are close to launch, we'll let you fine tune schedule for each date.
+                We have created a sample schedule for you.
+                Change it to reflect your availability.
+                </p>
+                <p className="text-light gwg-callout gwg-callout-warning">
+                When we are close to launch, we'll let you fine tune schedule for each date.
                 </p>
             {getChildDOM()}
             </div>

@@ -140,6 +140,9 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
             slots: [{
                 startTime: '08:00 AM',
                 endTime: '09:00 AM'
+            }, {
+                startTime: '09:00 AM',
+                endTime: '10:00 AM'
             }],
             currentMode: 'manual',
             noSlots: false
@@ -152,20 +155,23 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
         }, {
             day_code: 'wed',
             day_name: 'Wednesday',
-            currentMode: 'copy',
-            selectedDayCode: 'mon',
+            slots: [{
+                startTime: '10:00 PM',
+                endTime: '11:00 PM'
+            }],
+            currentMode: 'manual',
             noSlots: false
         }, {
             day_code: 'thu',
             day_name: 'Thursday',
             currentMode: 'copy',
-            selectedDayCode: 'mon',
+            selectedDayCode: 'wed',
             noSlots: false
         }, {
             day_code: 'fri',
             day_name: 'Friday',
             currentMode: 'copy',
-            selectedDayCode: 'mon',
+            selectedDayCode: 'wed',
             noSlots: false
         }, {
             day_code: 'sat',
@@ -176,9 +182,9 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
         }, {
             day_code: 'sun',
             day_name: 'Sunday',
-            currentMode: 'copy',
+            currentMode: 'manual',
             selectedDayCode: 'mon',
-            noSlots: false
+            noSlots: true
         } ];
 
         var data = new self(dataOfInterest);

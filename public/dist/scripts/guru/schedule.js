@@ -180,6 +180,29 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
             }
         }
     },
+    getRowActionItemIcon: function() {
+        if (this.props.data.currentMode === 'copy') {
+            return (
+                React.DOM.i( {className:"fa fa-clock-o"})
+                )
+        } else if (this.props.data.noSlots) {
+            return (
+                React.DOM.i( {className:"fa fa-edit"})
+                )
+        }
+        return (
+            React.DOM.i( {className:"glyphicon glyphicon-plus"})
+            )
+    },
+    getRowActionItemIconTitle: function() {
+        if (this.props.data.currentMode === 'copy') {
+            return "Create time slots";
+        } else if (this.props.data.noSlots) {
+            return "Create slots";
+        }
+        return "Add new slot";
+
+    },
     render: function() {
         return (
             React.DOM.div( {className:"day-slots-container"}, 
@@ -191,9 +214,9 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
                 this.getChild()
                     ),
                     React.DOM.div( {className:"col-sm-3 text-right"}, 
-                        React.DOM.a( {className:"schedule-text-middle addNewSlot", title:"Add New Slot",
+                        React.DOM.a( {className:"schedule-text-middle addNewSlot", title:this.getRowActionItemIconTitle(),
                         onClick:this.addTimeSlot}, 
-                            React.DOM.i( {className:"glyphicon glyphicon-plus"})
+                        this.getRowActionItemIcon()
                         ),
                         React.DOM.a( {className:"schedule-text-middle clearAllDaySlots", title:"Remove All Slots",
                         onClick:this.removeAllTimeSlots}, 
@@ -309,7 +332,11 @@ var DaysList = React.createClass({displayName: 'DaysList',
                     )
                     );
             } else {
-                return (Loading(null ));
+                return (
+                    React.DOM.div( {className:"has-min-height"}, 
+                        Loading(null )
+                    )
+                    );
             }
         }.bind(this);
 
@@ -320,7 +347,11 @@ var DaysList = React.createClass({displayName: 'DaysList',
                 " People will make reservations against these timings. "
                 ),
                 React.DOM.p( {className:"text-light gwg-callout gwg-callout-info"}, 
-                " * When we are close to launch, we'll let you fine tune schedule for each date. "
+                " We have created a sample schedule for you. "+
+                "Change it to reflect your availability. "
+                ),
+                React.DOM.p( {className:"text-light gwg-callout gwg-callout-warning"}, 
+                " When we are close to launch, we'll let you fine tune schedule for each date. "
                 ),
             getChildDOM()
             )

@@ -134,15 +134,31 @@ var ProfileManagement = React.createClass({
     },
     render: function() {
         return (
-            <div className="pad-10">
-                <form className="form-horizontal" role="form" onSubmit={this.handleProfileFormSubmit}>
-                {this._getFormComponents()}
-                    <div className="form-group">
-                        <div className="col-sm-offset-3 col-sm-9">
-                            <button type="submit" className="btn btn-success">Save</button>
+            <div className="has-min-height">
+                <h3>Profile</h3>
+                <p className="gwg-callout gwg-callout-info text-light">
+                * Tell us a bit about yourself. This will help us feature you on our homepage.
+                </p>
+
+                <p className="gwg-callout gwg-callout-warning text-light">
+                    <strong>New: </strong>
+                Share your music with the world! Import your
+                    <a className="underline" href="/g/apps">Youtube videos</a>
+                and
+                    <a className="underline" href="/g/apps">SoundCloud songs</a>
+                into your profile.
+                </p>
+
+                <div className="pad-10">
+                    <form className="form-horizontal" role="form" onSubmit={this.handleProfileFormSubmit}>
+                    {this._getFormComponents()}
+                        <div className="form-group">
+                            <div className="col-sm-offset-3 col-sm-9">
+                                <button type="submit" className="btn btn-success">Save</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
             )
     }

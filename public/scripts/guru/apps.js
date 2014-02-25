@@ -457,7 +457,7 @@ var YoutubeComponent = React.createClass({
                     return (
                         <div>
                             <p className="gwg-callout gwg-callout-info text-light">
-                            Select the videos you would like to flaunt on your Guitar with Guru profile.
+                            Videos marked as Enabled will be shown in your Guitar with Guru profile.
                             {enableAllAction()}
                             </p>
                             <ul className="l-v-list list-unstyled">

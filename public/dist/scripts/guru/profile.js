@@ -134,12 +134,28 @@ var ProfileManagement = React.createClass({displayName: 'ProfileManagement',
     },
     render: function() {
         return (
-            React.DOM.div( {className:"pad-10"}, 
-                React.DOM.form( {className:"form-horizontal", role:"form", onSubmit:this.handleProfileFormSubmit}, 
-                this._getFormComponents(),
-                    React.DOM.div( {className:"form-group"}, 
-                        React.DOM.div( {className:"col-sm-offset-3 col-sm-9"}, 
-                            React.DOM.button( {type:"submit", className:"btn btn-success"}, "Save")
+            React.DOM.div( {className:"has-min-height"}, 
+                React.DOM.h3(null, "Profile"),
+                React.DOM.p( {className:"gwg-callout gwg-callout-info text-light"}, 
+                " * Tell us a bit about yourself. This will help us feature you on our homepage. "
+                ),
+
+                React.DOM.p( {className:"gwg-callout gwg-callout-warning text-light"}, 
+                    React.DOM.strong(null, "New: " ),
+                " Share your music with the world! Import your ",
+                    React.DOM.a( {className:"underline", href:"/g/apps"}, "Youtube videos"),
+                " and ",
+                    React.DOM.a( {className:"underline", href:"/g/apps"}, "SoundCloud songs"),
+                " into your profile. "
+                ),
+
+                React.DOM.div( {className:"pad-10"}, 
+                    React.DOM.form( {className:"form-horizontal", role:"form", onSubmit:this.handleProfileFormSubmit}, 
+                    this._getFormComponents(),
+                        React.DOM.div( {className:"form-group"}, 
+                            React.DOM.div( {className:"col-sm-offset-3 col-sm-9"}, 
+                                React.DOM.button( {type:"submit", className:"btn btn-success"}, "Save")
+                            )
                         )
                     )
                 )

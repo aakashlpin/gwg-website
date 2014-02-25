@@ -51,8 +51,9 @@ module.exports = {
     passportGoogleAuthMiddleWare: passport.authenticate('google', {
         scope: 'https://www.googleapis.com/auth/userinfo.email ' +
             'https://www.googleapis.com/auth/userinfo.profile ' +
-            'https://www.googleapis.com/auth/youtube.readonly',
-        accessType: 'offline'}),    //sending this option gives back a refresh token
+            'https://www.googleapis.com/auth/youtube.readonly'
+//        , accessType: 'offline'
+    }),    //sending this option gives back a refresh token
     passportGoogleAuthCallbackMiddleWare: passport.authenticate('google', { failureRedirect: '/g' }),
 
     authCallbackMiddleWare: function(req, res) {

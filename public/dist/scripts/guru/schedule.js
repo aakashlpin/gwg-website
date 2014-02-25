@@ -1,4 +1,21 @@
 /*** @jsx React.DOM */
+/***
+ *
+ *
+ * Loading Component
+ */
+
+var Loading = React.createClass({displayName: 'Loading',
+    render: function() {
+        return (
+            React.DOM.div( {className:"loader"}, 
+                React.DOM.div( {className:"loader-inner"}, 
+                    React.DOM.img( {src:"/images/loader.gif", alt:"Just a moment.."} )
+                )
+            )
+            )
+    }
+});
 
 var TimeSlotComponent = React.createClass({displayName: 'TimeSlotComponent',
     componentDidMount: function() {
@@ -191,11 +208,17 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
 
 var DaysList = React.createClass({displayName: 'DaysList',
     getInitialState: function() {
-        return {data: []};
+        return {
+            data: [],
+            fetched: false
+        };
     },
     componentWillMount: function() {
         $.getJSON('/api/guru/schedule', function(data) {
-            this.setState({data: data.schedule});
+            this.setState({
+                data: data.schedule,
+                fetched: true
+            });
         }.bind(this));
 
     },
@@ -269,18 +292,37 @@ var DaysList = React.createClass({displayName: 'DaysList',
                 );
         }, this);
 
-        return (
-            React.DOM.div(null, 
-            dayNodes,
-                React.DOM.div( {className:"day-slots-container"}, 
-                    React.DOM.div( {className:"row"}, 
-                        React.DOM.div( {className:"col-sm-7 col-sm-offset-2"}, 
-                            React.DOM.button( {className:"btn btn-success", id:"saveSchedule", onClick:this.saveData}, 
-                            " Save "
+        var getChildDOM = function() {
+            if (this.state.fetched) {
+                return (
+                    React.DOM.div(null, 
+                    dayNodes,
+                        React.DOM.div( {className:"day-slots-container"}, 
+                            React.DOM.div( {className:"row"}, 
+                                React.DOM.div( {className:"col-sm-7 col-sm-offset-2"}, 
+                                    React.DOM.button( {className:"btn btn-success", id:"saveSchedule", onClick:this.saveData}, 
+                                    " Save "
+                                    )
+                                )
                             )
                         )
                     )
-                )
+                    );
+            } else {
+                return (Loading(null ));
+            }
+        }.bind(this);
+
+        return (
+            React.DOM.div( {className:"has-min-height"}, 
+                React.DOM.h3(null, "Manage Schedule"),
+                React.DOM.p( {className:"text-light"}, 
+                " People will make reservations against these timings. "
+                ),
+                React.DOM.p( {className:"text-light gwg-callout gwg-callout-info"}, 
+                " * When we are close to launch, we'll let you fine tune schedule for each date. "
+                ),
+            getChildDOM()
             )
             )
     }

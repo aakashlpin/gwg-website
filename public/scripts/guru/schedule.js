@@ -1,4 +1,21 @@
 /*** @jsx React.DOM */
+/***
+ *
+ *
+ * Loading Component
+ */
+
+var Loading = React.createClass({
+    render: function() {
+        return (
+            <div className="loader">
+                <div className="loader-inner">
+                    <img src="/images/loader.gif" alt="Just a moment.." />
+                </div>
+            </div>
+            )
+    }
+});
 
 var TimeSlotComponent = React.createClass({
     componentDidMount: function() {
@@ -191,11 +208,17 @@ var DayComponent = React.createClass({
 
 var DaysList = React.createClass({
     getInitialState: function() {
-        return {data: []};
+        return {
+            data: [],
+            fetched: false
+        };
     },
     componentWillMount: function() {
         $.getJSON('/api/guru/schedule', function(data) {
-            this.setState({data: data.schedule});
+            this.setState({
+                data: data.schedule,
+                fetched: true
+            });
         }.bind(this));
 
     },
@@ -269,18 +292,37 @@ var DaysList = React.createClass({
                 );
         }, this);
 
-        return (
-            <div>
-            {dayNodes}
-                <div className="day-slots-container">
-                    <div className="row">
-                        <div className="col-sm-7 col-sm-offset-2">
-                            <button className="btn btn-success" id="saveSchedule" onClick={this.saveData}>
-                            Save
-                            </button>
+        var getChildDOM = function() {
+            if (this.state.fetched) {
+                return (
+                    <div>
+                    {dayNodes}
+                        <div className="day-slots-container">
+                            <div className="row">
+                                <div className="col-sm-7 col-sm-offset-2">
+                                    <button className="btn btn-success" id="saveSchedule" onClick={this.saveData}>
+                                    Save
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    );
+            } else {
+                return (<Loading />);
+            }
+        }.bind(this);
+
+        return (
+            <div className="has-min-height">
+                <h3>Manage Schedule</h3>
+                <p className="text-light">
+                People will make reservations against these timings.
+                </p>
+                <p className="text-light gwg-callout gwg-callout-info">
+                * When we are close to launch, we'll let you fine tune schedule for each date.
+                </p>
+            {getChildDOM()}
             </div>
             )
     }

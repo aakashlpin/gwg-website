@@ -49,11 +49,10 @@ GuruSchema = new Schema({
         enabled: Boolean
     }],
     facebook: {
-        access_token: {type: String}    //facebook doesn't send refresh tokens
+        access_token: {type: String}
     },
     google: {
-        access_token: {type: String},
-        refresh_token: {type: String}
+        access_token: {type: String}
     }
 });
 
@@ -99,17 +98,18 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
             var updateOnLoginData = {}, updateOnLoginOptions = {};
             updateOnLoginData[profile.provider] = {};
             updateOnLoginData[profile.provider].access_token = accessToken;
+
             //check for refresh token
-            if (refreshToken) {
+/*            if (refreshToken) {
                 //if exists, use it
                 updateOnLoginData[profile.provider].refresh_token = refreshToken;
             } else if(user[profile.provider].refresh_token) {
                 //else use the existing token for db request
                 updateOnLoginData[profile.provider].refresh_token = user[profile.provider].refresh_token;
-            }
+            }*/
 
             if (profile.provider === 'facebook') {
-                updateOnLoginData.picture = '//graph.facebook.com/'+ user.username +'/picture';
+                updateOnLoginData.picture = '//graph.facebook.com/'+ dataOfInterest.username +'/picture';
 
             } else if (profile.provider === 'google') {
                 updateOnLoginData.picture = dataOfInterest.picture;
@@ -118,12 +118,20 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
             self.findOneAndUpdate(emailQuery, updateOnLoginData, updateOnLoginOptions, function(err, updatedUser) {
                 if (err) {
                     console.error(err);
+                    callback(err);
+                    return;
                 }
                 updatedUser.exists = true;    //send a note to client to not start the on-boarding experience
                 callback(null, updatedUser);
             });
 
             return;
+        }
+
+        //create a picture field for new facebook signUp
+        //google provider will send it by as part of API response
+        if (profile.provider === 'facebook') {
+            dataOfInterest.picture = '//graph.facebook.com/'+ dataOfInterest.username +'/picture';
         }
 
         dataOfInterest.schedule = [ {
@@ -184,6 +192,33 @@ GuruSchema.statics.getAll = function(req, callback) {
     }
 
     this.find(callback);
+};
+
+GuruSchema.statics.associateAccount = function(req, callback) {
+    var sessionUser = req.user,
+        sessionUserEmail = sessionUser.email,
+        findQuery = {$or: [{email: sessionUserEmail}, {alternate_email: sessionUserEmail}]};
+
+    var data = _.pick(req.body, ['email', 'google']);
+
+    this.findOne(findQuery, {email: 1, alternate_email: 1}, function(err, doc) {
+        if (err || !doc) {
+            console.err(err);
+            return;
+        }
+
+        var updateParams = {}, updateOptions = {};
+        if (doc.email === data.email || doc.alternate_email === data.email) {
+            //no update of email is necessary
+            //update the refresh token
+            updateParams.google = data.google;
+
+        } else {
+            updateParams.alternate_email = data.email;
+        }
+
+        this.update(findQuery, updateParams, updateOptions, callback);
+    }.bind(this))
 };
 
 Guru = mongoose.model('Guru', GuruSchema);

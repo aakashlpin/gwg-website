@@ -71,6 +71,11 @@ var routes = [
         path: '/guru/youtube',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAuthenticated, APIController.getGuruYoutubeHandler]
+    },
+    {
+        path: '/guru/accounts',
+        httpMethod: 'POST',
+        middleware: [RouteUtils.ensureAuthenticated, APIController.postGuruAccountHandler]
     }
 ];
 

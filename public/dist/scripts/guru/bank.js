@@ -233,7 +233,7 @@ var BankManagement = React.createClass({displayName: 'BankManagement',
     },
     render: function() {
         return (
-            React.DOM.div(null, 
+            React.DOM.div( {className:"has-min-height"}, 
                 React.DOM.h3(null, "Bank Details"),
                 React.DOM.p( {className:"text-light gwg-callout gwg-callout-info mb-30"}, 
                 " Enter correct information here to ensure timely payments to your account. "

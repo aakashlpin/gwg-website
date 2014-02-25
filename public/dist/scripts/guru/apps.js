@@ -271,13 +271,40 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
 
         }.bind(this));
     },
-    handleAuthClick: function(e) {
-        e.preventDefault();
+    bindGoogleCredsAndHandleAuthResult: function(authResults) {
+        //put loader
+        this.setState({
+            fetched: false,
+            authorized: true,
+            revoked: false
+        });
+
+        //make api request to fetch user profile
+        gapi.client.load('plus','v1', function(){
+            var request = gapi.client.plus.people.get({
+                'userId': 'me'
+            });
+            request.execute(function(peopleInfo) {
+                var payload = {
+                    email: peopleInfo.emails[0].value,
+                    google: {
+                        access_token: authResults.access_token
+                    }
+                };
+
+                $.post('/api/guru/accounts', payload, function(){
+                    this.handleAuthResult.call(this, authResults);
+                }.bind(this));
+
+            }.bind(this));
+        }.bind(this));
+    },
+    handleAuthClick: function() {
         gapi.auth.authorize({
             client_id: this.props.data.clientId,
             scope: this.props.data.scopes,
-            immediate: true
-        }, this.handleAuthResult.bind(this));
+            immediate: false
+        }, this.bindGoogleCredsAndHandleAuthResult.bind(this));
 
         return false;
 

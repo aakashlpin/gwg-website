@@ -96,6 +96,13 @@ module.exports = {
             res.json(data);
         });
 
+    },
+    postGuruAccountHandler: function(req, res) {
+        var GuruModel = models.Guru;
+        GuruModel.associateAccount(req, function(err, data) {
+            res.json(data);
+        });
+
     }
 
 

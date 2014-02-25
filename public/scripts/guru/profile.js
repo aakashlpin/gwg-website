@@ -60,27 +60,30 @@ var TextBoxComponent = React.createClass({
 var ProfileManagement = React.createClass({
     getInitialState: function() {
         return {
-            about_me: {
-                name: 'About me',
-                value: '',
-                formElement: 'textarea',
-                placeholder: 'I am the lead guitarist and a songwriter in the heavy metal band Metallica ' +
-                    'and have been a member of the band since 1983. ' +
-                    'Before joining Metallica I formed and named the band Exodus.'
-            },
-            band_name: {
-                name: 'Name a band you have been associated with',
-                value: '',
-                formElement: 'input',
-                placeholder: 'Metallica'
-            },
-            links: {
-                name: 'List of links you would like to share (one per line)',
-                value: '',
-                formElement: 'textarea',
-                placeholder: 'http://www.mtv.com/artists/metallica'
+            data: {
+                about_me: {
+                    name: 'About me',
+                    value: '',
+                    formElement: 'textarea',
+                    placeholder: 'I am the lead guitarist and a songwriter in the heavy metal band Metallica ' +
+                        'and have been a member of the band since 1983. ' +
+                        'Before joining Metallica I formed and named the band Exodus.'
+                },
+                band_name: {
+                    name: 'Name a band you have been associated with',
+                    value: '',
+                    formElement: 'input',
+                    placeholder: 'Metallica'
+                },
+                links: {
+                    name: 'List of links you would like to share (one per line)',
+                    value: '',
+                    formElement: 'textarea',
+                    placeholder: 'http://www.mtv.com/artists/metallica'
 
-            }
+                }
+            },
+            isDirty: true
         }
     },
     componentWillMount: function() {
@@ -89,25 +92,27 @@ var ProfileManagement = React.createClass({
 
             data = data.extras;
             _.each(_.keys(data), function(profileItem) {
-                if (this.state[profileItem].formElement == "textarea") {
-                    this.state[profileItem].value = data[profileItem].join('\n');
+                if (this.state.data[profileItem].formElement == "textarea") {
+                    this.state.data[profileItem].value = data[profileItem].join('\n');
                 } else {
-                    this.state[profileItem].value = data[profileItem];
+                    this.state.data[profileItem].value = data[profileItem];
                 }
             }, this);
 
-            this.setState(this.state);
+            this.setState({data: this.state.data});
         }.bind(this));
     },
     handleStateChange: function(itemKey, itemValue) {
-        var setStateObject = {};
-        setStateObject[itemKey] = itemValue;
-        this.setState(setStateObject);
+        this.state.data[itemKey] = itemValue;
+        this.setState({
+            data: this.state.data,
+            isDirty: true
+        });
 
     },
     _getFormComponents: function() {
-        return _.keys(this.state).map(function(itemKey) {
-            return <TextBoxComponent itemKey={itemKey} itemValue={this.state[itemKey]}
+        return _.keys(this.state.data).map(function(itemKey) {
+            return <TextBoxComponent itemKey={itemKey} itemValue={this.state.data[itemKey]}
             handleStateChange={this.handleStateChange}/>
 
         }, this);
@@ -115,9 +120,12 @@ var ProfileManagement = React.createClass({
     },
     handleProfileFormSubmit: function(e) {
         e.preventDefault();
-        var payload = {};
-        _.each(_.keys(this.state), function(profileItem){
-            var profileItemValue = this.state[profileItem];
+        var payload = {},
+            clonedCopyOfState = $.extend(true, {}, this.state.data);
+            //create this cloned copy so that original state does not get affected
+        //
+        _.each(_.keys(clonedCopyOfState), function(profileItem){
+            var profileItemValue = clonedCopyOfState[profileItem];
             if (profileItemValue.formElement == 'textarea') {
                 profileItemValue.value = profileItemValue.value.split('\n');
             }
@@ -127,10 +135,19 @@ var ProfileManagement = React.createClass({
 
         $.post('/api/guru/profile', {extras: payload}, function(res) {
             if (res) {
-                $(this.getDOMNode()).find('[type="submit"]')
-                    .toggleClass('btn-success btn-primary').html('Saved');
+                this.setState({isDirty: false});
             }
         }.bind(this));
+    },
+    getSubmitButtonType: function() {
+        if (this.state.isDirty) {
+            return (
+                <button type="submit" className="btn btn-success">Save</button>
+                )
+        }
+        return (
+            <button type="submit" className="btn btn-primary">Saved</button>
+            )
     },
     render: function() {
         return (
@@ -154,7 +171,7 @@ var ProfileManagement = React.createClass({
                     {this._getFormComponents()}
                         <div className="form-group">
                             <div className="col-sm-offset-3 col-sm-9">
-                                <button type="submit" className="btn btn-success">Save</button>
+                            {this.getSubmitButtonType.call(this)}
                             </div>
                         </div>
                     </form>

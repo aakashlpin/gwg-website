@@ -5,6 +5,30 @@ SC.initialize({
     redirect_uri: "http://guitarwith.guru/auth/soundcloud/callback.html"
 });
 
+/***
+ *
+ *
+ * Loading Component
+ */
+
+var Loading = React.createClass({displayName: 'Loading',
+    render: function() {
+        return (
+            React.DOM.div( {className:"loader"}, 
+                React.DOM.div( {className:"loader-inner"}, 
+                    React.DOM.img( {src:"/images/loader.gif", alt:"Just a moment.."} )
+                )
+            )
+            )
+    }
+});
+
+/**
+ *
+ *
+ * SoundCloud Component
+ */
+
 var SoundCloudComponent = React.createClass({displayName: 'SoundCloudComponent',
     getInitialState: function() {
         return {
@@ -86,9 +110,7 @@ var SoundCloudComponent = React.createClass({displayName: 'SoundCloudComponent',
             }
         } else {
             return (
-                React.DOM.div( {className:"loader"}, 
-                    React.DOM.img( {src:"/images/loader.gif", alt:"Just a moment.."} )
-                )
+                Loading(null)
                 )
         }
     },
@@ -109,6 +131,9 @@ var SoundCloudComponent = React.createClass({displayName: 'SoundCloudComponent',
     render: function() {
         return (
             React.DOM.div( {className:"has-min-height"}, 
+                React.DOM.h3(null, "SoundCloud ",
+                    React.DOM.a( {href:"http://soundcloud.com", target:"_blank"}, React.DOM.i( {className:"fa fa-external-link"}))
+                ),
             this.loadDOM(),
                 React.DOM.div( {id:"embedSoundCloudWidget"}
                 )
@@ -117,13 +142,52 @@ var SoundCloudComponent = React.createClass({displayName: 'SoundCloudComponent',
     }
 });
 
+/*****
+ *
+ *
+ *
+ * Youtube component
+ */
+
 var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
     getInitialState: function() {
-        //TODO create a data model similar to the response from youtube.
-        //TODO populate this data to populate UI 
         return {
-
+            videos: [],
+            fetched: false
         };
+    },
+    componentWillMount: function() {
+        //make a call to server to fetch existing videos
+        $.getJSON('/api/guru/youtube', function(res) {
+            if (!res || (res && !res.youtube)) {
+                return;
+            }
+
+            this.setState({
+                videos: res.youtube
+            });
+
+        }.bind(this));
+
+        //initiate Google OAuth2 to check for videos again.
+        //We might want to have highlight the newer videos
+        this.callbackName = "youtube" + Math.floor(Math.random() * 1000000);
+        //create a random global for the library to be able to call it
+        window[this.callbackName] = this.handleGPlusClientLoad;
+        $.ajax({
+            url: function(){
+                return 'https://apis.google.com/js/client.js?onload=' + this.callbackName
+            }.call(this),
+            crossDomain: true,
+            dataType: 'script'
+        });
+
+    },
+    sync: function() {
+        $.post('/api/guru/youtube', {youtube: this.state.videos}, function(res) {
+            console.log("sync", res);
+        });
+
     },
     handleGPlusClientLoad: function() {
         gapi.client.setApiKey(this.props.data.apiKey);
@@ -150,6 +214,14 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
         }
 
     },
+    getEnabledStatus: function(videoId) {
+        var videoExists = _.find(this.state.videos, function(video) {
+            return video.videoId === videoId;
+        }, this);
+
+        return (videoExists ? videoExists.enabled : true);
+
+    },
     makeApiCall: function() {
         gapi.client.load('youtube', 'v3', function() {
             var request = gapi.client.youtube.channels.list({
@@ -167,12 +239,30 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
 
                 request.execute(function(response) {
                     // Go through response.result.playlistItems to view list of uploaded videos.
+                    var videos = [], videoObject = {};
+                    _.each(response.result.items, function(item){
+                        videoObject = {
+                            title: item.snippet.title,
+                            description: item.snippet.description,
+                            videoId: item.snippet.resourceId.videoId,
+                            enabled: this.getEnabledStatus.call(this, item.snippet.resourceId.videoId)
+                        };
 
-                });
+                        videos.push(videoObject);
+                    }, this);
 
-            });
+                    this.setState({
+                        videos: videos,
+                        fetched: true
+                    });
 
-        });
+                    this.sync();
+
+                }.bind(this));
+
+            }.bind(this));
+
+        }.bind(this));
     },
     handleAuthClick: function(event) {
         gapi.auth.authorize({
@@ -184,22 +274,127 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
         return false;
 
     },
-    componentWillMount: function() {
-        this.callbackName = "youtube" + Math.floor(Math.random() * 1000000);
-        //create a random global for the library to be able to call it
-        window[this.callbackName] = this.handleGPlusClientLoad;
-        $.ajax({
-            url: function(){
-                return 'https://apis.google.com/js/client.js?onload=' + this.callbackName
-            }.call(this),
-            crossDomain: true,
-            dataType: 'script'
+    toggleStateFor: function(videoId) {
+        var updatedVideosArray = this.state.videos.map(function(video) {
+            if (video.videoId === videoId) {
+                video.enabled = !video.enabled
+            }
+            return video;
         });
 
+        this.setState({
+            videos: updatedVideosArray
+        });
+
+        this.sync();
+    },
+    enableAllVideos: function() {
+        this.setState({
+            videos: this.state.videos.map(function(video) {
+                video.enabled = true;
+                return video;
+            }, this)
+        });
+
+        this.sync();
     },
     render: function() {
+        var getSrc = function(videoId) {
+            return 'http://i3.ytimg.com/vi/' + videoId + '/mqdefault.jpg';
+        };
+
+        var getHref = function(videoId) {
+            return 'http://youtube.com/watch?v=' + videoId;
+        };
+
+        var getToggleButtonState = function(videoObject) {
+            if (videoObject.enabled) {
+                return (
+                    React.DOM.button( {className:"btn btn-primary", onClick:this.toggleStateFor.bind(this, videoObject.videoId)}, 
+                        React.DOM.i( {className:"fa fa-check-square-o"}), " Enabled "
+                    )
+                    )
+            } else {
+                return (
+                    React.DOM.button( {className:"btn btn-default", onClick:this.toggleStateFor.bind(this, videoObject.videoId)}, 
+                        React.DOM.i( {className:"fa fa-frown-o"}), " Disabled "
+                    )
+                    )
+
+            }
+        }.bind(this);
+
+        var videosDOM = this.state.videos.map(function(video) {
+            return (
+                React.DOM.li( {className:"item bg-brand"}, 
+                    React.DOM.div( {className:"media spacious"}, 
+                        React.DOM.div( {className:"pull-left"}, 
+                            React.DOM.a( {href:getHref(video.videoId), target:"_blank", className:"youtube-play"}, 
+                                React.DOM.img( {className:"media-object", src:getSrc(video.videoId)} )
+                            )
+                        ),
+                        React.DOM.div( {className:"media-body spacious"}, 
+                            React.DOM.h4( {className:"media-heading"}, video.title),
+                            React.DOM.p( {className:"text-light mb-20"}, video.description),
+                            getToggleButtonState(video)
+                        )
+                    )
+                )
+                )
+
+
+        });
+
+        var enableAllAction = function() {
+            var isAnyOneVideoDisabled = _.find(this.state.videos, function(video) {
+                return !video.enabled;
+            }, this);
+
+            if (isAnyOneVideoDisabled) {
+                return (
+                    React.DOM.a( {className:"underline pull-right", onClick:this.enableAllVideos.bind(this)}, 
+                    " Enable All Videos "
+                    )
+                    );
+
+            } else {
+                return ;
+            }
+
+        }.bind(this);
+
+        var getDOM = function() {
+            if (!this.state.fetched) {
+                return (Loading(null ));
+            } else {
+                if (this.state.videos.length) {
+                    return (
+                        React.DOM.div(null, 
+                            React.DOM.p( {className:"gwg-callout gwg-callout-info text-light"}, 
+                            " Select the videos you would like to flaunt on your Guitar with Guru profile. ",
+                            enableAllAction()
+                            ),
+                            React.DOM.ul( {className:"l-v-list list-unstyled"}, 
+                                videosDOM
+                            )
+                        )
+                        );
+                } else {
+                    return (
+                        React.DOM.div(null, 
+                            React.DOM.p( {className:"gwg-callout gwg-callout-info text-light"}, 
+                            " Looks like you haven't uploaded any videos on Youtube. Never mind! "
+                            )
+                        )
+                        )
+                }
+            }
+        }.bind(this);
+
         return (
-            React.DOM.div( {className:"has-min-height"}
+            React.DOM.div( {className:"has-min-height"}, 
+                React.DOM.h3(null, "Youtube ", React.DOM.a( {href:"http://youtube.com", target:"_blank"}, React.DOM.i( {className:"fa fa-external-link"}))),
+                getDOM()
             )
             );
 
@@ -221,4 +416,3 @@ React.renderComponent(
     YoutubeComponent( {data:youtubeData} ),
     document.getElementById('youtubeAppManagement')
 );
-

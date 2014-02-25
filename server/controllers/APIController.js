@@ -82,6 +82,20 @@ module.exports = {
             res.json(data);
         });
 
+    },
+    postGuruYoutubeHandler: function(req, res) {
+        var GuruModel = models.Guru;
+        GuruModel.put(req, ['youtube'], function(err, data) {
+            res.json(data);
+        });
+
+    },
+    getGuruYoutubeHandler: function(req, res) {
+        var GuruModel = models.Guru;
+        GuruModel.get(req, ['youtube'], function(err, data) {
+            res.json(data);
+        });
+
     }
 
 

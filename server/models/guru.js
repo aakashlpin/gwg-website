@@ -42,6 +42,12 @@ GuruSchema = new Schema({
         permalink_url: {type: String},  //link to pass on to embed widget
         is_shown: {type: Boolean, default: false}    //is widget enabled in profile?
     },
+    youtube: [{
+        title: String,
+        description: String,
+        videoId: String,
+        enabled: Boolean
+    }],
     facebook: {
         access_token: {type: String}    //facebook doesn't send refresh tokens
     },

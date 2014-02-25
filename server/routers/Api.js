@@ -61,6 +61,16 @@ var routes = [
         path: '/guru/soundcloud',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAuthenticated, APIController.getGuruSoundCloudHandler]
+    },
+    {
+        path: '/guru/youtube',
+        httpMethod: 'POST',
+        middleware: [RouteUtils.ensureAuthenticated, APIController.postGuruYoutubeHandler]
+    },
+    {
+        path: '/guru/youtube',
+        httpMethod: 'GET',
+        middleware: [RouteUtils.ensureAuthenticated, APIController.getGuruYoutubeHandler]
     }
 ];
 

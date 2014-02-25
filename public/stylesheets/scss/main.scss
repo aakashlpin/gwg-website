@@ -231,8 +231,11 @@ img.bg {
 .mb-10 {
   margin-bottom: 10px;
 }
+.mb-20 {
+  margin-bottom: 20px;
+}
 .mb-30 {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 .mb-40 {
   margin-bottom: 40px;
@@ -327,11 +330,21 @@ img.bg {
 @media only screen and (min-width: $screen-sm-min) {
   .has-min-height {
     min-height: 360px;
+    position: relative;
   }
+}
+
+.bg-brand {
+  background: #f1f1e5;
+}
+
+.spacious {
+  padding: 20px 15px;
 }
 
 .loader {
   height: 100%;
+  text-align: center;
   img {
     position: absolute;
     top: 50%; left: 50%;
@@ -342,4 +355,39 @@ img.bg {
 
 .mt--4 {
   margin-top: -4px;
+}
+
+.youtube-play {
+  position: relative;
+  display: block;
+  &:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+    background-image: url(/images/youtube_play.png);
+    background-size: 80px 45px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    height: 100%;
+    width: 100%;
+    z-index: 1000;
+  }
+
+  &:before {
+    transition: all 0.1s ease-in;
+    z-index: 999;
+    background: rgba(0,0,0,0.1);
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  &:hover:before {
+    background: rgba(0,0,0,0.2);
+  }
+
 }

@@ -316,15 +316,20 @@ img.bg {
   padding: 40px 0 40px 0;
 }
 
+.gwg-callout {
+  margin: 20px 0;
+  padding: 20px;
+  border-left: 3px solid #eee;
+}
+
 .gwg-callout-info {
   background-color: #f4f8fa;
   border-color: #5bc0de;
 }
 
-.gwg-callout {
-  margin: 20px 0;
-  padding: 20px;
-  border-left: 3px solid #eee;
+.gwg-callout-warning {
+  background-color: #fcf8f2;
+  border-color: #f0ad4e;
 }
 
 @media only screen and (min-width: $screen-sm-min) {
@@ -390,4 +395,7 @@ img.bg {
     background: rgba(0,0,0,0.2);
   }
 
+}
+.wd-gplus {
+  width: 212px;
 }

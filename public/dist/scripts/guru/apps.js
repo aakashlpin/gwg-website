@@ -153,7 +153,9 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
     getInitialState: function() {
         return {
             videos: [],
-            fetched: false
+            fetched: false,
+            authorized: true,
+            revoked: false
         };
     },
     componentWillMount: function() {
@@ -203,14 +205,19 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
 
     },
     handleAuthResult: function(authResult) {
-//    var authorizeButton = document.getElementById('authorize-button');
         if (authResult && !authResult.error) {
-//            authorizeButton.style.visibility = 'hidden';
             this.makeApiCall();
+
         } else {
-            //TODO
-//            authorizeButton.style.visibility = '';
-//            authorizeButton.onclick = handleAuthClick;
+            //set authorized state to false
+            this.setState({authorized: false});
+
+            if (this.state.videos.length) {
+                //access was granted earlier. videos were synced. then access was revoked.
+                this.setState({revoked: true});
+            }
+
+            this.setState({fetched: true});
         }
 
     },
@@ -264,7 +271,8 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
 
         }.bind(this));
     },
-    handleAuthClick: function(event) {
+    handleAuthClick: function(e) {
+        e.preventDefault();
         gapi.auth.authorize({
             client_id: this.props.data.clientId,
             scope: this.props.data.scopes,
@@ -297,6 +305,17 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
         });
 
         this.sync();
+    },
+    disableAllVideos: function() {
+        this.setState({
+            videos: this.state.videos.map(function(video) {
+                video.enabled = false;
+                return video;
+            }, this)
+        });
+
+        this.sync();
+
     },
     render: function() {
         var getSrc = function(videoId) {
@@ -363,9 +382,49 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
 
         }.bind(this);
 
+        var getAuthDOM = function() {
+            if (this.state.authorized) return;
+
+            if (this.state.revoked) {
+                //when server returned a lengthy video list
+                return (
+                    React.DOM.div(null, 
+                        React.DOM.p( {className:"gwg-callout gwg-callout-warning text-light"}, 
+                        " It seems like you have revoked our access to your Google Account. "+
+                        "We will continue to show the videos you enabled earlier. ",
+                            React.DOM.a( {onClick:this.handleAuthClick.bind(this)}, 
+                                React.DOM.img( {className:"wd-gplus", src:"/images/sign-in-with-google.png", alt:"login with Google"})
+                            ),
+                        " to update your account with new uploads. "+
+                        "Alternatively, you can ",
+                            React.DOM.a( {className:"underline", onClick:this.disableAllVideos.bind(this)}, "Disable All Videos"),". "
+                        )
+                    )
+                    )
+            } else {
+                //when server returned an empty video list
+                return (
+                    React.DOM.div(null, 
+                        React.DOM.p( {className:"gwg-callout gwg-callout-info text-light"}, 
+                        " Connect your Google Account to fetch the videos you have uploaded on Youtube. "
+                        ),
+
+                        React.DOM.div( {class:"text-center"}, 
+                            React.DOM.a( {onClick:this.handleAuthClick.bind(this)}, 
+                                React.DOM.img( {className:"wd-gplus", src:"/images/sign-in-with-google.png", alt:"login with Google"})
+                            )
+                        )
+                    )
+                    )
+
+            }
+
+        }.bind(this);
+
         var getDOM = function() {
             if (!this.state.fetched) {
                 return (Loading(null ));
+
             } else {
                 if (this.state.videos.length) {
                     return (
@@ -380,13 +439,17 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
                         )
                         );
                 } else {
-                    return (
-                        React.DOM.div(null, 
-                            React.DOM.p( {className:"gwg-callout gwg-callout-info text-light"}, 
-                            " Looks like you haven't uploaded any videos on Youtube. Never mind! "
+                    if (this.state.authorized) {
+                        return (
+                            React.DOM.div(null, 
+                                React.DOM.p( {className:"gwg-callout gwg-callout-info text-light"}, 
+                                " Looks like you haven't uploaded any videos on Youtube. Never mind! "
+                                )
                             )
-                        )
-                        )
+                            )
+                    } else {
+                        return;
+                    }
                 }
             }
         }.bind(this);
@@ -394,6 +457,7 @@ var YoutubeComponent = React.createClass({displayName: 'YoutubeComponent',
         return (
             React.DOM.div( {className:"has-min-height"}, 
                 React.DOM.h3(null, "Youtube ", React.DOM.a( {href:"http://youtube.com", target:"_blank"}, React.DOM.i( {className:"fa fa-external-link"}))),
+                getAuthDOM(),
                 getDOM()
             )
             );
@@ -409,7 +473,9 @@ React.renderComponent(
 var youtubeData = {
     clientId: '1008229016606-s7fjods4mi2h1me6bdh9mapv8154lmem.apps.googleusercontent.com',
     apiKey: 'AIzaSyDdvmhjlHnK7rR2RaGy_1dVCbtDZ6Sr1fM',
-    scopes: 'https://www.googleapis.com/auth/youtube.readonly'
+    scopes: 'https://www.googleapis.com/auth/userinfo.email ' +
+        'https://www.googleapis.com/auth/userinfo.profile ' +
+        'https://www.googleapis.com/auth/youtube.readonly'
 };
 
 React.renderComponent(

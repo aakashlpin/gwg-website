@@ -153,7 +153,9 @@ var YoutubeComponent = React.createClass({
     getInitialState: function() {
         return {
             videos: [],
-            fetched: false
+            fetched: false,
+            authorized: true,
+            revoked: false
         };
     },
     componentWillMount: function() {
@@ -203,14 +205,19 @@ var YoutubeComponent = React.createClass({
 
     },
     handleAuthResult: function(authResult) {
-//    var authorizeButton = document.getElementById('authorize-button');
         if (authResult && !authResult.error) {
-//            authorizeButton.style.visibility = 'hidden';
             this.makeApiCall();
+
         } else {
-            //TODO
-//            authorizeButton.style.visibility = '';
-//            authorizeButton.onclick = handleAuthClick;
+            //set authorized state to false
+            this.setState({authorized: false});
+
+            if (this.state.videos.length) {
+                //access was granted earlier. videos were synced. then access was revoked.
+                this.setState({revoked: true});
+            }
+
+            this.setState({fetched: true});
         }
 
     },
@@ -264,7 +271,8 @@ var YoutubeComponent = React.createClass({
 
         }.bind(this));
     },
-    handleAuthClick: function(event) {
+    handleAuthClick: function(e) {
+        e.preventDefault();
         gapi.auth.authorize({
             client_id: this.props.data.clientId,
             scope: this.props.data.scopes,
@@ -297,6 +305,17 @@ var YoutubeComponent = React.createClass({
         });
 
         this.sync();
+    },
+    disableAllVideos: function() {
+        this.setState({
+            videos: this.state.videos.map(function(video) {
+                video.enabled = false;
+                return video;
+            }, this)
+        });
+
+        this.sync();
+
     },
     render: function() {
         var getSrc = function(videoId) {
@@ -363,9 +382,49 @@ var YoutubeComponent = React.createClass({
 
         }.bind(this);
 
+        var getAuthDOM = function() {
+            if (this.state.authorized) return;
+
+            if (this.state.revoked) {
+                //when server returned a lengthy video list
+                return (
+                    <div>
+                        <p className="gwg-callout gwg-callout-warning text-light">
+                        It seems like you have revoked our access to your Google Account.
+                        We will continue to show the videos you enabled earlier.
+                            <a onClick={this.handleAuthClick.bind(this)}>
+                                <img className="wd-gplus" src="/images/sign-in-with-google.png" alt="login with Google"/>
+                            </a>
+                        to update your account with new uploads.
+                        Alternatively, you can
+                            <a className="underline" onClick={this.disableAllVideos.bind(this)}>Disable All Videos</a>.
+                        </p>
+                    </div>
+                    )
+            } else {
+                //when server returned an empty video list
+                return (
+                    <div>
+                        <p className="gwg-callout gwg-callout-info text-light">
+                        Connect your Google Account to fetch the videos you have uploaded on Youtube.
+                        </p>
+
+                        <div class="text-center">
+                            <a onClick={this.handleAuthClick.bind(this)}>
+                                <img className="wd-gplus" src="/images/sign-in-with-google.png" alt="login with Google"/>
+                            </a>
+                        </div>
+                    </div>
+                    )
+
+            }
+
+        }.bind(this);
+
         var getDOM = function() {
             if (!this.state.fetched) {
                 return (<Loading />);
+
             } else {
                 if (this.state.videos.length) {
                     return (
@@ -380,13 +439,17 @@ var YoutubeComponent = React.createClass({
                         </div>
                         );
                 } else {
-                    return (
-                        <div>
-                            <p className="gwg-callout gwg-callout-info text-light">
-                            Looks like you haven't uploaded any videos on Youtube. Never mind!
-                            </p>
-                        </div>
-                        )
+                    if (this.state.authorized) {
+                        return (
+                            <div>
+                                <p className="gwg-callout gwg-callout-info text-light">
+                                Looks like you haven't uploaded any videos on Youtube. Never mind!
+                                </p>
+                            </div>
+                            )
+                    } else {
+                        return;
+                    }
                 }
             }
         }.bind(this);
@@ -394,6 +457,7 @@ var YoutubeComponent = React.createClass({
         return (
             <div className="has-min-height">
                 <h3>Youtube <a href="http://youtube.com" target="_blank"><i className="fa fa-external-link"></i></a></h3>
+                {getAuthDOM()}
                 {getDOM()}
             </div>
             );
@@ -409,7 +473,9 @@ React.renderComponent(
 var youtubeData = {
     clientId: '1008229016606-s7fjods4mi2h1me6bdh9mapv8154lmem.apps.googleusercontent.com',
     apiKey: 'AIzaSyDdvmhjlHnK7rR2RaGy_1dVCbtDZ6Sr1fM',
-    scopes: 'https://www.googleapis.com/auth/youtube.readonly'
+    scopes: 'https://www.googleapis.com/auth/userinfo.email ' +
+        'https://www.googleapis.com/auth/userinfo.profile ' +
+        'https://www.googleapis.com/auth/youtube.readonly'
 };
 
 React.renderComponent(

@@ -180,9 +180,9 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                 ),
                 React.DOM.div( {id:"courseFormContainer", className:"text-left", style:hide}, 
                     React.DOM.div( {className:"panel panel-default pad-10"}, 
-                        React.DOM.h4(null, "Add new course"),
+                        React.DOM.legend(null, "Add new course"),
                         React.DOM.form( {className:"form-horizontal", role:"form", onSubmit:this.handleNewCourseFormSubmit}, 
-                            React.DOM.div( {className:this.state.new_course.name.length ? 'form-group has-success': 'form-group has-error'}, 
+                            React.DOM.div( {className:"form-group"}, 
                                 React.DOM.label( {className:"control-label col-sm-3", htmlFor:"name"}, "Course Name"),
                                 React.DOM.div( {className:"col-sm-7"}, 
                                     React.DOM.input( {type:"text", className:"form-control",
@@ -190,11 +190,12 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                                     name:"name",
                                     id:"name",
                                     value:this.state.new_course.name,
-                                    onChange:this.validateTextInput}
+                                    onChange:this.validateTextInput,
+                                    required:"required"}
                                     )
                                 )
                             ),
-                            React.DOM.div( {className:this.state.new_course.description.length ? 'form-group has-success': 'form-group has-error'}, 
+                            React.DOM.div( {className:"form-group"}, 
                                 React.DOM.label( {className:"control-label col-sm-3", htmlFor:"description"}, "Course Description"),
                                 React.DOM.div( {className:"col-sm-7"}, 
                                     React.DOM.textarea( {rows:"5",
@@ -203,11 +204,12 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                                     name:"description",
                                     id:"description",
                                     value:this.state.new_course.description,
-                                    onChange:this.validateTextInput}
+                                    onChange:this.validateTextInput,
+                                    required:"required"}
                                     )
                                 )
                             ),
-                            React.DOM.div( {className:this.state.new_course.classes > 0  ? 'form-group has-success': 'form-group has-error'}, 
+                            React.DOM.div( {className:"form-group"}, 
                                 React.DOM.label( {className:"control-label col-sm-3", htmlFor:"classes"}, "Number of sessions"),
                                 React.DOM.div( {className:"col-sm-3"}, 
                                     React.DOM.input( {type:"text",
@@ -216,11 +218,12 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                                     className:"form-control",
                                     placeholder:"12",
                                     value:this.state.new_course.classes,
-                                    onChange:this.validateNumberInput}
+                                    onChange:this.validateNumberInput,
+                                    required:"required"}
                                     )
                                 )
                             ),
-                            React.DOM.div( {className:this.state.new_course.fee > 0  ? 'form-group has-success': 'form-group has-error'}, 
+                            React.DOM.div( {className:"form-group"}, 
                                 React.DOM.label( {className:"control-label col-sm-3", htmlFor:"fee"}, "Total Course Fee"),
                                 React.DOM.div( {className:"col-sm-3"}, 
                                     React.DOM.div( {className:"input-group"}, 
@@ -231,12 +234,13 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                                         className:"form-control",
                                         placeholder:"6000",
                                         value:this.state.new_course.fee,
+                                        required:"required",
                                         onChange:this.validateNumberInput}
                                         )
                                     )
                                 )
                             ),
-                            React.DOM.div( {className:"form-group has-success"}, 
+                            React.DOM.div( {className:"form-group"}, 
                                 React.DOM.label( {className:"control-label col-sm-3", htmlFor:"target_audience"}, "Target Audience"),
                                 React.DOM.div( {className:"col-sm-7"}, 
                                 targetAudienceChecks
@@ -252,7 +256,7 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                     )
                 ),
                 React.DOM.div( {className:"mb-40"}),
-                React.DOM.div( {id:"existingCourses"}, 
+                React.DOM.div( {id:"existingCourses", className:"has-min-height"}, 
                     React.DOM.ul( {className:"l-v-list v-flat-list list-unstyled"}, 
                     existingCourses
                     )

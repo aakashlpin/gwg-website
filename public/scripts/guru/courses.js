@@ -180,9 +180,9 @@ var CourseManagement = React.createClass({
                 </div>
                 <div id="courseFormContainer" className="text-left" style={hide}>
                     <div className="panel panel-default pad-10">
-                        <h4>Add new course</h4>
+                        <legend>Add new course</legend>
                         <form className="form-horizontal" role="form" onSubmit={this.handleNewCourseFormSubmit}>
-                            <div className={this.state.new_course.name.length ? 'form-group has-success': 'form-group has-error'}>
+                            <div className='form-group'>
                                 <label className="control-label col-sm-3" htmlFor="name">Course Name</label>
                                 <div className="col-sm-7">
                                     <input type="text" className="form-control"
@@ -191,10 +191,11 @@ var CourseManagement = React.createClass({
                                     id="name"
                                     value={this.state.new_course.name}
                                     onChange={this.validateTextInput}
+                                    required="required"
                                     />
                                 </div>
                             </div>
-                            <div className={this.state.new_course.description.length ? 'form-group has-success': 'form-group has-error'}>
+                            <div className='form-group'>
                                 <label className="control-label col-sm-3" htmlFor="description">Course Description</label>
                                 <div className="col-sm-7">
                                     <textarea rows="5"
@@ -204,10 +205,11 @@ var CourseManagement = React.createClass({
                                     id="description"
                                     value={this.state.new_course.description}
                                     onChange={this.validateTextInput}
+                                    required="required"
                                     />
                                 </div>
                             </div>
-                            <div className={this.state.new_course.classes > 0  ? 'form-group has-success': 'form-group has-error'}>
+                            <div className='form-group'>
                                 <label className="control-label col-sm-3" htmlFor="classes">Number of sessions</label>
                                 <div className="col-sm-3">
                                     <input type="text"
@@ -217,10 +219,11 @@ var CourseManagement = React.createClass({
                                     placeholder="12"
                                     value={this.state.new_course.classes}
                                     onChange={this.validateNumberInput}
+                                    required="required"
                                     />
                                 </div>
                             </div>
-                            <div className={this.state.new_course.fee > 0  ? 'form-group has-success': 'form-group has-error'}>
+                            <div className='form-group'>
                                 <label className="control-label col-sm-3" htmlFor="fee">Total Course Fee</label>
                                 <div className="col-sm-3">
                                     <div className="input-group">
@@ -231,12 +234,13 @@ var CourseManagement = React.createClass({
                                         className="form-control"
                                         placeholder="6000"
                                         value={this.state.new_course.fee}
+                                        required="required"
                                         onChange={this.validateNumberInput}
                                         />
                                     </div>
                                 </div>
                             </div>
-                            <div className="form-group has-success">
+                            <div className="form-group">
                                 <label className="control-label col-sm-3" htmlFor="target_audience">Target Audience</label>
                                 <div className="col-sm-7">
                                 {targetAudienceChecks}
@@ -252,7 +256,7 @@ var CourseManagement = React.createClass({
                     </div>
                 </div>
                 <div className="mb-40"></div>
-                <div id="existingCourses">
+                <div id="existingCourses" className="has-min-height">
                     <ul className="l-v-list v-flat-list list-unstyled">
                     {existingCourses}
                     </ul>

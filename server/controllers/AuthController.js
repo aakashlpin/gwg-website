@@ -9,11 +9,20 @@ var config          = require( 'config' ),
 module.exports = {
     initAuth: function() {
         passport.serializeUser(function(user, done) {
-            done(null, user);
+            if (user) {
+                done(null, {u: user._id.toString()})
+            } else {
+                done(null, {u: "0"});
+            }
         });
 
         passport.deserializeUser(function(obj, done) {
-            done(null, obj);
+            var id = obj.u,
+                getRequest = {user: {_id: id}};
+
+            models.Guru.get(getRequest, [], function(err, user) {
+                done(err, user);
+            });
         });
 
         passport.use(new FBStrategy({

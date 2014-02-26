@@ -25,7 +25,8 @@ var CourseManagement = React.createClass({
     getInitialState: function() {
         return {
             courses: [],
-            new_course: this._getEmptyFormData()
+            new_course: this._getEmptyFormData(),
+            user: {}
         }
     },
     componentWillMount: function() {
@@ -34,6 +35,21 @@ var CourseManagement = React.createClass({
             if (!this.state.courses.length) {
                 this.toggleAddCourseForm();
             }
+        }.bind(this));
+
+        $.getJSON('/api/user', function(user) {
+            if (!user) return;
+            this.setState({user: user});
+
+            mixpanel.identify(user.email);
+            mixpanel.people.set({
+                "$email": user.email,
+                "$name": user.name,
+                "$last_login": new Date()
+            });
+
+            mixpanel.track('Visited Course page');
+
         }.bind(this));
 
     },
@@ -75,6 +91,8 @@ var CourseManagement = React.createClass({
                 this.setState({courses: this.state.courses});
                 this._resetForm();
             }.bind(this));
+
+            mixpanel.track('Created new course');
         }
     },
     validateTextInput: function(e) {

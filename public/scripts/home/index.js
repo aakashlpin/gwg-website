@@ -50,16 +50,19 @@ function handleFormSubmit(e) {
                 submitBtn.innerHTML = 'You are in!';
                 submitBtn.setAttribute('disabled', 'disabled');
 
+                mixpanel.track("Launch Page Signup", {email: response.email});
             }
         } else {
             //server responded back with Error
             toggleClass(submitBtn, 'btn-danger');
             submitBtn.innerHTML = 'Sorry! Try again.';
+
+            mixpanel.track("Launch Page Signup Failure");
         }
     }
 
     function formErrorHandler() {
-        console.log('connection error');
+        mixpanel.track("Launch Page Form Submit Error");
     }
 }
 
@@ -78,3 +81,5 @@ var toggleClass = function (el, className) {
         el.className = classes.join(' ');
     }
 };
+
+mixpanel.track("Visited Launch page");

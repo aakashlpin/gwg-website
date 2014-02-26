@@ -83,7 +83,8 @@ var ProfileManagement = React.createClass({
 
                 }
             },
-            isDirty: true
+            isDirty: true,
+            user: {}
         }
     },
     componentWillMount: function() {
@@ -101,6 +102,22 @@ var ProfileManagement = React.createClass({
 
             this.setState({data: this.state.data});
         }.bind(this));
+
+        $.getJSON('/api/user', function(user) {
+            if (!user) return;
+            this.setState({user: user});
+
+            mixpanel.identify(user.email);
+            mixpanel.people.set({
+                "$email": user.email,
+                "$name": user.name,
+                "$last_login": new Date()
+            });
+
+            mixpanel.track('Visited Profile page');
+
+        }.bind(this));
+
     },
     handleStateChange: function(itemKey, itemValue) {
         this.state.data[itemKey] = itemValue;
@@ -122,7 +139,7 @@ var ProfileManagement = React.createClass({
         e.preventDefault();
         var payload = {},
             clonedCopyOfState = $.extend(true, {}, this.state.data);
-            //create this cloned copy so that original state does not get affected
+        //create this cloned copy so that original state does not get affected
         //
         _.each(_.keys(clonedCopyOfState), function(profileItem){
             var profileItemValue = clonedCopyOfState[profileItem];
@@ -138,6 +155,8 @@ var ProfileManagement = React.createClass({
                 this.setState({isDirty: false});
             }
         }.bind(this));
+
+        mixpanel.track('Profile changed and saved');
     },
     getSubmitButtonType: function() {
         if (this.state.isDirty) {

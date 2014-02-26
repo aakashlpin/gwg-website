@@ -295,7 +295,8 @@ var DaysList = React.createClass({
         return {
             data: [],
             fetched: false,
-            isDirty: true
+            isDirty: true,
+            user: {}
         };
     },
     componentWillMount: function() {
@@ -316,6 +317,21 @@ var DaysList = React.createClass({
             });
         }.bind(this));
 
+        $.getJSON('/api/user', function(user) {
+            if (!user) return;
+            this.setState({user: user});
+
+            mixpanel.identify(user.email);
+            mixpanel.people.set({
+                "$email": user.email,
+                "$name": user.name,
+                "$last_login": new Date()
+            });
+
+            mixpanel.track('Visited Schedule page');
+
+        }.bind(this));
+
     },
     saveData: function() {
         $.post('/api/guru/schedule', {schedule: this.state.data}, function(res) {
@@ -325,6 +341,7 @@ var DaysList = React.createClass({
 
         }.bind(this));
 
+        mixpanel.track('Schedule modified and saved');
     },
     handleOnChange: function(dayCode, properties) {
         this.setState({
@@ -363,6 +380,8 @@ var DaysList = React.createClass({
 
                 return dayObject}, this)
         });
+
+        mixpanel.track('Schedule modified');
     },
     getCopyModeData: function(dayObject) {
         if (dayObject.currentMode !== 'copy') {
@@ -433,8 +452,7 @@ var DaysList = React.createClass({
                 People will make reservations against these timings.
                 </p>
                 <p className="text-light gwg-callout gwg-callout-info">
-                We have created a sample schedule for you.
-                Change it to reflect your availability.
+                Maintain the schedule below to reflect your availability.
                 </p>
                 <p className="text-light gwg-callout gwg-callout-warning">
                 When we are close to launch, we'll let you fine tune schedule for each date.

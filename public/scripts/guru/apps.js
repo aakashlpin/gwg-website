@@ -37,7 +37,8 @@ var SoundCloudComponent = React.createClass({
                 permalink_url: '',
                 is_shown: false
             },
-            fetched: false
+            fetched: false,
+            user: {}
         }
     },
     componentWillMount: function() {
@@ -53,6 +54,22 @@ var SoundCloudComponent = React.createClass({
             this.embedSoundCloudWidget();
 
         }.bind(this));
+
+        $.getJSON('/api/user', function(user) {
+            if (!user) return;
+            this.setState({user: user});
+
+            mixpanel.identify(user.email);
+            mixpanel.people.set({
+                "$email": user.email,
+                "$name": user.name,
+                "$last_login": new Date()
+            });
+
+            mixpanel.track('Visited Apps page');
+
+        }.bind(this));
+
     },
     sync: function() {
         $.post('/api/guru/soundcloud', {soundcloud: this.state.soundcloud}, function(res) {
@@ -72,6 +89,8 @@ var SoundCloudComponent = React.createClass({
 
                 this.sync();
 
+                mixpanel.track('Connected SoundCloud');
+
             }.bind(this));
         }.bind(this));
 
@@ -82,6 +101,7 @@ var SoundCloudComponent = React.createClass({
             soundcloud: this.state.soundcloud
         });
         this.sync();
+        mixpanel.track('DisConnected SoundCloud');
     },
     loadDOM: function() {
         if (this.state.fetched) {
@@ -187,7 +207,7 @@ var YoutubeComponent = React.createClass({
     },
     sync: function() {
         $.post('/api/guru/youtube', {youtube: this.state.videos}, function(res) {
-            console.log("sync", res);
+            mixpanel.track('Youtube app synced');
         });
 
     },

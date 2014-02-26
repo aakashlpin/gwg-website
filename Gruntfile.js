@@ -53,12 +53,12 @@ module.exports = function ( grunt ) {
         },
 
         uglify: {
-            my_target: {
+            dist: {
                 files: [{
                     expand: true,
                     cwd: 'public/dist',
                     src: '**/*.js',
-                    dest: 'dest/js'
+                    dest: 'public/dist'
                 }]
             }
         },
@@ -182,7 +182,7 @@ module.exports = function ( grunt ) {
         'cssmin',
         'imagemin',
         'react',
-        'uglify',
+        'uglify:dist',
         'forever:restart'
     ] );
 

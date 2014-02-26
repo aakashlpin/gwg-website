@@ -186,6 +186,21 @@ var BankManagement = React.createClass({
 
             this.setState(this.state);
         }.bind(this));
+
+        $.getJSON('/api/user', function(user) {
+            if (!user) return;
+
+            mixpanel.identify(user.email);
+            mixpanel.people.set({
+                "$email": user.email,
+                "$name": user.name,
+                "$last_login": new Date()
+            });
+
+            mixpanel.track('Visited Bank page');
+
+        }.bind(this));
+
     },
     handleStateChange: function(itemKey, itemValue) {
         var setStateObject = {};

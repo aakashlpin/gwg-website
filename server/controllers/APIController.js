@@ -1,10 +1,12 @@
 var config = require('config'),
     async = require('async'),
-    models = require('../models');
+    models = require('../models'),
+    _ = require('underscore');
 
 module.exports = {
     getUserHandler: function(req, res) {
-        res.json(req.user);
+        var data = _.pick(req.user, ['email', 'alternate_email', 'name', 'picture']);
+        res.json(data);
     },
     postSignupHandler: function(req, res) {
         var SignupModel = models.Signup;

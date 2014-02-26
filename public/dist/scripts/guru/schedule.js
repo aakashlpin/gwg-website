@@ -18,18 +18,54 @@ var Loading = React.createClass({displayName: 'Loading',
 });
 
 var TimeSlotComponent = React.createClass({displayName: 'TimeSlotComponent',
+    trickleDown: function(startTime, endTime) {
+        this.props.data.startTime = startTime;
+        this.props.data.endTime = endTime;
+        this.props.onSlotChange(this.props.dayCode, this.props.data);
+
+    },
     componentDidMount: function() {
         var domNode = $(this.getDOMNode());
-        var timepicker = domNode.find('div.bfh-timepicker');
-        var _this = this;
-        timepicker.each(function() {
-            var _timepicker = $(this);
-            _timepicker.bfhtimepicker({
-                icon: '',
-                time: _this.props.data[_timepicker.data('type')],
-                mode: '12h'
-            });
-        });
+        var startTimeInputId = '#' + this.props.data.key + '_0',
+            endTimeInputId  = '#' + this.props.data.key + '_1';
+
+        var from_$input = $(startTimeInputId).pickatime({interval: 15}),
+            from_picker = from_$input.pickatime('picker');
+
+        var to_$input = $(endTimeInputId).pickatime({
+                interval: 15,
+                formatLabel: function( timeObject ) {
+                    var minObject = this.get( 'min' ),
+                        hours = timeObject.hour - minObject.hour,
+                        mins = ( timeObject.mins - minObject.mins ) / 60,
+                        pluralize = function( number, word ) {
+                            return number + ' ' + ( number === 1 ? word : word + 's' )
+                        };
+                    return '<b>h</b>:i <!i>a</!i> <sm!all>(' + pluralize( hours + mins, '!hour' ) + ')</sm!all>'
+                }
+            }),
+            to_picker = to_$input.pickatime('picker');
+
+        // Check if there’s a “from” or “to” time to start with.
+        if ( from_picker.get('value') ) {
+            to_picker.set('min', from_picker.get('select'));
+        }
+
+        // When something is selected, update the “from” and “to” limits.
+        from_picker.on('set', function(event) {
+            if ( event.select ) {
+                to_picker.set('min', from_picker.get('select'));
+                to_picker.set('select', from_picker.get('select').pick + 60);
+                this.trickleDown(from_picker.get('value'), to_picker.get('value'));
+            }
+        }.bind(this));
+
+        to_picker.on('set', function(event) {
+            if ( event.select ) {
+                from_picker.set('max', to_picker.get('select'));
+                this.trickleDown(from_picker.get('value'), to_picker.get('value'));
+            }
+        }.bind(this));
 
     },
     removeTimeSlot: function() {
@@ -40,13 +76,23 @@ var TimeSlotComponent = React.createClass({displayName: 'TimeSlotComponent',
         return (
             React.DOM.div( {className:"time-slot-container clearfix"}, 
                 React.DOM.div( {className:"item time-slot-unit"}, 
-                    React.DOM.div( {className:"bfh-timepicker", 'data-type':"startTime"})
+                    React.DOM.input(
+                    {className:"form-control gwg-timepicker",
+                    id:this.props.data.key + '_0',
+                    name:this.props.data.key + '_0',
+                    value:this.props.data.startTime,
+                    'data-type':"startTime"} )
                 ),
                 React.DOM.div( {className:"item time-slot-join"}, 
                     React.DOM.span( {className:"schedule-text-middle"}, "to")
                 ),
                 React.DOM.div( {className:"item time-slot-unit"}, 
-                    React.DOM.div( {className:"bfh-timepicker", 'data-type':"endTime"})
+                    React.DOM.input(
+                    {className:"form-control gwg-timepicker",
+                    id:this.props.data.key + '_1',
+                    name:this.props.data.key + '_1',
+                    value:this.props.data.endTime,
+                    'data-type':"endTime"} )
                 ),
                 React.DOM.div( {className:"item time-slot-remove"}, 
                     React.DOM.button( {className:"btn btn-link", onClick:this.removeTimeSlot}, 
@@ -78,7 +124,8 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
 
         this.props.data.slots.push({
             startTime: startTime,
-            endTime: endTime
+            endTime: endTime,
+            key: this.props.data.day_code + '_' + (++this.props.data.slotIndex)
         });
 
         this.props.data.noSlots = false;
@@ -105,11 +152,8 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
     },
     handleOnSlotRemove: function(dayCode, timeSlot) {
         var dayObject = this.props.data;
-
         dayObject.slots = _.reject(dayObject.slots, function(slot) {
-            return ((slot.startTime === timeSlot.startTime)
-                && (slot.endTime === timeSlot.endTime)
-                );
+            return (slot.key === timeSlot.key)
         });
 
         if (!dayObject.slots.length) {
@@ -118,6 +162,19 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
 
         this.props.onDayChange(dayCode, dayObject);
 
+    },
+    handleOnSlotChange: function(dayCode, data) {
+        var dayObject = this.props.data;
+
+        dayObject.slots = _.map(dayObject.slots, function(slot) {
+            if (slot.key === data.key) {
+                slot = data;
+            }
+
+            return slot;
+        });
+
+        this.props.onDayChange(dayCode, dayObject);
     },
     handleClickOnCopyModeChange: function(e) {
         var target = $(e.target);
@@ -147,7 +204,7 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
                 return (
                     React.DOM.div( {className:"copyModeContainer"}, 
                         React.DOM.div( {className:"l-h-list"}, 
-                            React.DOM.p( {className:"item schedule-text-middle"}, "Same as: "  ),
+                            React.DOM.p( {className:"item schedule-text-middle text-light"}, "Same as: "  ),
                             React.DOM.ul( {className:"item l-h-list guru-schedule-copy-links"}, 
                         copyModeDOM
                             )
@@ -166,7 +223,11 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
         } else {
             if (!this.props.data.noSlots) {
                 var dom = this.props.data.slots.map(function(slot) {
-                    return (TimeSlotComponent( {data:slot, key:slot.startTime, onSlotRemove:this.handleOnSlotRemove}))
+                    return (
+                        TimeSlotComponent( {data:slot, dayCode:this.props.data.day_code,
+                        onSlotChange:this.handleOnSlotChange,
+                        onSlotRemove:this.handleOnSlotRemove})
+                        )
                 }, this);
 
                 return (React.DOM.div( {className:"daySlotsContainer"}, dom));
@@ -211,7 +272,7 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
                         React.DOM.p( {className:"text-bold schedule-text-middle"}, this.props.data.day_name)
                     ),
                     React.DOM.div( {className:"col-sm-7"}, 
-                this.getChild()
+                    this.getChild()
                     ),
                     React.DOM.div( {className:"col-sm-3 text-right"}, 
                         React.DOM.a( {className:"schedule-text-middle addNewSlot", title:this.getRowActionItemIconTitle(),
@@ -233,11 +294,22 @@ var DaysList = React.createClass({displayName: 'DaysList',
     getInitialState: function() {
         return {
             data: [],
-            fetched: false
+            fetched: false,
+            isDirty: true
         };
     },
     componentWillMount: function() {
         $.getJSON('/api/guru/schedule', function(data) {
+            //map each slot with a key
+            //this enables trickling down the key for updating/removing
+            _.each(data.schedule, function(scheduleItem) {
+                _.each(scheduleItem.slots, function(slotItem, index) {
+                    slotItem.key = scheduleItem.day_code + '_' + index;
+                }, this);
+
+                scheduleItem.slotIndex = scheduleItem.slots.length;
+            }, this);
+
             this.setState({
                 data: data.schedule,
                 fetched: true
@@ -247,48 +319,49 @@ var DaysList = React.createClass({displayName: 'DaysList',
     },
     saveData: function() {
         $.post('/api/guru/schedule', {schedule: this.state.data}, function(res) {
-            $(this.getDOMNode()).find('#saveSchedule')
-                .html('Saved')
-                .toggleClass('btn-success btn-primary')
-            ;
+            this.setState({
+                isDirty: false
+            });
 
         }.bind(this));
 
     },
     handleOnChange: function(dayCode, properties) {
-        this.setState({'data': _.map(this.state.data, function(dayObject) {
-            if (dayObject.day_code === dayCode) {
-                for (var property in properties) {
-                    if (properties.hasOwnProperty(property)) {
-                        dayObject[property] = properties[property];
+        this.setState({
+            isDirty: true,
+            data: _.map(this.state.data, function(dayObject) {
+                if (dayObject.day_code === dayCode) {
+                    for (var property in properties) {
+                        if (properties.hasOwnProperty(property)) {
+                            dayObject[property] = properties[property];
+                        }
                     }
                 }
-            }
 
-            if (dayObject.currentMode === 'copy') {
-                var copyModeData = this.getCopyModeData(dayObject);
-                if (copyModeData.length) {
-                    //if the selectedDayCode is not found in the list of copy mode items
-                    if (!_.isObject(_.find(copyModeData, function(copyModeObject) {
-                        return dayObject.selectedDayCode === copyModeObject.day_code;
-                    }, this))) {
-                        //then set the first item in the list of available copy modes as selected
-                        dayObject.selectedDayCode = copyModeData[0].day_code;
-                    }
-                    dayObject.noSlots = false;
+                if (dayObject.currentMode === 'copy') {
+                    var copyModeData = this.getCopyModeData(dayObject);
+                    if (copyModeData.length) {
+                        //if the selectedDayCode is not found in the list of copy mode items
+                        if (!_.isObject(_.find(copyModeData, function(copyModeObject) {
+                            return dayObject.selectedDayCode === copyModeObject.day_code;
+                        }, this))) {
+                            //then set the first item in the list of available copy modes as selected
+                            dayObject.selectedDayCode = copyModeData[0].day_code;
+                        }
+                        dayObject.noSlots = false;
 
-                } else {
-                    var atleastOneDayWithSlotsExists = _.find(this.state.data, function(dataObject) {
-                        return dataObject.slots.length;
-                    });
+                    } else {
+                        var atleastOneDayWithSlotsExists = _.find(this.state.data, function(dataObject) {
+                            return dataObject.slots.length;
+                        });
 
-                    if (!atleastOneDayWithSlotsExists) {
-                        dayObject.noSlots = true;
+                        if (!atleastOneDayWithSlotsExists) {
+                            dayObject.noSlots = true;
+                        }
                     }
                 }
-            }
 
-            return dayObject}, this)
+                return dayObject}, this)
         });
     },
     getCopyModeData: function(dayObject) {
@@ -303,6 +376,21 @@ var DaysList = React.createClass({displayName: 'DaysList',
                 && (dataDayObject.currentMode !== 'copy')   //exclude the copy mode guys
                 );
         });
+
+    },
+    getSubmitButton: function() {
+        if (this.state.isDirty) {
+            return (
+                React.DOM.button( {className:"btn btn-success", id:"saveSchedule", onClick:this.saveData}, 
+                " Save "
+                )
+                )
+        }
+        return (
+            React.DOM.button( {className:"btn btn-primary"}, 
+            " Saved "
+            )
+            )
 
     },
     render: function() {
@@ -323,9 +411,7 @@ var DaysList = React.createClass({displayName: 'DaysList',
                         React.DOM.div( {className:"day-slots-container"}, 
                             React.DOM.div( {className:"row"}, 
                                 React.DOM.div( {className:"col-sm-7 col-sm-offset-2"}, 
-                                    React.DOM.button( {className:"btn btn-success", id:"saveSchedule", onClick:this.saveData}, 
-                                    " Save "
-                                    )
+                                this.getSubmitButton.call(this)
                                 )
                             )
                         )
@@ -353,7 +439,7 @@ var DaysList = React.createClass({displayName: 'DaysList',
                 React.DOM.p( {className:"text-light gwg-callout gwg-callout-warning"}, 
                 " When we are close to launch, we'll let you fine tune schedule for each date. "
                 ),
-            getChildDOM()
+                getChildDOM()
             )
             )
     }

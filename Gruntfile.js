@@ -52,6 +52,17 @@ module.exports = function ( grunt ) {
             }
         },
 
+        uglify: {
+            my_target: {
+                files: [{
+                    expand: true,
+                    cwd: 'public/dist',
+                    src: '**/*.js',
+                    dest: 'dest/js'
+                }]
+            }
+        },
+
         nodemon: {
             dev: {
                 script: 'index.js',
@@ -169,6 +180,9 @@ module.exports = function ( grunt ) {
         'compass:dist',
         'autoprefixer',
         'cssmin',
+        'imagemin',
+        'react',
+        'uglify',
         'forever:restart'
     ] );
 

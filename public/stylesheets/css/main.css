@@ -10734,3 +10734,8 @@ img.bg {
 .wd-gplus {
   width: 212px;
 }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003404}}
+.display-ib {
+  display: inline-block;
+}

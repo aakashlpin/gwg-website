@@ -150,7 +150,7 @@ var SoundCloudComponent = React.createClass({
     },
     render: function() {
         return (
-            <div className="has-min-height">
+            <div className="mb-60">
                 <h3>SoundCloud
                     <a href="http://soundcloud.com" target="_blank"><i className="fa fa-external-link"></i></a>
                 </h3>

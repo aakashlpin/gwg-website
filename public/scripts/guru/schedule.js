@@ -62,7 +62,7 @@ var TimeSlotComponent = React.createClass({
 
         to_picker.on('set', function(event) {
             if ( event.select ) {
-                from_picker.set('max', to_picker.get('select'));
+//                from_picker.set('max', to_picker.get('select'));
                 this.trickleDown(from_picker.get('value'), to_picker.get('value'));
             }
         }.bind(this));
@@ -295,7 +295,10 @@ var DaysList = React.createClass({
         return {
             data: [],
             fetched: false,
-            isDirty: true,
+            isDirty: false,
+            saving: false,
+            mostRecentChangeAt: new Date(),
+            intervalNumber: 0,
             user: {}
         };
     },
@@ -333,11 +336,34 @@ var DaysList = React.createClass({
         }.bind(this));
 
     },
+    componentDidMount: function() {
+        //Autosave/ autosync every 3 sec
+        setInterval(function() {
+                var mostRecentChangeAt = moment(this.state.mostRecentChangeAt),
+                    now = moment(),
+                    diff = now.diff(mostRecentChangeAt)
+                ;
+
+            if (diff > 3000 && this.state.isDirty) {
+                this.saveData();
+            }
+
+        }.bind(this), 1000);
+    },
     saveData: function() {
+        this.setState({
+            isDirty: false,
+            saving: true
+        });
+
         $.post('/api/guru/schedule', {schedule: this.state.data}, function(res) {
-            this.setState({
-                isDirty: false
-            });
+            //emulate some loading ;)
+            setTimeout(function(){
+                this.setState({
+                    saving: false
+                });
+
+            }.bind(this), 500);
 
         }.bind(this));
 
@@ -345,6 +371,7 @@ var DaysList = React.createClass({
     },
     handleOnChange: function(dayCode, properties) {
         this.setState({
+            mostRecentChangeAt: new Date(),
             isDirty: true,
             data: _.map(this.state.data, function(dayObject) {
                 if (dayObject.day_code === dayCode) {
@@ -405,6 +432,13 @@ var DaysList = React.createClass({
                 </button>
                 )
         }
+        if (this.state.saving) {
+            return (
+                <button className="btn btn-success btn-loading">
+                Saving..
+                </button>
+                )
+        }
         return (
             <button className="btn btn-primary">
             Saved
@@ -426,14 +460,17 @@ var DaysList = React.createClass({
             if (this.state.fetched) {
                 return (
                     <div>
-                    {dayNodes}
                         <div className="day-slots-container">
                             <div className="row">
-                                <div className="col-sm-7 col-sm-offset-2">
-                                {this.getSubmitButton.call(this)}
+                                <div className="clearfix">
+                                    <div className="pull-right">
+                                    {this.getSubmitButton.call(this)}
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        {dayNodes}
                     </div>
                     );
             } else {

@@ -4,7 +4,7 @@ var config = require('config'),
 
 module.exports = {
     getSignupsHandler: function(req, res) {
-        if (req.user.email !== config.admin.email) {
+        if (config.admin.emails.indexOf(req.user.email) < 0) {
             res.redirect('/g');
             return;
         }

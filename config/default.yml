@@ -22,7 +22,7 @@ redis:
   port: 6379
 
 admin:
-  email: 'aakash.lpin@gmail.com'
+  emails: ['aakash.lpin@gmail.com', 'goyal64@gmail.com']
 
 soundcloud:
   clientID: 'e63a38724fcd2b664ca141aeb20e6fd0'

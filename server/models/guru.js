@@ -193,7 +193,7 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
 };
 
 GuruSchema.statics.getAll = function(req, callback) {
-    if (req.user.email !== config.admin.email) {
+    if (config.admin.emails.indexOf(req.user.email) < 0) {
         return callback('Unauthorized');
     }
 

@@ -144,7 +144,10 @@ module.exports = {
         }
 
         GuruModel.getByUserName(username, function(err, guruRecord) {
-            if (!err && guruRecord) {
+            if (err || !guruRecord) {
+                res.json({err: err ? err: 'User is a ghost. No record for user found.'});
+
+            } else {
                 var schedule = guruRecord.schedule;
                 //right now, lets send out events for next 30 days
                 //later we will have to see what how often are gurus able to update their schedule

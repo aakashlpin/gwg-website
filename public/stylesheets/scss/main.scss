@@ -7,6 +7,9 @@ $border-radius-small: 2px;
 @import '../../bower_components/sass-bootstrap/lib/bootstrap';
 @import 'default';
 @import 'default.time';
+@import 'blueimp-gallery';
+@import 'blueimp-gallery-video';
+@import 'fullcalendar';
 @import 'font-awesome/scss/font-awesome';
 @import 'typography';
 @import 'modules';
@@ -480,6 +483,12 @@ img.bg {
   height: 50px;
 }
 
+.navbar-profile {
+  background: rgba(21, 21, 21, 0.9);
+  border-style: solid;
+  border-color: $color-black;
+}
+
 .guru-image {
   border: 2px solid #eee;
   padding: 3px;
@@ -505,3 +514,8 @@ img.bg {
   color: $color-grey;
 }
 
+.schedule-container {
+  background: #fff;
+  box-shadow: inset 0 0 6px 1px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+}

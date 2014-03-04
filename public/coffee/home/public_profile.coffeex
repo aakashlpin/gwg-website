@@ -1,0 +1,134 @@
+`/*** @jsx React.DOM */`
+
+
+#########
+#Helper for getting user name from URL
+#########
+UserHelpers =
+  getUserName: ->
+    window.location.pathname.split('/')[1]
+
+#########
+#Schedule for guru
+#########
+Schedule = React.createClass
+  mixins: [UserHelpers],
+
+  getInitialState: ->
+    slots: []
+
+  componentWillMount: ->
+    $.getJSON '/api/public/schedule', {username: @getUserName()}, (slotsRes) =>
+      @setState
+        slots: slotsRes
+
+  componentDidUpdate: ->
+    $(@getDOMNode()).find('#calendar').fullCalendar({
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      defaultView: 'agendaWeek',
+      editable: false,
+      events: @state.slots
+    });
+
+  render: ->
+    return `(
+      <div>
+        <h4 className="text-heading">Available Slots</h4>
+        <div className="schedule-container" id="calendar"></div>
+      </div>
+      )`
+
+########
+#YouTube widget
+########
+
+Youtube = React.createClass
+  mixins: [UserHelpers]
+
+  getInitialState: ->
+    youtube: []
+
+  componentWillMount: ->
+    username = @getUserName()
+    $.getJSON '/api/public/youtube', username: username, (youTubeRes) =>
+      @setState
+        youtube: youTubeRes
+
+  componentDidUpdate: ->
+    videoArray = @state.youtube.map (youtubeItem) ->
+      if youtubeItem.enabled
+      then return {
+      title: youtubeItem.title
+      href: "http://www.youtube.com/watch?v=#{youtubeItem.videoId}"
+      type: 'text/html'
+      youtube: youtubeItem.videoId
+      poster: "https://img.youtube.com/vi/#{youtubeItem.videoId}/0.jpg"
+      }
+      else return false #set the disabled video as falsy value
+
+    #reject the videos that have been mapped as false
+    videoArray = _.reject videoArray, (videoItem) -> !videoItem
+
+    blueimp.Gallery videoArray,
+      container: '#blueimp-video-carousel'
+      carousel: true
+
+  render: ->
+    `(
+    <div>
+    <h4 className="text-heading">On Youtube</h4>
+      <div id="blueimp-video-carousel" className="blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel">
+        <div className="slides"></div>
+        <h3 className="title"></h3>
+        <a className="prev">‹</a>
+        <a className="next">›</a>
+        <a className="play-pause"></a>
+      </div>
+    </div>
+  )`
+
+
+########
+#SoundCloud widget
+########
+
+SoundCloud = React.createClass
+  mixins: [UserHelpers]
+
+  getInitialState: ->
+    soundcloud:
+      connected: false
+      permalink_url: ''
+      is_shown: false
+
+  render: ->
+    `(
+      <div>
+        <h4 className="text-heading">On SoundCloud</h4>
+        <div id="embedSoundCloudWidget"></div>
+      </div>
+    )`
+
+  componentWillMount: ->
+    username = @getUserName()
+    $.getJSON '/api/public/soundcloud', username: username , (soundCloudRes) =>
+      @setState
+        soundcloud: soundCloudRes
+
+  componentDidUpdate: ->
+    container = $(@getDOMNode()).find('#embedSoundCloudWidget')
+    if @state.soundcloud.connected
+    then SC.oEmbed @state.soundcloud.permalink_url, (embed) -> container.html(embed.html)
+
+
+########
+#Render the components
+########
+
+React.renderComponent (SoundCloud {}), document.getElementById('widget-soundcloud')
+React.renderComponent (Youtube {}), document.getElementById('widget-youtube')
+React.renderComponent (Schedule {}), document.getElementById('widget-schedule')

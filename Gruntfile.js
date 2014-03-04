@@ -19,8 +19,15 @@ module.exports = function ( grunt ) {
 
         // Watches files for changes and runs tasks based on the changed files
         watch: {
+            coffee_to_js: {
+                files: [ 'public/coffee/**/*.coffee', 'public/coffee/**/*.coffeex' ],
+                tasks: [ 'coffee' ],
+                options: {
+                    interrupt: true
+                }
+            },
             ui_js: {
-                files: [ 'public/scripts/**/*.js' ],
+                files: [ 'public/scripts/**/*.jsx' ],
                 tasks: [ 'react' ],
                 options: {
                     interrupt: true
@@ -168,13 +175,22 @@ module.exports = function ( grunt ) {
         },
 
         coffee: {
-            glob_to_multiple: {
+            options: {
+                bare: true
+            },
+            js: {
                 expand: true,
-                flatten: true,
-                cwd: 'public/coffee',
+                cwd: 'public/coffee/',
                 src: ['**/*.coffee'],
                 dest: 'public/scripts',
                 ext: '.js'
+            },
+            jsx: {
+                expand: true,
+                cwd: 'public/coffee/',
+                src: ['**/*.coffeex'],
+                dest: 'public/scripts',
+                ext: '.jsx'
             }
         }
 

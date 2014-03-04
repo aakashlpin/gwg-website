@@ -10,7 +10,8 @@
     "react": "~0.9.0",
     "pickadate": "~3.4.0",
     "jquery-ui": "~1.10.4",
-    "blueimp-gallery": "~2.14.0"
+    "blueimp-gallery": "~2.14.0",
+    "fullcalendar": "~1.6.4"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

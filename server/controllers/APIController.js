@@ -149,6 +149,11 @@ module.exports = {
                 //right now, lets send out events for next 30 days
                 //later we will have to see what how often are gurus able to update their schedule
 
+                var scheduleMap = {};
+                _.each(schedule, function(scheduleItem) {
+                    scheduleMap[scheduleItem.day_code.toLowerCase()] = scheduleItem;
+                });
+
                 //starting tomorrow, send out the events (will increment in the loop)
                 var tomorrow = moment();
                 var NO_OF_DAYS = 30;
@@ -157,9 +162,7 @@ module.exports = {
                     tomorrow = moment(tomorrow).add('days', 1);
                     //closure with loops 101
                     (function(tomorrow){
-                        var scheduleForDay = _.find(schedule, function(scheduleItem) {
-                            return scheduleItem.day_code.toLowerCase() === moment(tomorrow).format('ddd').toLowerCase();
-                        });
+                        var scheduleForDay = scheduleMap[moment(tomorrow).format('ddd').toLowerCase()];
 
                         //if no slots, go back
                         if (!scheduleForDay.noSlots) {
@@ -168,9 +171,7 @@ module.exports = {
                                 //find out the day that is to be copied from
                                 var copyFromDayCode = scheduleForDay.selectedDayCode;
                                 //get fresh schedule for day
-                                scheduleForDay = _.find(schedule, function(scheduleItem) {
-                                    return scheduleItem.day_code.toLowerCase() === copyFromDayCode.toLowerCase();
-                                });
+                                scheduleForDay = scheduleMap[copyFromDayCode.toLowerCase()];
                             }
 
                             //loop through slots property and fill in the events array.

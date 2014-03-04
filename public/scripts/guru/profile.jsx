@@ -81,6 +81,18 @@ var ProfileManagement = React.createClass({
                     formElement: 'textarea',
                     placeholder: 'http://www.mtv.com/artists/metallica'
 
+                },
+                phone: {
+                    name: 'Phone number',
+                    value: '',
+                    formElement: 'input',
+                    placeholder: '+91-9090898989'
+                },
+                username: {
+                    name: 'Username',
+                    value: '',
+                    formElement: 'input',
+                    placeholder: 'username'
                 }
             },
             isDirty: true,

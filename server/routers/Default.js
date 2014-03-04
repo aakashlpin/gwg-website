@@ -8,6 +8,11 @@ var routes = [
         middleware: [HomeController.getIndex]
     },
     {
+        path: '/404',
+        httpMethod: 'GET',
+        middleware: [HomeController.get404]
+    },
+    {
         path: '/g',
         httpMethod: 'GET',
         middleware: [HomeController.getGuruIndex]
@@ -21,8 +26,12 @@ var routes = [
         path: '/logout',
         httpMethod: 'GET',
         middleware: [HomeController.logOutHandler]
+    },
+    {
+        path: '/:username',
+        httpMethod: 'GET',
+        middleware: [HomeController.validateUserNameRoute, HomeController.getGuruProfile]
     }
-
 ];
 
 module.exports = function(app) {

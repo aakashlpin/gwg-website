@@ -436,3 +436,72 @@ img.bg {
     background-position: -50px 0;
   }
 }
+
+.game {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.tile {
+  display: block;
+  padding: 6px 10px;
+  background: #efefef;
+  border: 1px dashed #fefefe;
+  border-radius: 3px;
+  color: #565656;
+  margin-bottom: 4px;
+}
+
+.board {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40%;
+  min-height: 360px;
+}
+
+.tray {
+  position: absolute;
+  right: 0; top: 0;
+  width: 50%;
+  background: #aaa;
+  min-height: 60px;
+  padding: 10px;
+}
+
+.tray .tile {
+  margin: 0 0 10px 0;
+}
+
+.navbar-logo {
+  height: 50px;
+}
+
+.guru-image {
+  border: 2px solid #eee;
+  padding: 3px;
+  border-radius: 3px;
+  height: 150px;
+}
+
+.guru-name {
+  font-weight: 900;
+  text-transform: uppercase;
+  color: $color-brown;
+}
+
+.guru-band {
+  @extend .lead;
+  color: $color-charcoal;
+}
+
+.guru-about-me {
+  font-weight: 200;
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+  color: $color-grey;
+}
+

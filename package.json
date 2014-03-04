@@ -44,7 +44,8 @@
     "grunt-forever": "~0.4.1",
     "grunt-nodemon": "~0.2.0",
     "grunt-react": "^0.6.0",
-    "should": "^3.1.2"
+    "should": "^3.1.2",
+    "grunt-contrib-coffee": "^0.10.1"
   },
   "engines": {
     "node": ">=0.8.0"

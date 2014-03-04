@@ -158,14 +158,26 @@ module.exports = function ( grunt ) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'public/scripts/guru',
-                        src: ['**/*.js'],
-                        dest: 'public/dist/scripts/guru',
+                        cwd: 'public/scripts',
+                        src: ['**/*.jsx'],
+                        dest: 'public/dist/scripts',
                         ext: '.js'
                     }
                 ]
             }
+        },
+
+        coffee: {
+            glob_to_multiple: {
+                expand: true,
+                flatten: true,
+                cwd: 'public/coffee',
+                src: ['**/*.coffee'],
+                dest: 'public/scripts',
+                ext: '.js'
+            }
         }
+
     } );
 
     grunt.registerTask( 'serve', function ( target ) {

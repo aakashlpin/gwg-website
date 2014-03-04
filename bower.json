@@ -8,7 +8,9 @@
     "handlebars": "~1.3.0",
     "moment": "~2.5.1",
     "react": "~0.9.0",
-    "pickadate": "~3.4.0"
+    "pickadate": "~3.4.0",
+    "jquery-ui": "~1.10.4",
+    "blueimp-gallery": "~2.14.0"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

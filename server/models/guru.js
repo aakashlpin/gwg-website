@@ -227,6 +227,11 @@ GuruSchema.statics.associateAccount = function(req, callback) {
     }.bind(this))
 };
 
+GuruSchema.statics.getByUserName = function(username, callback) {
+    this.findOne({username: username}, {}, callback);
+
+};
+
 Guru = mongoose.model('Guru', GuruSchema);
 
 module.exports = Guru;

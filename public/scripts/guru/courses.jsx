@@ -53,6 +53,55 @@ var CourseManagement = React.createClass({
         }.bind(this));
 
     },
+    componentDidUpdate: function() {
+        var gameContainer = $(this.getDOMNode()).find(".game");
+        var myTray = $(this.getDOMNode()).find(".tray").sortable({
+            containment: gameContainer,
+            helper: "clone",
+            revert: 100,
+            tolerance: "pointer",
+            update: function(ev, ui) {
+                ui.item.addClass("ontray").css({
+                    "left": "0px",
+                    "position": "static",
+                    "top": "0px"
+                });
+            }
+        }).disableSelection();
+
+        var setTileDraggable = function(tileSelector) {
+            tileSelector.draggable({
+                connectToSortable: myTray,
+                containment: gameContainer,
+                helper: "original",
+                revert: "invalid"
+            }).disableSelection();
+        };
+
+        var myBoard = $(this.getDOMNode()).find(".board").droppable({
+            accept: ".tile",
+            drop: function(ev, ui) {
+                if (ui.draggable.hasClass("ontray")) {
+                    // tile (not red) coming from tray, place it into .tiles child div
+                    var cloneTile = ui.draggable.clone().removeClass("ontray").show();
+                    myBoard.children(".tiles").append(cloneTile);
+                    var dropx = ui.offset.left - myBoard.offset().left;
+                    var dropy = ui.offset.top - myBoard.offset().top;
+                    cloneTile.css({
+                        "left": dropx + "px",
+                        "position": "absolute",
+                        "top": dropy + "px"
+                    });
+                    setTileDraggable(cloneTile);
+                    ui.helper.remove();
+                    ui.draggable.remove();
+                }
+            }
+        }).disableSelection();
+
+    // set up draggables
+        setTileDraggable(myBoard.children(".tiles").find(".tile"));
+    },
     toggleAddCourseForm: function() {
         $(this.getDOMNode())
             .find('#courseFormContainer').fadeToggle('fast')
@@ -128,20 +177,9 @@ var CourseManagement = React.createClass({
         this.setState({new_course: this.state.new_course});
 
     },
-    _getTargetAudience: function(course) {
-        return course.target_audience.map(function(member){
-            //if audience member is not selected, return
-            if (!member.selected) return;
-            //else return the member item
-            return (
-                <li className="item capitalize">{member.id}</li>
-                )
-        }, this);
-
-    },
     render: function() {
-        var hide    = {display:'none'},
-            mt60    = {'margin-top': 60};
+        var hide    = {'display'    :'none'},
+            mt60    = {'margin-top' : 60};
 
         var targetAudienceChecks = this.state.new_course.target_audience.map(function(target) {
             return (
@@ -155,25 +193,9 @@ var CourseManagement = React.createClass({
 
         var existingCourses = this.state.courses.map(function(course) {
             return (
-                <li className="item">
-                    <div className="row">
-                        <div className="col-md-7">
-                            <h4 className="text-item-heading">{course.name}</h4>
-                            <p className="text-light">{course.description}</p>
-                        </div>
-                        <div className="col-md-5">
-                            <div className="mb-10"><strong>Classes: </strong> {course.classes}</div>
-                            <div className="mb-10"><strong>Fee: </strong> <i className="fa fa-rupee"></i> {course.fee}</div>
-                            <div className="mb-10"><strong>Audience: </strong>
-                                <ul className="l-h-list inline-block">
-                                {this._getTargetAudience.call(this, course)}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                <div className="tile">{course.name}</div>
                 );
-        }, this);
+        });
 
         return (
             <div>
@@ -182,9 +204,6 @@ var CourseManagement = React.createClass({
                         <h3>Manage Courses</h3>
                         <p className="text-light">
                         These courses will be a part of your online academy.
-                        </p>
-                        <p className="text-light gwg-callout gwg-callout-info">
-                        * When we are close to launch, we'll let you create full-fledged course plans.
                         </p>
                     </div>
                     <div className="col-md-3">
@@ -275,9 +294,18 @@ var CourseManagement = React.createClass({
                 </div>
                 <div className="mb-40"></div>
                 <div id="existingCourses" className="has-min-height">
-                    <ul className="l-v-list v-flat-list list-unstyled">
-                    {existingCourses}
-                    </ul>
+                    <div className="relative">
+                        <div className="game">
+                            <div className="board">
+                                <div className="tiles">
+                                {existingCourses}
+                                </div>
+                            </div>
+                            <div className="tray">
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
             );

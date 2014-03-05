@@ -12,11 +12,11 @@ Course = React.createClass({
     var audience, audienceItemDOM;
     audienceItemDOM = function(id) {
       if (id === "beg") {
-        return (<span className="audience-item beg">B</span>);
+        return (<span className="audience-item beg" title="Level: Beginner">B</span>);
       } else if (id === "inter") {
-        return (<span className="audience-item inter">I</span>);
+        return (<span className="audience-item inter" title="Level: Intermediate">I</span>);
       } else {
-        return (<span className="audience-item adv">A</span>);
+        return (<span className="audience-item adv" title="Level: Advanced">A</span>);
       }
     };
     audience = this.props.course.target_audience.map((function(_this) {
@@ -34,13 +34,20 @@ Course = React.createClass({
     <li className="item">
       <div className="clearfix">
         <div className="pull-left">
-        <h4 className="text-charcoal item-heading display-ib">{this.props.course.name}</h4>
-        <ul className="l-h-list display-ib guru-audience-list">
-        {audience}
-        </ul>
+          <h4 className="item-heading display-ib">{this.props.course.name}</h4>
+          <ul className="l-h-list display-ib guru-audience-list">
+            {audience}
+          </ul>
+          <div>
+            <h5 className="text-charcoal">Sessions: <strong>{this.props.course.classes}</strong>
+            | Fee :  <strong><i className="fa fa-rupee"></i> {this.props.course.fee}</strong>
+            </h5>
+          </div>
         </div>
         <div className="pull-right">
-          <button className="btn btn-primary" >Reserve</button>
+          <button className="btn btn-primary">Reserve
+            <i className="fa fa-headphones"></i>
+          </button>
         </div>
       </div>
     </li>
@@ -75,7 +82,7 @@ Courses = React.createClass({
     });
     return (
     <div className="schedule-container">
-      <h4 className="text-heading">Now Teaching</h4>
+      <h4 className="text-heading">Learn</h4>
       <ul className="list-guru-courses list-unstyled">
       {courses}
       </ul>

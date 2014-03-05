@@ -11923,7 +11923,7 @@ img.bg {
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003528}}
 .list-guru-courses > li {
-  padding: 12px;
+  padding: 30px 5px;
   border-bottom: 1px solid #ddd;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/aakash\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003531}}

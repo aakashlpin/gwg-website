@@ -12,11 +12,11 @@ Course = React.createClass({
     var audience, audienceItemDOM;
     audienceItemDOM = function(id) {
       if (id === "beg") {
-        return (React.DOM.span( {className:"audience-item beg"}, "B"));
+        return (React.DOM.span( {className:"audience-item beg", title:"Level: Beginner"}, "B"));
       } else if (id === "inter") {
-        return (React.DOM.span( {className:"audience-item inter"}, "I"));
+        return (React.DOM.span( {className:"audience-item inter", title:"Level: Intermediate"}, "I"));
       } else {
-        return (React.DOM.span( {className:"audience-item adv"}, "A"));
+        return (React.DOM.span( {className:"audience-item adv", title:"Level: Advanced"}, "A"));
       }
     };
     audience = this.props.course.target_audience.map((function(_this) {
@@ -34,13 +34,20 @@ Course = React.createClass({
     React.DOM.li( {className:"item"}, 
       React.DOM.div( {className:"clearfix"}, 
         React.DOM.div( {className:"pull-left"}, 
-        React.DOM.h4( {className:"text-charcoal item-heading display-ib"}, this.props.course.name),
-        React.DOM.ul( {className:"l-h-list display-ib guru-audience-list"}, 
-        audience
-        )
+          React.DOM.h4( {className:"item-heading display-ib"}, this.props.course.name),
+          React.DOM.ul( {className:"l-h-list display-ib guru-audience-list"}, 
+            audience
+          ),
+          React.DOM.div(null, 
+            React.DOM.h5( {className:"text-charcoal"}, "Sessions: ", React.DOM.strong(null, this.props.course.classes),
+            " | Fee : ",  React.DOM.strong(null, React.DOM.i( {className:"fa fa-rupee"}), this.props.course.fee)
+            )
+          )
         ),
         React.DOM.div( {className:"pull-right"}, 
-          React.DOM.button( {className:"btn btn-primary"} , "Reserve")
+          React.DOM.button( {className:"btn btn-primary"}, "Reserve ",
+            React.DOM.i( {className:"fa fa-headphones"})
+          )
         )
       )
     )
@@ -75,7 +82,7 @@ Courses = React.createClass({
     });
     return (
     React.DOM.div( {className:"schedule-container"}, 
-      React.DOM.h4( {className:"text-heading"}, "Now Teaching"),
+      React.DOM.h4( {className:"text-heading"}, "Learn"),
       React.DOM.ul( {className:"list-guru-courses list-unstyled"}, 
       courses
       )

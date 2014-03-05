@@ -13,12 +13,16 @@ UserHelpers =
 #########
 Course = React.createClass
   render: ->
+    audienceItemDOM = (id) ->
+      if id is "beg" then `(<span className="audience-item beg">B</span>)`
+      else if id is "inter" then `(<span className="audience-item inter">I</span>)`
+      else `(<span className="audience-item adv">A</span>)`
 
-    audience = @props.course.target_audience.map (audienceItem) ->
+    audience = @props.course.target_audience.map (audienceItem) =>
       if audienceItem.selected
       then `(
           <li className="item">
-          {audienceItem.name}
+          {audienceItemDOM(audienceItem.id)}
           </li>
         )`
 
@@ -26,8 +30,8 @@ Course = React.createClass
     <li className="item">
       <div className="clearfix">
         <div className="pull-left">
-        <h4 className="text-charcoal item-heading">{this.props.course.name}</h4>
-        <ul className="l-h-list">
+        <h4 className="text-charcoal item-heading display-ib">{this.props.course.name}</h4>
+        <ul className="l-h-list display-ib guru-audience-list">
         {audience}
         </ul>
         </div>

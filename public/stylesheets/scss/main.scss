@@ -533,7 +533,30 @@ img.bg {
     }
 
     .item-heading {
+      margin: 0 20px 0 0;
+    }
+
+    .guru-audience-list {
+      vertical-align: bottom;
+    }
+
+    .audience-item {
       display: inline-block;
+      width: 30px;
+      padding: 3px 0;
+      text-align: center;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 1px 0px rgba(0,0,0,0.5);
+      background: #f1c40f;
+
+      &.beg {
+        background: #40d47e;
+      }
+
+      &.adv {
+        background: #e46a6b;
+      }
     }
   }
 }

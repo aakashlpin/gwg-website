@@ -9,22 +9,33 @@ UserHelpers = {
 
 Course = React.createClass({
   render: function() {
-    var audience;
-    audience = this.props.course.target_audience.map(function(audienceItem) {
-      if (audienceItem.selected) {
-        return (
+    var audience, audienceItemDOM;
+    audienceItemDOM = function(id) {
+      if (id === "beg") {
+        return (<span className="audience-item beg">B</span>);
+      } else if (id === "inter") {
+        return (<span className="audience-item inter">I</span>);
+      } else {
+        return (<span className="audience-item adv">A</span>);
+      }
+    };
+    audience = this.props.course.target_audience.map((function(_this) {
+      return function(audienceItem) {
+        if (audienceItem.selected) {
+          return (
           <li className="item">
-          {audienceItem.name}
+          {audienceItemDOM(audienceItem.id)}
           </li>
         );
-      }
-    });
+        }
+      };
+    })(this));
     return (
     <li className="item">
       <div className="clearfix">
         <div className="pull-left">
-        <h4 className="text-charcoal item-heading">{this.props.course.name}</h4>
-        <ul className="l-h-list">
+        <h4 className="text-charcoal item-heading display-ib">{this.props.course.name}</h4>
+        <ul className="l-h-list display-ib guru-audience-list">
         {audience}
         </ul>
         </div>

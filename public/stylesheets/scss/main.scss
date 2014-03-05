@@ -347,6 +347,10 @@ img.bg {
   background: #f1f1e5;
 }
 
+.bg-white {
+  background: #fff;
+}
+
 .spacious {
   padding: 20px 15px;
 }
@@ -518,4 +522,18 @@ img.bg {
   background: #fff;
   box-shadow: inset 0 0 6px 1px rgba(0, 0, 0, 0.3);
   padding: 15px;
+}
+
+.list-guru-courses {
+  > li {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .item-heading {
+      display: inline-block;
+    }
+  }
 }

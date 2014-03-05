@@ -205,8 +205,34 @@ module.exports = {
                 res.json(events);
             }
         })
-    }
+    },
+    getPublicCoursesHandler: function(req, res) {
+        var GuruModel = models.Guru;
+        var username = req.query.username;
+        if (!username || (username && !username.trim().length)) {
+            res.json({err: 'invalid request'});
+            return;
+        }
 
+        GuruModel.getByUserName(username, function(err, guruRecord) {
+            if (err || !guruRecord) {
+                res.json({err: err ? err: 'User is a ghost. No record for user found.'});
+                return;
+            }
+
+            var creatorId = guruRecord._id;
+            var CourseModel = models.Course;
+
+            CourseModel.getByCreator(creatorId, function(err, courseRecord) {
+                if (err || !courseRecord || (courseRecord && !courseRecord.length)) {
+                    res.json({err: err ? err : 'No Courses found'});
+                    return;
+                }
+
+                res.json(courseRecord);
+            })
+        })
+    }
 
 };
 

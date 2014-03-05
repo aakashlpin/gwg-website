@@ -9,6 +9,64 @@ UserHelpers =
     window.location.pathname.split('/')[1]
 
 #########
+#Single Course entry
+#########
+Course = React.createClass
+  render: ->
+
+    audience = @props.course.target_audience.map (audienceItem) ->
+      if audienceItem.selected
+      then `(
+          <li className="item">
+          {audienceItem.name}
+          </li>
+        )`
+
+    return `(
+    <li className="item">
+      <div className="clearfix">
+        <div className="pull-left">
+        <h4 className="text-charcoal item-heading">{this.props.course.name}</h4>
+        <ul className="l-h-list">
+        {audience}
+        </ul>
+        </div>
+        <div className="pull-right">
+          <button className="btn btn-primary" >Reserve</button>
+        </div>
+      </div>
+    </li>
+    )`
+
+#########
+#Courses for guru
+#########
+Courses = React.createClass
+  mixins: [UserHelpers],
+
+  getInitialState: ->
+    courses: []
+
+  componentWillMount: ->
+    $.getJSON '/api/public/courses', {username: @getUserName()}, (coursesRes) =>
+      @setState
+        courses: coursesRes
+
+  render: ->
+    courses = @state.courses.map (course) ->
+      (Course {course:course})
+
+    return `(
+    <div className="schedule-container">
+      <h4 className="text-heading">Now Teaching</h4>
+      <ul className="list-guru-courses list-unstyled">
+      {courses}
+      </ul>
+    </div>
+    )`
+
+
+#########
 #Schedule for guru
 #########
 Schedule = React.createClass
@@ -23,16 +81,17 @@ Schedule = React.createClass
         slots: slotsRes
 
   componentDidUpdate: ->
-    $(@getDOMNode()).find('#calendar').fullCalendar({
-      header: {
+    $(@getDOMNode()).find('#calendar').fullCalendar
+      header :
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
-      },
+    ,
       defaultView: 'agendaWeek',
       editable: false,
-      events: @state.slots
-    });
+      events: @state.slots,
+      eventClick: (e) ->
+        console.log(e)
 
   render: ->
     return `(
@@ -131,4 +190,5 @@ SoundCloud = React.createClass
 
 React.renderComponent (SoundCloud {}), document.getElementById('widget-soundcloud')
 React.renderComponent (Youtube {}), document.getElementById('widget-youtube')
-React.renderComponent (Schedule {}), document.getElementById('widget-schedule')
+#React.renderComponent (Schedule {}), document.getElementById('widget-schedule')
+React.renderComponent (Courses {}), document.getElementById('widget-courses')

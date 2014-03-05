@@ -1,11 +1,77 @@
 /*** @jsx React.DOM */;
-var Schedule, SoundCloud, UserHelpers, Youtube;
+var Course, Courses, Schedule, SoundCloud, UserHelpers, Youtube;
 
 UserHelpers = {
   getUserName: function() {
     return window.location.pathname.split('/')[1];
   }
 };
+
+Course = React.createClass({
+  render: function() {
+    var audience;
+    audience = this.props.course.target_audience.map(function(audienceItem) {
+      if (audienceItem.selected) {
+        return (
+          React.DOM.li( {className:"item"}, 
+          audienceItem.name
+          )
+        );
+      }
+    });
+    return (
+    React.DOM.li( {className:"item"}, 
+      React.DOM.div( {className:"clearfix"}, 
+        React.DOM.div( {className:"pull-left"}, 
+        React.DOM.h4( {className:"text-charcoal item-heading"}, this.props.course.name),
+        React.DOM.ul( {className:"l-h-list"}, 
+        audience
+        )
+        ),
+        React.DOM.div( {className:"pull-right"}, 
+          React.DOM.button( {className:"btn btn-primary"} , "Reserve")
+        )
+      )
+    )
+    );
+  }
+});
+
+Courses = React.createClass({
+  mixins: [UserHelpers],
+  getInitialState: function() {
+    return {
+      courses: []
+    };
+  },
+  componentWillMount: function() {
+    return $.getJSON('/api/public/courses', {
+      username: this.getUserName()
+    }, (function(_this) {
+      return function(coursesRes) {
+        return _this.setState({
+          courses: coursesRes
+        });
+      };
+    })(this));
+  },
+  render: function() {
+    var courses;
+    courses = this.state.courses.map(function(course) {
+      return Course({
+        course: course
+      });
+    });
+    return (
+    React.DOM.div( {className:"schedule-container"}, 
+      React.DOM.h4( {className:"text-heading"}, "Now Teaching"),
+      React.DOM.ul( {className:"list-guru-courses list-unstyled"}, 
+      courses
+      )
+    )
+    );
+  }
+});
 
 Schedule = React.createClass({
   mixins: [UserHelpers],
@@ -26,16 +92,19 @@ Schedule = React.createClass({
     })(this));
   },
   componentDidUpdate: function() {
-    console.log(this.state.slots);
     return $(this.getDOMNode()).find('#calendar').fullCalendar({
       header: {
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
-      },
+      }
+    }, {
       defaultView: 'agendaWeek',
       editable: false,
-      events: this.state.slots
+      events: this.state.slots,
+      eventClick: function(e) {
+        return console.log(e);
+      }
     });
   },
   render: function() {
@@ -154,4 +223,4 @@ React.renderComponent(SoundCloud({}), document.getElementById('widget-soundcloud
 
 React.renderComponent(Youtube({}), document.getElementById('widget-youtube'));
 
-React.renderComponent(Schedule({}), document.getElementById('widget-schedule'));
+React.renderComponent(Courses({}), document.getElementById('widget-courses'));

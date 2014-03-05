@@ -91,6 +91,11 @@ var routes = [
         path: '/public/schedule',
         httpMethod: 'GET',
         middleware: [APIController.getPublicScheduleHandler]
+    },
+    {
+        path: '/public/courses',
+        httpMethod: 'GET',
+        middleware: [APIController.getPublicCoursesHandler]
     }
 ];
 

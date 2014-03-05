@@ -1,11 +1,77 @@
 /*** @jsx React.DOM */;
-var Schedule, SoundCloud, UserHelpers, Youtube;
+var Course, Courses, Schedule, SoundCloud, UserHelpers, Youtube;
 
 UserHelpers = {
   getUserName: function() {
     return window.location.pathname.split('/')[1];
   }
 };
+
+Course = React.createClass({
+  render: function() {
+    var audience;
+    audience = this.props.course.target_audience.map(function(audienceItem) {
+      if (audienceItem.selected) {
+        return (
+          <li className="item">
+          {audienceItem.name}
+          </li>
+        );
+      }
+    });
+    return (
+    <li className="item">
+      <div className="clearfix">
+        <div className="pull-left">
+        <h4 className="text-charcoal item-heading">{this.props.course.name}</h4>
+        <ul className="l-h-list">
+        {audience}
+        </ul>
+        </div>
+        <div className="pull-right">
+          <button className="btn btn-primary" >Reserve</button>
+        </div>
+      </div>
+    </li>
+    );
+  }
+});
+
+Courses = React.createClass({
+  mixins: [UserHelpers],
+  getInitialState: function() {
+    return {
+      courses: []
+    };
+  },
+  componentWillMount: function() {
+    return $.getJSON('/api/public/courses', {
+      username: this.getUserName()
+    }, (function(_this) {
+      return function(coursesRes) {
+        return _this.setState({
+          courses: coursesRes
+        });
+      };
+    })(this));
+  },
+  render: function() {
+    var courses;
+    courses = this.state.courses.map(function(course) {
+      return Course({
+        course: course
+      });
+    });
+    return (
+    <div className="schedule-container">
+      <h4 className="text-heading">Now Teaching</h4>
+      <ul className="list-guru-courses list-unstyled">
+      {courses}
+      </ul>
+    </div>
+    );
+  }
+});
 
 Schedule = React.createClass({
   mixins: [UserHelpers],
@@ -31,10 +97,14 @@ Schedule = React.createClass({
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
-      },
+      }
+    }, {
       defaultView: 'agendaWeek',
       editable: false,
-      events: this.state.slots
+      events: this.state.slots,
+      eventClick: function(e) {
+        return console.log(e);
+      }
     });
   },
   render: function() {
@@ -153,4 +223,4 @@ React.renderComponent(SoundCloud({}), document.getElementById('widget-soundcloud
 
 React.renderComponent(Youtube({}), document.getElementById('widget-youtube'));
 
-React.renderComponent(Schedule({}), document.getElementById('widget-schedule'));
+React.renderComponent(Courses({}), document.getElementById('widget-courses'));

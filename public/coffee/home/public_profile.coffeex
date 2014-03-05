@@ -149,7 +149,7 @@ Youtube = React.createClass
   render: ->
     `(
     <div>
-    <h4 className="text-heading">On Youtube</h4>
+    <h3 className="text-heading text-center mb-30">On Youtube</h3>
       <div id="blueimp-video-carousel" className="blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel">
         <div className="slides"></div>
         <h3 className="title"></h3>
@@ -177,7 +177,7 @@ SoundCloud = React.createClass
   render: ->
     `(
       <div>
-        <h4 className="text-heading">On SoundCloud</h4>
+        <h3 className="text-heading text-center mb-30">On SoundCloud</h3>
         <div id="embedSoundCloudWidget"></div>
       </div>
     )`
@@ -191,7 +191,8 @@ SoundCloud = React.createClass
   componentDidUpdate: ->
     container = $(@getDOMNode()).find('#embedSoundCloudWidget')
     if @state.soundcloud.connected
-    then SC.oEmbed @state.soundcloud.permalink_url, (embed) -> container.html(embed.html)
+#    then SC.oEmbed @state.soundcloud.permalink_url, (embed) -> container.html(embed.html)
+    then SC.oEmbed "https://soundcloud.com/mad-orange-fireworks", (embed) -> container.html(embed.html)
 
 
 ########

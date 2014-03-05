@@ -181,7 +181,7 @@ Youtube = React.createClass({
   render: function() {
     return (
     React.DOM.div(null, 
-    React.DOM.h4( {className:"text-heading"}, "On Youtube"),
+    React.DOM.h3( {className:"text-heading text-center mb-30"}, "On Youtube"),
       React.DOM.div( {id:"blueimp-video-carousel", className:"blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel"}, 
         React.DOM.div( {className:"slides"}),
         React.DOM.h3( {className:"title"}),
@@ -208,7 +208,7 @@ SoundCloud = React.createClass({
   render: function() {
     return (
       React.DOM.div(null, 
-        React.DOM.h4( {className:"text-heading"}, "On SoundCloud"),
+        React.DOM.h3( {className:"text-heading text-center mb-30"}, "On SoundCloud"),
         React.DOM.div( {id:"embedSoundCloudWidget"})
       )
     );
@@ -230,7 +230,7 @@ SoundCloud = React.createClass({
     var container;
     container = $(this.getDOMNode()).find('#embedSoundCloudWidget');
     if (this.state.soundcloud.connected) {
-      return SC.oEmbed(this.state.soundcloud.permalink_url, function(embed) {
+      return SC.oEmbed("https://soundcloud.com/mad-orange-fireworks", function(embed) {
         return container.html(embed.html);
       });
     }

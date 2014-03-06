@@ -111,7 +111,10 @@ Course = React.createClass
     @refs.modal.close()
 
   handleModalShown: ->
-    React.renderComponent (Schedule {}), document.getElementById(@modalId)
+    React.renderComponent (Schedule {
+      classes: @props.course.classes,
+      courseId: @props.course._id
+    }), document.getElementById(@modalId)
 
   render: ->
     @modalId = "modal_#{@props.course._id}"
@@ -198,6 +201,9 @@ Courses = React.createClass
 Schedule = React.createClass
   mixins: [UserHelpers],
 
+  getDefaultProps: ->
+    selectedClasses: 0
+
   getInitialState: ->
     slots: []
 
@@ -207,7 +213,7 @@ Schedule = React.createClass
         slots: slotsRes
 
   componentDidUpdate: ->
-    calendarElem = $(@getDOMNode()).find('#calendar')
+    calendarElem = $(@getDOMNode()).find('.schedule-calendar')
     calendarElem.fullCalendar
       header :
         left: 'prev,next today',
@@ -216,16 +222,39 @@ Schedule = React.createClass
       defaultView : 'month'
       editable : false
       events : @state.slots
-      eventClick : (event) ->
-        event.title = if event.title is 'Available' then 'Selected' else 'Available'
-        event.color = if event.color is '#e67e22' then '#3a87ad' else '#e67e22'
-        calendarElem.fullCalendar('updateEvent', event)
+      eventClick : (event) =>
+        shouldUpdate = true
 
+        if event.title is 'Available'
+          if @props.selectedClasses isnt @props.classes
+            event.title = 'Selected'
+            event.color = '#e67e22'
+            @props.selectedClasses += 1
+
+          else
+            shouldUpdate = false
+            noty layout: 'topCenter', text: "Max classes chosen. Save and proceed", timeout: 2500, type: 'warning', killer: true
+
+        else
+          event.title = 'Available'
+          event.color = '#3a87ad'
+          @props.selectedClasses -= 1
+
+        if shouldUpdate
+          $(@getDOMNode()).find('.schedule-classes').html @props.selectedClasses
+          calendarElem.fullCalendar 'updateEvent', event
 
   render: ->
+    @scheduleMessageId = "schedule-messages_#{@props.courseId}"
     return `(
       <div>
-        <div id="calendar"></div>
+        <h5>
+          Selected
+          <span className="schedule-classes">{this.props.selectedClasses}</span>
+          of
+          {this.props.classes}
+        </h5>
+        <div className="schedule-calendar"></div>
       </div>
       )`
 

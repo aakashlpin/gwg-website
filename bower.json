@@ -11,7 +11,8 @@
     "jquery-ui": "~1.10.4",
     "blueimp-gallery": "~2.14.0",
     "fullcalendar": "~1.6.4",
-    "bootstrap-sass": "twbs/bootstrap-sass#~3.1.1"
+    "bootstrap-sass": "twbs/bootstrap-sass#~3.1.1",
+    "noty": "~2.2.2"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

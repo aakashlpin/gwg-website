@@ -234,11 +234,15 @@ Schedule = React.createClass
           else
             shouldUpdate = false
             noty layout: 'topCenter', text: "Max classes chosen. Save and proceed", timeout: 2500, type: 'warning', killer: true
+            return
 
         else
           event.title = 'Available'
           event.color = '#3a87ad'
           @props.selectedClasses -= 1
+
+        if @props.selectedClasses is @props.classes
+          noty layout: 'topCenter', text: "w00t! #{@props.classes} classes selected. Save and proceed", type: 'success', killer: true
 
         if shouldUpdate
           $(@getDOMNode()).find('.schedule-classes').html @props.selectedClasses

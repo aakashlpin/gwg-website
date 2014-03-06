@@ -248,11 +248,20 @@ Schedule = React.createClass({
                 type: 'warning',
                 killer: true
               });
+              return;
             }
           } else {
             event.title = 'Available';
             event.color = '#3a87ad';
             _this.props.selectedClasses -= 1;
+          }
+          if (_this.props.selectedClasses === _this.props.classes) {
+            noty({
+              layout: 'topCenter',
+              text: "w00t! " + _this.props.classes + " classes selected. Save and proceed",
+              type: 'success',
+              killer: true
+            });
           }
           if (shouldUpdate) {
             $(_this.getDOMNode()).find('.schedule-classes').html(_this.props.selectedClasses);

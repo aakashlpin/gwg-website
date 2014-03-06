@@ -86,7 +86,16 @@ BootstrapModal = React.createClass
 #Single Course entry
 #########
 Course = React.createClass
-  reserveSlots: ->
+  reserveSlots: (e) ->
+    $ e.target
+      .closest '.btn'
+      .toggleClass 'btn-primary btn-warning'
+
+    $ e.target
+      .closest '.btn'
+      .find 'span'
+      .html 'Reserving..'
+
     @refs.modal.open()
 
   handleCancel: ->
@@ -139,7 +148,7 @@ Course = React.createClass
             </div>
           </div>
           <div className="pull-right">
-            <button className="btn btn-primary" onClick={this.reserveSlots}>Reserve
+            <button ref="reserveBtn" className="btn btn-primary" onClick={this.reserveSlots}>Reserve
               <i className="fa fa-headphones"></i>
             </button>
           </div>

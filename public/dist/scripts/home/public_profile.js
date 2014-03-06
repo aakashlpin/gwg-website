@@ -94,11 +94,7 @@ Course = React.createClass({
     return this.refs.modal.close();
   },
   handleModalShown: function() {
-    return setTimeout((function(_this) {
-      return function() {
-        return React.renderComponent(Schedule({}), document.getElementById(_this.modalId), 0);
-      };
-    })(this));
+    return React.renderComponent(Schedule({}), document.getElementById(this.modalId));
   },
   render: function() {
     var audience, audienceItemDOM, modal, modalTitle;

@@ -111,8 +111,7 @@ Course = React.createClass
     @refs.modal.close()
 
   handleModalShown: ->
-    setTimeout =>
-      React.renderComponent (Schedule {}), document.getElementById(@modalId), 0
+    React.renderComponent (Schedule {}), document.getElementById(@modalId)
 
   render: ->
     @modalId = "modal_#{@props.course._id}"

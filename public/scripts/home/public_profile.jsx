@@ -86,11 +86,11 @@ BootstrapModal = React.createClass({
 
 Course = React.createClass({
   reserveSlots: function() {
-    $(this.getDOMNode()).find('.has-action').toggleClass('btn-primary btn-warning').find('span').html('Reserving..');
+    $(this.getDOMNode()).find('.has-action').toggleClass('btn-primary btn-warning').find('span').html('Reserving.. ');
     return this.refs.modal.open();
   },
   handleCancel: function() {
-    $(this.getDOMNode()).find('.has-action').toggleClass('btn-primary btn-warning').find('span').html('Reserve');
+    $(this.getDOMNode()).find('.has-action').toggleClass('btn-primary btn-warning').find('span').html('Reserve ');
     return this.refs.modal.close();
   },
   handleModalShown: function() {
@@ -150,8 +150,7 @@ Course = React.createClass({
           </div>
           <div className="pull-right">
             <button ref="reserveBtn" className="btn btn-primary has-action" onClick={this.reserveSlots}>
-              <span>Reserve</span>
-              <i className="fa fa-headphones"></i>
+              <span>Reserve </span><i className="fa fa-headphones"></i>
             </button>
           </div>
         </div>

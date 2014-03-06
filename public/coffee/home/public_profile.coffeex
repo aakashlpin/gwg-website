@@ -97,7 +97,7 @@ Course = React.createClass
       .find '.has-action'
         .toggleClass 'btn-primary btn-warning'
           .find 'span'
-            .html 'Reserving..'
+            .html 'Reserving.. '
 
     @refs.modal.open()
 
@@ -106,7 +106,7 @@ Course = React.createClass
     .find '.has-action'
       .toggleClass 'btn-primary btn-warning'
         .find 'span'
-          .html 'Reserve'
+          .html 'Reserve '
 
     @refs.modal.close()
 
@@ -158,8 +158,7 @@ Course = React.createClass
           </div>
           <div className="pull-right">
             <button ref="reserveBtn" className="btn btn-primary has-action" onClick={this.reserveSlots}>
-              <span>Reserve</span>
-              <i className="fa fa-headphones"></i>
+              <span>Reserve </span><i className="fa fa-headphones"></i>
             </button>
           </div>
         </div>

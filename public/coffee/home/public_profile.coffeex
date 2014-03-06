@@ -30,15 +30,13 @@ BootstrapModal = React.createClass
         backdrop: 'static'
         show: false
     .on 'shown.bs.modal', @handleModalShown
+    .on 'hidden.bs.modal', @handleModalClose
 
   close: ->
     $(@getDOMNode()).modal 'hide'
 
   open : ->
     $(@getDOMNode()).modal 'show'
-
-  handleModalShown: ->
-    @props.onShown?()
 
   render: ->
     confirmButton = null
@@ -75,6 +73,14 @@ BootstrapModal = React.createClass
       </div>
     )`
 
+  handleModalClose: ->
+    $ @getDOMNode()
+    .find '.modal-body'
+      .empty()
+
+  handleModalShown: ->
+    @props.onShown?()
+
   handleCancel: ->
     @props.onCancel?()
 
@@ -86,19 +92,22 @@ BootstrapModal = React.createClass
 #Single Course entry
 #########
 Course = React.createClass
-  reserveSlots: (e) ->
-    $ e.target
-      .closest '.btn'
-      .toggleClass 'btn-primary btn-warning'
-
-    $ e.target
-      .closest '.btn'
-      .find 'span'
-      .html 'Reserving..'
+  reserveSlots: ->
+    $ @getDOMNode()
+      .find '.has-action'
+        .toggleClass 'btn-primary btn-warning'
+          .find 'span'
+            .html 'Reserving..'
 
     @refs.modal.open()
 
   handleCancel: ->
+    $ @getDOMNode()
+    .find '.has-action'
+      .toggleClass 'btn-primary btn-warning'
+        .find 'span'
+          .html 'Reserve'
+
     @refs.modal.close()
 
   handleModalShown: ->
@@ -115,8 +124,8 @@ Course = React.createClass
       cancel = "Go back"
       onConfirm = {this.handleConfirm}
       onCancel = {this.handleCancel}
-      title = {modalTitle}
       onShown = {this.handleModalShown}
+      title = {modalTitle}
       id = {this.modalId}>
       </BootstrapModal>`
 
@@ -148,7 +157,8 @@ Course = React.createClass
             </div>
           </div>
           <div className="pull-right">
-            <button ref="reserveBtn" className="btn btn-primary" onClick={this.reserveSlots}>Reserve
+            <button ref="reserveBtn" className="btn btn-primary has-action" onClick={this.reserveSlots}>
+              <span>Reserve</span>
               <i className="fa fa-headphones"></i>
             </button>
           </div>

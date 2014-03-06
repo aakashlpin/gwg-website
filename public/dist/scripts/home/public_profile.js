@@ -22,17 +22,13 @@ BootstrapModal = React.createClass({
     return $(this.getDOMNode()).modal({
       backdrop: 'static',
       show: false
-    }).on('shown.bs.modal', this.handleModalShown);
+    }).on('shown.bs.modal', this.handleModalShown).on('hidden.bs.modal', this.handleModalClose);
   },
   close: function() {
     return $(this.getDOMNode()).modal('hide');
   },
   open: function() {
     return $(this.getDOMNode()).modal('show');
-  },
-  handleModalShown: function() {
-    var _base;
-    return typeof (_base = this.props).onShown === "function" ? _base.onShown() : void 0;
   },
   render: function() {
     var cancelButton, confirmButton;
@@ -71,6 +67,13 @@ BootstrapModal = React.createClass({
       )
     );
   },
+  handleModalClose: function() {
+    return $(this.getDOMNode()).find('.modal-body').empty();
+  },
+  handleModalShown: function() {
+    var _base;
+    return typeof (_base = this.props).onShown === "function" ? _base.onShown() : void 0;
+  },
   handleCancel: function() {
     var _base;
     return typeof (_base = this.props).onCancel === "function" ? _base.onCancel() : void 0;
@@ -82,12 +85,12 @@ BootstrapModal = React.createClass({
 });
 
 Course = React.createClass({
-  reserveSlots: function(e) {
-    $(e.target).closest('.btn').toggleClass('btn-primary btn-warning');
-    $(e.target).closest('.btn').find('span').html('Reserving..');
+  reserveSlots: function() {
+    $(this.getDOMNode()).find('.has-action').toggleClass('btn-primary btn-warning').find('span').html('Reserving..');
     return this.refs.modal.open();
   },
   handleCancel: function() {
+    $(this.getDOMNode()).find('.has-action').toggleClass('btn-primary btn-warning').find('span').html('Reserve');
     return this.refs.modal.close();
   },
   handleModalShown: function() {
@@ -107,8 +110,8 @@ Course = React.createClass({
       cancel:  "Go back",
       onConfirm:  this.handleConfirm,
       onCancel:  this.handleCancel,
-      title:  modalTitle,
       onShown:  this.handleModalShown,
+      title:  modalTitle,
       id:  this.modalId}
       );
     audienceItemDOM = function(id) {
@@ -146,7 +149,8 @@ Course = React.createClass({
             )
           ),
           React.DOM.div( {className:"pull-right"}, 
-            React.DOM.button( {ref:"reserveBtn", className:"btn btn-primary", onClick:this.reserveSlots}, "Reserve ",
+            React.DOM.button( {ref:"reserveBtn", className:"btn btn-primary has-action", onClick:this.reserveSlots}, 
+              React.DOM.span(null, "Reserve"),
               React.DOM.i( {className:"fa fa-headphones"})
             )
           )

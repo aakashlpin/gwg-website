@@ -62,7 +62,7 @@ BootstrapModal = React.createClass
         <div className="modal-dialog modal-md">
           <div className="modal-content">
             <div className="modal-header">
-              <h3>{this.props.title}</h3>
+              <h3 className="m-0">{this.props.title}</h3>
             </div>
             <div className="modal-body"  id={this.props.id}>
             </div>
@@ -98,6 +98,7 @@ Course = React.createClass
 
   render: ->
     @modalId = "modal_#{@props.course._id}"
+    modalTitle = "Reserve slots - #{@props.course.name}"
 
     modal = `<BootstrapModal
       ref = "modal"
@@ -105,7 +106,7 @@ Course = React.createClass
       cancel = "Go back"
       onConfirm = {this.handleConfirm}
       onCancel = {this.handleCancel}
-      title = "Reserve Slots"
+      title = {modalTitle}
       onShown = {this.handleModalShown}
       id = {this.modalId}>
       </BootstrapModal>`
@@ -189,16 +190,20 @@ Schedule = React.createClass
         slots: slotsRes
 
   componentDidUpdate: ->
-    $(@getDOMNode()).find('#calendar').fullCalendar
+    calendarElem = $(@getDOMNode()).find('#calendar')
+    calendarElem.fullCalendar
       header :
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
-      defaultView: 'agendaWeek'
-      editable: false
-      events: @state.slots
-      eventClick: (e) ->
-        console.log(e)
+      defaultView : 'month'
+      editable : false
+      events : @state.slots
+      eventClick : (event) ->
+        event.title = if event.title is 'Available' then 'Selected' else 'Available'
+        event.color = if event.color is '#e67e22' then '#3a87ad' else '#e67e22'
+        calendarElem.fullCalendar('updateEvent', event)
+
 
   render: ->
     return `(

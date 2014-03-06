@@ -58,7 +58,7 @@ BootstrapModal = React.createClass({
         <div className="modal-dialog modal-md">
           <div className="modal-content">
             <div className="modal-header">
-              <h3>{this.props.title}</h3>
+              <h3 className="m-0">{this.props.title}</h3>
             </div>
             <div className="modal-body"  id={this.props.id}>
             </div>
@@ -96,15 +96,16 @@ Course = React.createClass({
     })(this));
   },
   render: function() {
-    var audience, audienceItemDOM, modal;
+    var audience, audienceItemDOM, modal, modalTitle;
     this.modalId = "modal_" + this.props.course._id;
+    modalTitle = "Reserve slots - " + this.props.course.name;
     modal = <BootstrapModal
       ref = "modal"
       confirm = "Done"
       cancel = "Go back"
       onConfirm = {this.handleConfirm}
       onCancel = {this.handleCancel}
-      title = "Reserve Slots"
+      title = {modalTitle}
       onShown = {this.handleModalShown}
       id = {this.modalId}>
       </BootstrapModal>;
@@ -209,17 +210,21 @@ Schedule = React.createClass({
     })(this));
   },
   componentDidUpdate: function() {
-    return $(this.getDOMNode()).find('#calendar').fullCalendar({
+    var calendarElem;
+    calendarElem = $(this.getDOMNode()).find('#calendar');
+    return calendarElem.fullCalendar({
       header: {
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
       },
-      defaultView: 'agendaWeek',
+      defaultView: 'month',
       editable: false,
       events: this.state.slots,
-      eventClick: function(e) {
-        return console.log(e);
+      eventClick: function(event) {
+        event.title = event.title === 'Available' ? 'Selected' : 'Available';
+        event.color = event.color === '#e67e22' ? '#3a87ad' : '#e67e22';
+        return calendarElem.fullCalendar('updateEvent', event);
       }
     });
   },

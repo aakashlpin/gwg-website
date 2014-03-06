@@ -4,6 +4,7 @@ $font-family-sans-serif: "droid-sans";
 $font-family-serif: "museo-slab";
 $border-radius-base: 3px;
 $border-radius-small: 2px;
+$border-radius-large: $border-radius-base;
 @import '../../bower_components/bootstrap-sass/vendor/assets/stylesheets/bootstrap/bootstrap';
 @import 'default';
 @import 'default.time';
@@ -234,6 +235,10 @@ img.bg {
   margin-top: ($dimension * -1)/2 + px;
   margin-left: ($dimension * -1)/2 + px;
 
+}
+
+.m-0 {
+  margin: 0;
 }
 
 .mb-10 {

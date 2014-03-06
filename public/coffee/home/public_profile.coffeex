@@ -9,10 +9,107 @@ UserHelpers =
     window.location.pathname.split('/')[1]
 
 #########
+#Button for Bootstrap
+#########
+BootstrapButton = React.createClass
+  render: ->
+    return `this.transferPropsTo(
+      <a role="button" className="btn">
+        {this.props.children}
+      </a>
+    );`
+
+#########
+#Bootstrap modal
+#can use this for populating the schedule
+#########
+BootstrapModal = React.createClass
+  componentDidMount: ->
+    $(@getDOMNode())
+    .modal
+        backdrop: 'static'
+        show: false
+    .on 'shown.bs.modal', @handleModalShown
+
+  close: ->
+    $(@getDOMNode()).modal 'hide'
+
+  open : ->
+    $(@getDOMNode()).modal 'show'
+
+  handleModalShown: ->
+    @props.onShown?()
+
+  render: ->
+    confirmButton = null
+    cancelButton = null
+
+    if @props.confirm then confirmButton = `
+      <BootstrapButton
+        onClick={this.handleConfirm}
+        className="btn-primary">
+        {this.props.confirm}
+      </BootstrapButton>`
+
+    if @props.cancel then cancelButton = `
+      <BootstrapButton
+        onClick={this.handleCancel}>
+        {this.props.cancel}
+      </BootstrapButton>`
+
+    return `(
+      <div className="modal fade">
+        <div className="modal-dialog modal-md">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>{this.props.title}</h3>
+            </div>
+            <div className="modal-body"  id={this.props.id}>
+            </div>
+            <div className="modal-footer">
+              {cancelButton}
+              {confirmButton}
+            </div>
+          </div>
+        </div>
+      </div>
+    )`
+
+  handleCancel: ->
+    @props.onCancel?()
+
+  handleConfirm: ->
+    @props.onConfirm?()
+
+
+#########
 #Single Course entry
 #########
 Course = React.createClass
+  reserveSlots: ->
+    @refs.modal.open()
+
+  handleCancel: ->
+    @refs.modal.close()
+
+  handleModalShown: ->
+    setTimeout =>
+      React.renderComponent (Schedule {}), document.getElementById(@modalId), 0
+
   render: ->
+    @modalId = "modal_#{@props.course._id}"
+
+    modal = `<BootstrapModal
+      ref = "modal"
+      confirm = "Done"
+      cancel = "Go back"
+      onConfirm = {this.handleConfirm}
+      onCancel = {this.handleCancel}
+      title = "Reserve Slots"
+      onShown = {this.handleModalShown}
+      id = {this.modalId}>
+      </BootstrapModal>`
+
     audienceItemDOM = (id) ->
       if id is "beg" then `(<span className="audience-item beg" title="Level: Beginner">B</span>)`
       else if id is "inter" then `(<span className="audience-item inter" title="Level: Intermediate">I</span>)`
@@ -21,32 +118,33 @@ Course = React.createClass
     audience = @props.course.target_audience.map (audienceItem) =>
       if audienceItem.selected
       then `(
-          <li className="item">
-          {audienceItemDOM(audienceItem.id)}
-          </li>
-        )`
+        <li className="item">
+        {audienceItemDOM(audienceItem.id)}
+        </li>
+    )`
 
     return `(
-    <li className="item">
-      <div className="clearfix">
-        <div className="pull-left">
-          <h4 className="item-heading display-ib">{this.props.course.name}</h4>
-          <ul className="l-h-list display-ib guru-audience-list">
-            {audience}
-          </ul>
-          <div>
-            <h5 className="text-charcoal">Sessions: <strong>{this.props.course.classes}</strong>
-            | Fee :  <strong><i className="fa fa-rupee"></i> {this.props.course.fee}</strong>
-            </h5>
+      <li className="item">
+        <div className="clearfix">
+          <div className="pull-left">
+            <h4 className="item-heading display-ib">{this.props.course.name}</h4>
+            <ul className="l-h-list display-ib guru-audience-list">
+              {audience}
+            </ul>
+            <div>
+              <h5 className="text-charcoal">Sessions: <strong>{this.props.course.classes}</strong>
+              | Fee :  <strong><i className="fa fa-rupee"></i> {this.props.course.fee}</strong>
+              </h5>
+            </div>
+          </div>
+          <div className="pull-right">
+            <button className="btn btn-primary" onClick={this.reserveSlots}>Reserve
+              <i className="fa fa-headphones"></i>
+            </button>
           </div>
         </div>
-        <div className="pull-right">
-          <button className="btn btn-primary">Reserve
-            <i className="fa fa-headphones"></i>
-          </button>
-        </div>
-      </div>
-    </li>
+        {modal}
+      </li>
     )`
 
 #########
@@ -96,18 +194,16 @@ Schedule = React.createClass
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
-    ,
-      defaultView: 'agendaWeek',
-      editable: false,
-      events: @state.slots,
+      defaultView: 'agendaWeek'
+      editable: false
+      events: @state.slots
       eventClick: (e) ->
         console.log(e)
 
   render: ->
     return `(
       <div>
-        <h4 className="text-heading">Available Slots</h4>
-        <div className="schedule-container" id="calendar"></div>
+        <div id="calendar"></div>
       </div>
       )`
 
@@ -201,5 +297,4 @@ SoundCloud = React.createClass
 
 React.renderComponent (SoundCloud {}), document.getElementById('widget-soundcloud')
 React.renderComponent (Youtube {}), document.getElementById('widget-youtube')
-#React.renderComponent (Schedule {}), document.getElementById('widget-schedule')
 React.renderComponent (Courses {}), document.getElementById('widget-courses')

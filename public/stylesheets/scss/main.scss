@@ -1,10 +1,10 @@
-$icon-font-path: "../../bower_components/sass-bootstrap/fonts/";
+$icon-font-path: "../../bower_components/bootstrap-sass/vendor/assets/fonts/bootstrap/";
 $brand-primary: #865C33;
 $font-family-sans-serif: "droid-sans";
 $font-family-serif: "museo-slab";
 $border-radius-base: 3px;
 $border-radius-small: 2px;
-@import '../../bower_components/sass-bootstrap/lib/bootstrap';
+@import '../../bower_components/bootstrap-sass/vendor/assets/stylesheets/bootstrap/bootstrap';
 @import 'default';
 @import 'default.time';
 @import 'blueimp-gallery';
@@ -74,6 +74,10 @@ body,
 
 .lead {
   margin-bottom: 45px;
+}
+
+.navbar-brand {
+  height: auto;
 }
 
 img.bg {

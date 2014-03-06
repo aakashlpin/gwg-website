@@ -1,5 +1,5 @@
 /*** @jsx React.DOM */;
-var Course, Courses, Schedule, SoundCloud, UserHelpers, Youtube;
+var BootstrapButton, BootstrapModal, Course, Courses, Schedule, SoundCloud, UserHelpers, Youtube;
 
 UserHelpers = {
   getUserName: function() {
@@ -7,9 +7,107 @@ UserHelpers = {
   }
 };
 
-Course = React.createClass({
+BootstrapButton = React.createClass({
   render: function() {
-    var audience, audienceItemDOM;
+    return this.transferPropsTo(
+      React.DOM.a( {role:"button", className:"btn"}, 
+        this.props.children
+      )
+    );;
+  }
+});
+
+BootstrapModal = React.createClass({
+  componentDidMount: function() {
+    return $(this.getDOMNode()).modal({
+      backdrop: 'static',
+      show: false
+    }).on('shown.bs.modal', this.handleModalShown);
+  },
+  close: function() {
+    return $(this.getDOMNode()).modal('hide');
+  },
+  open: function() {
+    return $(this.getDOMNode()).modal('show');
+  },
+  handleModalShown: function() {
+    var _base;
+    return typeof (_base = this.props).onShown === "function" ? _base.onShown() : void 0;
+  },
+  render: function() {
+    var cancelButton, confirmButton;
+    confirmButton = null;
+    cancelButton = null;
+    if (this.props.confirm) {
+      confirmButton = 
+      BootstrapButton(
+        {onClick:this.handleConfirm,
+        className:"btn-primary"}, 
+        this.props.confirm
+      );
+    }
+    if (this.props.cancel) {
+      cancelButton = 
+      BootstrapButton(
+        {onClick:this.handleCancel}, 
+        this.props.cancel
+      );
+    }
+    return (
+      React.DOM.div( {className:"modal fade"}, 
+        React.DOM.div( {className:"modal-dialog modal-md"}, 
+          React.DOM.div( {className:"modal-content"}, 
+            React.DOM.div( {className:"modal-header"}, 
+              React.DOM.h3(null, this.props.title)
+            ),
+            React.DOM.div( {className:"modal-body",  id:this.props.id}
+            ),
+            React.DOM.div( {className:"modal-footer"}, 
+              cancelButton,
+              confirmButton
+            )
+          )
+        )
+      )
+    );
+  },
+  handleCancel: function() {
+    var _base;
+    return typeof (_base = this.props).onCancel === "function" ? _base.onCancel() : void 0;
+  },
+  handleConfirm: function() {
+    var _base;
+    return typeof (_base = this.props).onConfirm === "function" ? _base.onConfirm() : void 0;
+  }
+});
+
+Course = React.createClass({
+  reserveSlots: function() {
+    return this.refs.modal.open();
+  },
+  handleCancel: function() {
+    return this.refs.modal.close();
+  },
+  handleModalShown: function() {
+    return setTimeout((function(_this) {
+      return function() {
+        return React.renderComponent(Schedule({}), document.getElementById(_this.modalId), 0);
+      };
+    })(this));
+  },
+  render: function() {
+    var audience, audienceItemDOM, modal;
+    this.modalId = "modal_" + this.props.course._id;
+    modal = BootstrapModal(
+      {ref:  "modal",
+      confirm:  "Done",
+      cancel:  "Go back",
+      onConfirm:  this.handleConfirm,
+      onCancel:  this.handleCancel,
+      title:  "Reserve Slots",
+      onShown:  this.handleModalShown,
+      id:  this.modalId}
+      );
     audienceItemDOM = function(id) {
       if (id === "beg") {
         return (React.DOM.span( {className:"audience-item beg", title:"Level: Beginner"}, "B"));
@@ -23,34 +121,35 @@ Course = React.createClass({
       return function(audienceItem) {
         if (audienceItem.selected) {
           return (
-          React.DOM.li( {className:"item"}, 
-          audienceItemDOM(audienceItem.id)
-          )
-        );
+        React.DOM.li( {className:"item"}, 
+        audienceItemDOM(audienceItem.id)
+        )
+    );
         }
       };
     })(this));
     return (
-    React.DOM.li( {className:"item"}, 
-      React.DOM.div( {className:"clearfix"}, 
-        React.DOM.div( {className:"pull-left"}, 
-          React.DOM.h4( {className:"item-heading display-ib"}, this.props.course.name),
-          React.DOM.ul( {className:"l-h-list display-ib guru-audience-list"}, 
-            audience
+      React.DOM.li( {className:"item"}, 
+        React.DOM.div( {className:"clearfix"}, 
+          React.DOM.div( {className:"pull-left"}, 
+            React.DOM.h4( {className:"item-heading display-ib"}, this.props.course.name),
+            React.DOM.ul( {className:"l-h-list display-ib guru-audience-list"}, 
+              audience
+            ),
+            React.DOM.div(null, 
+              React.DOM.h5( {className:"text-charcoal"}, "Sessions: ", React.DOM.strong(null, this.props.course.classes),
+              " | Fee : ",  React.DOM.strong(null, React.DOM.i( {className:"fa fa-rupee"}), this.props.course.fee)
+              )
+            )
           ),
-          React.DOM.div(null, 
-            React.DOM.h5( {className:"text-charcoal"}, "Sessions: ", React.DOM.strong(null, this.props.course.classes),
-            " | Fee : ",  React.DOM.strong(null, React.DOM.i( {className:"fa fa-rupee"}), this.props.course.fee)
+          React.DOM.div( {className:"pull-right"}, 
+            React.DOM.button( {className:"btn btn-primary", onClick:this.reserveSlots}, "Reserve ",
+              React.DOM.i( {className:"fa fa-headphones"})
             )
           )
         ),
-        React.DOM.div( {className:"pull-right"}, 
-          React.DOM.button( {className:"btn btn-primary"}, "Reserve ",
-            React.DOM.i( {className:"fa fa-headphones"})
-          )
-        )
+        modal
       )
-    )
     );
   }
 });
@@ -115,8 +214,7 @@ Schedule = React.createClass({
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
-      }
-    }, {
+      },
       defaultView: 'agendaWeek',
       editable: false,
       events: this.state.slots,
@@ -128,8 +226,7 @@ Schedule = React.createClass({
   render: function() {
     return (
       React.DOM.div(null, 
-        React.DOM.h4( {className:"text-heading"}, "Available Slots"),
-        React.DOM.div( {className:"schedule-container", id:"calendar"})
+        React.DOM.div( {id:"calendar"})
       )
       );
   }

@@ -1,39 +1,265 @@
 /*** @jsx React.DOM */
 
-var CourseManagement = React.createClass({
+var TextInput = React.createClass({
+    validateTextInput: function(e) {
+        var target = $(e.target),
+            currentValue = target.val();
+
+        function isNumber(n) {
+            return !isNaN(parseInt(n)) && isFinite(n);
+        }
+
+        switch (this.props.data.type) {
+            case 'input[type="text"]':
+                this.props.data.value = currentValue;
+                break;
+            case 'input[type="number"]':
+                if (!currentValue) {
+                    //allow empty values so that it can be retyped
+                    this.props.data.value = currentValue;
+                } else {
+                    this.props.data.value = isNumber(currentValue) ? currentValue: this.props.data.value;
+                }
+                break;
+        }
+
+        this.props.onChange(this.props.key, this.props.data);
+
+    },
+    render: function() {
+        return (
+            <div className='form-group'>
+                <label className="control-label col-sm-3" htmlFor={this.props.key}>{this.props.data.name}</label>
+                <div className="col-sm-7">
+                    <input
+                    type        = "text"
+                    className   = "form-control"
+                    placeholder = {this.props.data.placeholder}
+                    value       = {this.props.data.value}
+                    onChange    = {this.validateTextInput}
+                    name        = {this.props.key}
+                    id          = {this.props.key}
+                    required    = {this.props.data.required}
+                    />
+                </div>
+            </div>
+            )
+    }
+});
+
+var TextArea = React.createClass({
+    validateTextInput: function(e) {
+        var target = $(e.target);
+
+        this.props.data.value = target.val();
+        this.props.onChange(this.props.key, this.props.data);
+
+    },
+    render: function() {
+        return (
+            <div className='form-group'>
+                <label className="control-label col-sm-3" htmlFor={this.props.key}>{this.props.data.name}</label>
+                <div className="col-sm-7">
+                    <textarea
+                    rows        = "5"
+                    className   = "form-control"
+                    placeholder = {this.props.data.placeholder}
+                    value       = {this.props.data.value}
+                    onChange    = {this.validateTextInput}
+                    name        = {this.props.key}
+                    id          = {this.props.key}
+                    required    = {this.props.data.required}
+                    />
+                </div>
+            </div>
+            )
+    }
+});
+
+var CheckboxInput = React.createClass({
+    _handleCheckboxChange: function(id) {
+        this.props.data.value = this.props.data.value.map(function(target) {
+            target.selected = target.id === id ? !target.selected : target.selected;
+            return target;
+        });
+
+        this.props.onChange(this.props.key, this.props.data);
+    },
+    render: function() {
+        var checkBoxGroup = this.props.data.value.map(function(checkboxItem) {
+            return (
+                <label className="checkbox-inline" htmlFor={checkboxItem.id}>
+                    <input
+                    type        = "checkbox"
+                    id          = {checkboxItem.id}
+                    name        = {this.props.key}
+                    value       = {checkboxItem.id}
+                    checked     = {checkboxItem.selected}
+                    onChange    = {this._handleCheckboxChange.bind(this, checkboxItem.id)}
+                    />
+                {checkboxItem.name}
+                </label>
+                )
+        }.bind(this));
+
+        return (
+            <div className="form-group">
+                <label className="control-label col-sm-3" htmlFor={this.props.key}>{this.props.data.name}</label>
+                <div className="col-sm-7">
+                {checkBoxGroup}
+                </div>
+            </div>
+            )
+    }
+});
+
+var NewCourse = React.createClass({
     _getEmptyFormData: function() {
         return {
-            name: '',
-            description: '',
-            target_audience: [{
-                id: 'beg',
-                selected: true,
-                name: 'Beginner'
-            }, {
-                id: 'inter',
-                selected: true,
-                name: 'Intermediate'
-            }, {
-                id: 'adv',
-                selected: true,
-                name: 'Advanced'
-            }],
-            classes: '',
-            fee: ''
-        };
+            name: {
+                name: 'Name',
+                type: 'input[type="text"]',
+                value: '',
+                required: true,
+                placeholder: 'Carnatic Guitar Techniques'
+            },
+            description: {
+                name: 'Description',
+                type: 'textarea',
+                value: '',
+                required: true,
+                placeholder: "A capable guitarist wanting to learn left and right hand techniques, triads, vibrato, bending, picking techniques, how to arpeggiate chords etc"
+            },
+            target_audience: {
+                name: 'Target Audience',
+                type: 'input[type="checkbox"]',
+                value: [{
+                    id: 'beg',
+                    selected: true,
+                    name: 'Beginner'
+                }, {
+                    id: 'inter',
+                    selected: true,
+                    name: 'Intermediate'
+                }, {
+                    id: 'adv',
+                    selected: true,
+                    name: 'Advanced'
+                }],
+                required: true
+            },
+            classes: {
+                name: 'Number of classes',
+                type: 'input[type="number"]',
+                value: '',
+                required: true,
+                placeholder: '4'
+            },
+            fee: {
+                name: 'Course fee (Rs.)',
+                type: 'input[type="number"]',
+                value: '',
+                required: true,
+                placeholder: '2000'
+            }
+        }
     },
+    getInitialState: function() {
+        return this._getEmptyFormData();
+
+    },
+    handleTextFieldChange: function(key, data) {
+        var updatedState = {};
+        updatedState[key] = data;
+        this.setState(updatedState);
+
+    },
+    handleCheckboxChange: function(key, data) {
+        var updatedState = {};
+        updatedState[key] = data;
+        this.setState(updatedState);
+
+    },
+    _resetForm: function() {
+        this.setState(this._getEmptyFormData());
+        this.props.onFormVisibility(false);
+//        $(this.getDOMNode()).find('#courseFormContainer').fadeToggle();
+
+    },
+    handleNewCourseFormSubmit: function(e) {
+        e.preventDefault();
+        var payload = {};
+        _.each(_.keys(this.state), function(formItemKey) {
+            payload[formItemKey] = this.state[formItemKey].value;
+
+        }, this);
+
+        $.post('/api/guru/course', payload, function(course) {
+            this.props.onNewCourse(course);
+            this._resetForm();
+
+        }.bind(this));
+
+        mixpanel.track('Created new course');
+    },
+    render: function() {
+        var formDOMElements = _.keys(this.state).map(function(formItemKey) {
+            var formItemValue = this.state[formItemKey];
+            switch (formItemValue.type) {
+                case 'textarea':
+                    return (<TextArea data={formItemValue} key={formItemKey} onChange={this.handleTextFieldChange} />);
+                    break;
+                case 'input[type="checkbox"]':
+                    return (<CheckboxInput data={formItemValue} key={formItemKey} onChange={this.handleCheckboxChange}/>);
+                    break;
+                default:
+                    return (<TextInput data={formItemValue} key={formItemKey} onChange={this.handleTextFieldChange} />);
+            }
+        }.bind(this));
+
+        var formDOMParent = function() {
+            if (this.props.isVisible) {
+                return (
+                    <div id="courseFormContainer" className="text-left">
+                        <div className="panel panel-default pad-10">
+                            <legend>Add new course</legend>
+                            <form className="form-horizontal" role="form" onSubmit={this.handleNewCourseFormSubmit}>
+                                {formDOMElements}
+                                <div className="form-group">
+                                    <div className="col-sm-offset-3 col-sm-9">
+                                        <button type="submit" className="btn btn-success mr-20" id="saveSchedule">Save</button>
+                                        <a className="btn btn-link" onClick={this._resetForm}>Cancel</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    )
+            } else {
+                return (
+                    <div ></div>
+                    )
+            }
+
+        };
+
+        return (<div>{formDOMParent.call(this)}</div>);
+    }
+});
+
+var CourseManagement = React.createClass({
     getInitialState: function() {
         return {
             courses: [],
-            new_course: this._getEmptyFormData(),
-            user: {}
+            user: {},
+            isNewCourseFormVisible: false
         }
     },
     componentWillMount: function() {
         $.getJSON('/api/guru/courses', function(courses) {
             this.setState({courses: courses});
             if (!this.state.courses.length) {
-                this.toggleAddCourseForm();
+                this.handleFormVisibility(true);
             }
         }.bind(this));
 
@@ -53,149 +279,62 @@ var CourseManagement = React.createClass({
         }.bind(this));
 
     },
-    componentDidUpdate: function() {
-        var gameContainer = $(this.getDOMNode()).find(".game");
-        var myTray = $(this.getDOMNode()).find(".tray").sortable({
-            containment: gameContainer,
-            helper: "clone",
-            revert: 100,
-            tolerance: "pointer",
-            update: function(ev, ui) {
-                ui.item.addClass("ontray").css({
-                    "left": "0px",
-                    "position": "static",
-                    "top": "0px"
-                });
-            }
-        }).disableSelection();
+    /*
+     validateNumberInput: function(e) {
+     var target = $(e.target),
+     currentValue = parseInt(target.val()),
+     currentElem = target.attr('id');
 
-        var setTileDraggable = function(tileSelector) {
-            tileSelector.draggable({
-                connectToSortable: myTray,
-                containment: gameContainer,
-                helper: "original",
-                revert: "invalid"
-            }).disableSelection();
-        };
+     var setStateObject = this.state.new_course;
+     setStateObject[currentElem] = _.isNaN(currentValue) ? '': currentValue;
+     this.setState({new_course: setStateObject});
 
-        var myBoard = $(this.getDOMNode()).find(".board").droppable({
-            accept: ".tile",
-            drop: function(ev, ui) {
-                if (ui.draggable.hasClass("ontray")) {
-                    // tile (not red) coming from tray, place it into .tiles child div
-                    var cloneTile = ui.draggable.clone().removeClass("ontray").show();
-                    myBoard.children(".tiles").append(cloneTile);
-                    var dropx = ui.offset.left - myBoard.offset().left;
-                    var dropy = ui.offset.top - myBoard.offset().top;
-                    cloneTile.css({
-                        "left": dropx + "px",
-                        "position": "absolute",
-                        "top": dropy + "px"
-                    });
-                    setTileDraggable(cloneTile);
-                    ui.helper.remove();
-                    ui.draggable.remove();
-                }
-            }
-        }).disableSelection();
-
-    // set up draggables
-        setTileDraggable(myBoard.children(".tiles").find(".tile"));
-    },
-    toggleAddCourseForm: function() {
-        $(this.getDOMNode())
-            .find('#courseFormContainer').fadeToggle('fast')
-            .find('input#name').focus();
+     },*/
+    _getTargetAudience: function(course) {
+        return course.target_audience.map(function(member){
+            //if audience member is not selected, return
+            if (!member.selected) return;
+            //else return the member item
+            return (
+                <li className="item capitalize">{member.id}</li>
+                )
+        }, this);
 
     },
-    _resetForm: function() {
-        this.state.new_course = this._getEmptyFormData();
-        this.setState({new_course: this.state.new_course});
-
-        $(this.getDOMNode()).find('#courseFormContainer').fadeToggle();
-
-    },
-    handleNewCourseFormSubmit: function(e) {
-        e.preventDefault();
-        var hasErrors = false;
-        _.each(_.values(this.state.new_course), function(item){
-            if (_.isArray(item) || _.isString(item)) {
-                if (!item.length)
-                    hasErrors = true;
-            }
-            if (_.isNumber(item)) {
-                if (item <= 0)
-                    hasErrors = true;
-            }
-        });
-
-        if (hasErrors) {
-            //msg: please fix the issues in red.
-        } else {
-            //all good.
-            //sync the data with server
-            //add the new item to current list
-            $.post('/api/guru/course', this.state.new_course, function(course) {
-                this.state.courses.push(course);
-                this.setState({courses: this.state.courses});
-                this._resetForm();
-            }.bind(this));
-
-            mixpanel.track('Created new course');
-        }
-    },
-    validateTextInput: function(e) {
-        var target = $(e.target),
-            currentValue = target.val(),
-            currentElem = target.attr('id');
-
-        var setStateObject = this.state.new_course;
-        setStateObject[currentElem] = currentValue;
-        this.setState({new_course: setStateObject});
+    handleNewCourse: function(courseObject) {
+        this.state.courses.push(courseObject);
+        this.setState({courses: this.state.courses});
+        this.handleFormVisibility(false);
 
     },
-    validateNumberInput: function(e) {
-        var target = $(e.target),
-            currentValue = parseInt(target.val()),
-            currentElem = target.attr('id');
-
-        var setStateObject = this.state.new_course;
-        setStateObject[currentElem] = _.isNaN(currentValue) ? '': currentValue;
-        this.setState({new_course: setStateObject});
-
-    },
-    _handleCheckboxChange: function(id) {
-        var targetAudience = this.state.new_course.target_audience.map(function(target) {
-            return {
-                id: target.id,
-                selected: target.id === id ? !target.selected : target.selected,
-                name: target.name
-            }
-        });
-
-        this.state.new_course.target_audience = targetAudience;
-        this.setState({new_course: this.state.new_course});
+    handleFormVisibility: function(visibility) {
+        this.setState({isNewCourseFormVisible: visibility});
 
     },
     render: function() {
-        var hide    = {'display'    :'none'},
-            mt60    = {'margin-top' : 60};
-
-        var targetAudienceChecks = this.state.new_course.target_audience.map(function(target) {
-            return (
-                <label className="checkbox-inline" htmlFor={target.id}>
-                    <input type="checkbox" id={target.id} name="target_audience"
-                    value={target.id} checked={target.selected}
-                    onChange={this._handleCheckboxChange.bind(this, target.id)}/> {target.name}
-                </label>
-                );
-        }, this);
+        var mt60    = {'margin-top': 60};
 
         var existingCourses = this.state.courses.map(function(course) {
             return (
-                <div className="tile">{course.name}</div>
+                <li className="item">
+                    <div className="row">
+                        <div className="col-md-7">
+                            <h4 className="text-item-heading">{course.name}</h4>
+                            <p className="text-light">{course.description}</p>
+                        </div>
+                        <div className="col-md-5">
+                            <div className="mb-10"><strong>Classes: </strong> {course.classes}</div>
+                            <div className="mb-10"><strong>Fee: </strong> <i className="fa fa-rupee"></i> {course.fee}</div>
+                            <div className="mb-10"><strong>Audience: </strong>
+                                <ul className="l-h-list inline-block">
+                                {this._getTargetAudience.call(this, course)}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
                 );
-        });
+        }, this);
 
         return (
             <div>
@@ -209,103 +348,22 @@ var CourseManagement = React.createClass({
                     <div className="col-md-3">
                         <div className="pull-right">
                             <div style={mt60}></div>
-                            <a id="addNewCourse" onClick={this.toggleAddCourseForm}>
+                            <a id="addNewCourse" onClick={this.handleFormVisibility.bind(this, true)}>
                                 <i className="fa fa-plus-circle"></i> Add New Course
                             </a>
                         </div>
                     </div>
                 </div>
-                <div id="courseFormContainer" className="text-left" style={hide}>
-                    <div className="panel panel-default pad-10">
-                        <legend>Add new course</legend>
-                        <form className="form-horizontal" role="form" onSubmit={this.handleNewCourseFormSubmit}>
-                            <div className='form-group'>
-                                <label className="control-label col-sm-3" htmlFor="name">Course Name</label>
-                                <div className="col-sm-7">
-                                    <input type="text" className="form-control"
-                                    placeholder="Carnatic Guitar Techniques"
-                                    name="name"
-                                    id="name"
-                                    value={this.state.new_course.name}
-                                    onChange={this.validateTextInput}
-                                    required="required"
-                                    />
-                                </div>
-                            </div>
-                            <div className='form-group'>
-                                <label className="control-label col-sm-3" htmlFor="description">Course Description</label>
-                                <div className="col-sm-7">
-                                    <textarea rows="5"
-                                    placeholder="A capable guitarist wanting to learn left and right hand techniques, triads, vibrato, bending, picking techniques, how to arpeggiate chords etc"
-                                    className="form-control"
-                                    name="description"
-                                    id="description"
-                                    value={this.state.new_course.description}
-                                    onChange={this.validateTextInput}
-                                    required="required"
-                                    />
-                                </div>
-                            </div>
-                            <div className='form-group'>
-                                <label className="control-label col-sm-3" htmlFor="classes">Number of sessions</label>
-                                <div className="col-sm-3">
-                                    <input type="text"
-                                    name="classes"
-                                    id="classes"
-                                    className="form-control"
-                                    placeholder="12"
-                                    value={this.state.new_course.classes}
-                                    onChange={this.validateNumberInput}
-                                    required="required"
-                                    />
-                                </div>
-                            </div>
-                            <div className='form-group'>
-                                <label className="control-label col-sm-3" htmlFor="fee">Total Course Fee</label>
-                                <div className="col-sm-3">
-                                    <div className="input-group">
-                                        <span className="input-group-addon">Rs.</span>
-                                        <input type="text"
-                                        name="fee"
-                                        id="fee"
-                                        className="form-control"
-                                        placeholder="6000"
-                                        value={this.state.new_course.fee}
-                                        required="required"
-                                        onChange={this.validateNumberInput}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <label className="control-label col-sm-3" htmlFor="target_audience">Target Audience</label>
-                                <div className="col-sm-7">
-                                {targetAudienceChecks}
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <div className="col-sm-offset-3 col-sm-9">
-                                    <button type="submit" className="btn btn-success mr-20" id="saveSchedule">Save</button>
-                                    <a className="btn btn-link" onClick={this._resetForm}>Cancel</a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                <NewCourse
+                onNewCourse         = {this.handleNewCourse}
+                isVisible           = {this.state.isNewCourseFormVisible}
+                onFormVisibility    = {this.handleFormVisibility}
+                />
                 <div className="mb-40"></div>
                 <div id="existingCourses" className="has-min-height">
-                    <div className="relative">
-                        <div className="game">
-                            <div className="board">
-                                <div className="tiles">
-                                {existingCourses}
-                                </div>
-                            </div>
-                            <div className="tray">
-                            </div>
-                        </div>
-
-                    </div>
+                    <ul className="l-v-list v-flat-list list-unstyled">
+                    {existingCourses}
+                    </ul>
                 </div>
             </div>
             );

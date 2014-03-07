@@ -183,7 +183,6 @@ var NewCourse = React.createClass({displayName: 'NewCourse',
     _resetForm: function() {
         this.setState(this._getEmptyFormData());
         this.props.onFormVisibility(false);
-//        $(this.getDOMNode()).find('#courseFormContainer').fadeToggle();
 
     },
     handleNewCourseFormSubmit: function(e) {
@@ -279,17 +278,6 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
         }.bind(this));
 
     },
-    /*
-     validateNumberInput: function(e) {
-     var target = $(e.target),
-     currentValue = parseInt(target.val()),
-     currentElem = target.attr('id');
-
-     var setStateObject = this.state.new_course;
-     setStateObject[currentElem] = _.isNaN(currentValue) ? '': currentValue;
-     this.setState({new_course: setStateObject});
-
-     },*/
     _getTargetAudience: function(course) {
         return course.target_audience.map(function(member){
             //if audience member is not selected, return

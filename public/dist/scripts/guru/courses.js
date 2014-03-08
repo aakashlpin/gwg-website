@@ -258,6 +258,11 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
         }, this);
 
     },
+    handleOnDelete: function(e) {
+        e.preventDefault();
+        this.props.onDeleteCourse(this.props.course._id);
+
+    },
     render: function() {
         return (
             React.DOM.li( {className:"item"}, 
@@ -275,7 +280,9 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
                             React.DOM.ul( {className:"l-h-list inline-block"}, 
                                 this._getTargetAudience.call(this, this.props.course)
                             )
-                        )
+                        ),
+
+                        React.DOM.a( {className:"deleteCourse", onClick:this.handleOnDelete}, React.DOM.i( {className:"fa fa-trash-o"}))
                     )
                 )
             )
@@ -288,9 +295,9 @@ var ExistingCourses = React.createClass({displayName: 'ExistingCourses',
     render: function() {
         var existingCourses = this.props.courses.map(function(course) {
             return (
-                ExistingCourseItem( {course:course} )
+                ExistingCourseItem( {course:course, onDeleteCourse:this.props.onDeleteCourse})
                 );
-        });
+        }, this);
 
         return (
             React.DOM.div( {id:"existingCourses", className:"has-min-height"}, 
@@ -345,6 +352,13 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
         this.setState({isNewCourseFormVisible: visibility});
 
     },
+    handleOnDeleteCourse: function(courseId) {
+        this.state.courses = _.reject(this.state.courses, function(course){
+            return course._id === courseId;
+        }, this);
+
+        this.setState({courses: this.state.courses});
+    },
     render: function() {
         var mt60    = {'margin-top': 60};
         return (
@@ -371,7 +385,7 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                 onFormVisibility:     this.handleFormVisibility}
                 ),
                 React.DOM.div( {className:"mb-40"}),
-                ExistingCourses( {courses:this.state.courses} )
+                ExistingCourses( {courses:this.state.courses, onDeleteCourse:this.handleOnDeleteCourse})
             )
             );
     }

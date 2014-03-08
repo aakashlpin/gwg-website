@@ -258,6 +258,11 @@ var ExistingCourseItem = React.createClass({
         }, this);
 
     },
+    handleOnDelete: function(e) {
+        e.preventDefault();
+        this.props.onDeleteCourse(this.props.course._id);
+
+    },
     render: function() {
         return (
             <li className="item">
@@ -276,6 +281,8 @@ var ExistingCourseItem = React.createClass({
                                 {this._getTargetAudience.call(this, this.props.course)}
                             </ul>
                         </div>
+
+                        <a className="deleteCourse" onClick={this.handleOnDelete}><i className="fa fa-trash-o"></i></a>
                     </div>
                 </div>
             </li>
@@ -288,9 +295,9 @@ var ExistingCourses = React.createClass({
     render: function() {
         var existingCourses = this.props.courses.map(function(course) {
             return (
-                <ExistingCourseItem course={course} />
+                <ExistingCourseItem course={course} onDeleteCourse={this.props.onDeleteCourse}/>
                 );
-        });
+        }, this);
 
         return (
             <div id="existingCourses" className="has-min-height">
@@ -345,6 +352,13 @@ var CourseManagement = React.createClass({
         this.setState({isNewCourseFormVisible: visibility});
 
     },
+    handleOnDeleteCourse: function(courseId) {
+        this.state.courses = _.reject(this.state.courses, function(course){
+            return course._id === courseId;
+        }, this);
+
+        this.setState({courses: this.state.courses});
+    },
     render: function() {
         var mt60    = {'margin-top': 60};
         return (
@@ -371,7 +385,7 @@ var CourseManagement = React.createClass({
                 onFormVisibility    = {this.handleFormVisibility}
                 />
                 <div className="mb-40"></div>
-                <ExistingCourses courses={this.state.courses} />
+                <ExistingCourses courses={this.state.courses} onDeleteCourse={this.handleOnDeleteCourse}/>
             </div>
             );
     }

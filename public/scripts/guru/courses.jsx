@@ -246,6 +246,63 @@ var NewCourse = React.createClass({
     }
 });
 
+var ExistingCourseItem = React.createClass({
+    _getTargetAudience: function(course) {
+        return course.target_audience.map(function(member){
+            //if audience member is not selected, return
+            if (!member.selected) return;
+            //else return the member item
+            return (
+                <li className="item capitalize">{member.id}</li>
+                )
+        }, this);
+
+    },
+    render: function() {
+        return (
+            <li className="item">
+                <div className="row">
+                    <div className="col-md-7">
+                        <h4 className="text-item-heading">{this.props.course.name}</h4>
+                        <p className="text-light">{this.props.course.description}</p>
+                    </div>
+                    <div className="col-md-5">
+                        <div className="mb-10"><strong>Classes: </strong> {this.props.course.classes}</div>
+                        <div className="mb-10"><strong>Fee: </strong> <i className="fa fa-rupee"></i>
+                        {this.props.course.fee}
+                        </div>
+                        <div className="mb-10"><strong>Audience: </strong>
+                            <ul className="l-h-list inline-block">
+                                {this._getTargetAudience.call(this, this.props.course)}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            )
+    }
+
+});
+
+var ExistingCourses = React.createClass({
+    render: function() {
+        var existingCourses = this.props.courses.map(function(course) {
+            return (
+                <ExistingCourseItem course={course} />
+                );
+        });
+
+        return (
+            <div id="existingCourses" className="has-min-height">
+                <ul className="l-v-list v-flat-list list-unstyled">
+                    {existingCourses}
+                </ul>
+            </div>
+            );
+    }
+
+});
+
 var CourseManagement = React.createClass({
     getInitialState: function() {
         return {
@@ -278,17 +335,6 @@ var CourseManagement = React.createClass({
         }.bind(this));
 
     },
-    _getTargetAudience: function(course) {
-        return course.target_audience.map(function(member){
-            //if audience member is not selected, return
-            if (!member.selected) return;
-            //else return the member item
-            return (
-                <li className="item capitalize">{member.id}</li>
-                )
-        }, this);
-
-    },
     handleNewCourse: function(courseObject) {
         this.state.courses.push(courseObject);
         this.setState({courses: this.state.courses});
@@ -301,29 +347,6 @@ var CourseManagement = React.createClass({
     },
     render: function() {
         var mt60    = {'margin-top': 60};
-
-        var existingCourses = this.state.courses.map(function(course) {
-            return (
-                <li className="item">
-                    <div className="row">
-                        <div className="col-md-7">
-                            <h4 className="text-item-heading">{course.name}</h4>
-                            <p className="text-light">{course.description}</p>
-                        </div>
-                        <div className="col-md-5">
-                            <div className="mb-10"><strong>Classes: </strong> {course.classes}</div>
-                            <div className="mb-10"><strong>Fee: </strong> <i className="fa fa-rupee"></i> {course.fee}</div>
-                            <div className="mb-10"><strong>Audience: </strong>
-                                <ul className="l-h-list inline-block">
-                                {this._getTargetAudience.call(this, course)}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                );
-        }, this);
-
         return (
             <div>
                 <div className="row">
@@ -348,11 +371,7 @@ var CourseManagement = React.createClass({
                 onFormVisibility    = {this.handleFormVisibility}
                 />
                 <div className="mb-40"></div>
-                <div id="existingCourses" className="has-min-height">
-                    <ul className="l-v-list v-flat-list list-unstyled">
-                    {existingCourses}
-                    </ul>
-                </div>
+                <ExistingCourses courses={this.state.courses} />
             </div>
             );
     }

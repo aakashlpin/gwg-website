@@ -246,6 +246,63 @@ var NewCourse = React.createClass({displayName: 'NewCourse',
     }
 });
 
+var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
+    _getTargetAudience: function(course) {
+        return course.target_audience.map(function(member){
+            //if audience member is not selected, return
+            if (!member.selected) return;
+            //else return the member item
+            return (
+                React.DOM.li( {className:"item capitalize"}, member.id)
+                )
+        }, this);
+
+    },
+    render: function() {
+        return (
+            React.DOM.li( {className:"item"}, 
+                React.DOM.div( {className:"row"}, 
+                    React.DOM.div( {className:"col-md-7"}, 
+                        React.DOM.h4( {className:"text-item-heading"}, this.props.course.name),
+                        React.DOM.p( {className:"text-light"}, this.props.course.description)
+                    ),
+                    React.DOM.div( {className:"col-md-5"}, 
+                        React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Classes: " ), this.props.course.classes),
+                        React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Fee: " ), React.DOM.i( {className:"fa fa-rupee"}),
+                        this.props.course.fee
+                        ),
+                        React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Audience: " ),
+                            React.DOM.ul( {className:"l-h-list inline-block"}, 
+                                this._getTargetAudience.call(this, this.props.course)
+                            )
+                        )
+                    )
+                )
+            )
+            )
+    }
+
+});
+
+var ExistingCourses = React.createClass({displayName: 'ExistingCourses',
+    render: function() {
+        var existingCourses = this.props.courses.map(function(course) {
+            return (
+                ExistingCourseItem( {course:course} )
+                );
+        });
+
+        return (
+            React.DOM.div( {id:"existingCourses", className:"has-min-height"}, 
+                React.DOM.ul( {className:"l-v-list v-flat-list list-unstyled"}, 
+                    existingCourses
+                )
+            )
+            );
+    }
+
+});
+
 var CourseManagement = React.createClass({displayName: 'CourseManagement',
     getInitialState: function() {
         return {
@@ -278,17 +335,6 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
         }.bind(this));
 
     },
-    _getTargetAudience: function(course) {
-        return course.target_audience.map(function(member){
-            //if audience member is not selected, return
-            if (!member.selected) return;
-            //else return the member item
-            return (
-                React.DOM.li( {className:"item capitalize"}, member.id)
-                )
-        }, this);
-
-    },
     handleNewCourse: function(courseObject) {
         this.state.courses.push(courseObject);
         this.setState({courses: this.state.courses});
@@ -301,29 +347,6 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
     },
     render: function() {
         var mt60    = {'margin-top': 60};
-
-        var existingCourses = this.state.courses.map(function(course) {
-            return (
-                React.DOM.li( {className:"item"}, 
-                    React.DOM.div( {className:"row"}, 
-                        React.DOM.div( {className:"col-md-7"}, 
-                            React.DOM.h4( {className:"text-item-heading"}, course.name),
-                            React.DOM.p( {className:"text-light"}, course.description)
-                        ),
-                        React.DOM.div( {className:"col-md-5"}, 
-                            React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Classes: " ), course.classes),
-                            React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Fee: " ), React.DOM.i( {className:"fa fa-rupee"}), course.fee),
-                            React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Audience: " ),
-                                React.DOM.ul( {className:"l-h-list inline-block"}, 
-                                this._getTargetAudience.call(this, course)
-                                )
-                            )
-                        )
-                    )
-                )
-                );
-        }, this);
-
         return (
             React.DOM.div(null, 
                 React.DOM.div( {className:"row"}, 
@@ -348,11 +371,7 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
                 onFormVisibility:     this.handleFormVisibility}
                 ),
                 React.DOM.div( {className:"mb-40"}),
-                React.DOM.div( {id:"existingCourses", className:"has-min-height"}, 
-                    React.DOM.ul( {className:"l-v-list v-flat-list list-unstyled"}, 
-                    existingCourses
-                    )
-                )
+                ExistingCourses( {courses:this.state.courses} )
             )
             );
     }

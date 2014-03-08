@@ -2,7 +2,7 @@ server {
 	listen 80 default_server;
 	listen [::]:80 default_server ipv6only=on;
 
-	root /home/aakash/projects/ontrack;
+	root /Users/aakashlpin/projects/ontrack;
 	index index.html index.htm;
 
 	server_name ontrack.aakashgoel.com;
@@ -36,7 +36,7 @@ upstream gwg {
 }
 
 server {
-  root /home/aakash/projects/gwg-website/public;
+  root /Users/aakashlpin/projects/gwg-website/public;
   try_files $uri $uri.html $uri/ @notfound;
   server_name guitarwith.guru;
   error_page   404  =  /404.html;

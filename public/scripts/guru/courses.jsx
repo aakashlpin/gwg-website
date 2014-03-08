@@ -165,7 +165,19 @@ var NewCourse = React.createClass({
         }
     },
     getInitialState: function() {
-        return this._getEmptyFormData();
+        if (!this.props.course) {
+            //add new course
+            return this._getEmptyFormData();
+
+        } else {
+            //edit existing course. map the existing values to empty form data
+            var formData = this._getEmptyFormData();
+            _.each(_.keys(formData), function(formItemKey) {
+                formData[formItemKey].value = this.props.course[formItemKey];
+            }, this);
+
+            return formData;
+        }
 
     },
     handleTextFieldChange: function(key, data) {
@@ -247,6 +259,11 @@ var NewCourse = React.createClass({
 });
 
 var ExistingCourseItem = React.createClass({
+    getInitialState: function() {
+        return {
+            isEditMode: false
+        }
+    },
     _getTargetAudience: function(course) {
         return course.target_audience.map(function(member){
             //if audience member is not selected, return
@@ -263,7 +280,20 @@ var ExistingCourseItem = React.createClass({
         this.props.onDeleteCourse(this.props.course._id);
 
     },
+    handleOnEdit: function(e) {
+        this.setState({
+            isEditMode: true
+        });
+
+    },
     render: function() {
+        if (this.state.isEditMode) {
+            return (
+                <li className="item">
+                    <NewCourse course={this.props.course} isVisible={true}/>
+                </li>
+                )
+        }
         return (
             <li className="item">
                 <div className="row">
@@ -283,6 +313,7 @@ var ExistingCourseItem = React.createClass({
                         </div>
 
                         <a className="deleteCourse" onClick={this.handleOnDelete}><i className="fa fa-trash-o"></i></a>
+                        <a className="editCourse" onClick={this.handleOnEdit}><i className="fa fa-pencil-square-o"></i></a>
                     </div>
                 </div>
             </li>

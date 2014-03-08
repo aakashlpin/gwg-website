@@ -165,7 +165,19 @@ var NewCourse = React.createClass({displayName: 'NewCourse',
         }
     },
     getInitialState: function() {
-        return this._getEmptyFormData();
+        if (!this.props.course) {
+            //add new course
+            return this._getEmptyFormData();
+
+        } else {
+            //edit existing course. map the existing values to empty form data
+            var formData = this._getEmptyFormData();
+            _.each(_.keys(formData), function(formItemKey) {
+                formData[formItemKey].value = this.props.course[formItemKey];
+            }, this);
+
+            return formData;
+        }
 
     },
     handleTextFieldChange: function(key, data) {
@@ -247,6 +259,11 @@ var NewCourse = React.createClass({displayName: 'NewCourse',
 });
 
 var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
+    getInitialState: function() {
+        return {
+            isEditMode: false
+        }
+    },
     _getTargetAudience: function(course) {
         return course.target_audience.map(function(member){
             //if audience member is not selected, return
@@ -263,7 +280,20 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
         this.props.onDeleteCourse(this.props.course._id);
 
     },
+    handleOnEdit: function(e) {
+        this.setState({
+            isEditMode: true
+        });
+
+    },
     render: function() {
+        if (this.state.isEditMode) {
+            return (
+                React.DOM.li( {className:"item"}, 
+                    NewCourse( {course:this.props.course, isVisible:true})
+                )
+                )
+        }
         return (
             React.DOM.li( {className:"item"}, 
                 React.DOM.div( {className:"row"}, 
@@ -282,7 +312,8 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
                             )
                         ),
 
-                        React.DOM.a( {className:"deleteCourse", onClick:this.handleOnDelete}, React.DOM.i( {className:"fa fa-trash-o"}))
+                        React.DOM.a( {className:"deleteCourse", onClick:this.handleOnDelete}, React.DOM.i( {className:"fa fa-trash-o"})),
+                        React.DOM.a( {className:"editCourse", onClick:this.handleOnEdit}, React.DOM.i( {className:"fa fa-pencil-square-o"}))
                     )
                 )
             )

@@ -23,6 +23,13 @@ module.exports = {
         });
 
     },
+    putGuruCourseHandler: function(req, res){
+        var CourseModel = models.Course;
+        CourseModel.put(req, function(err, data) {
+            res.json(data);
+        });
+
+    },
     getGuruCourseHandler: function(req, res) {
         var CourseModel = models.Course;
         CourseModel.getByCreator(req, function(err, data) {

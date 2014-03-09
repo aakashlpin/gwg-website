@@ -175,7 +175,9 @@ var NewCourse = React.createClass({
             _.each(_.keys(formData), function(formItemKey) {
                 formData[formItemKey].value = this.props.course[formItemKey];
             }, this);
-
+            
+            //so that it can be uniquely identified on the server
+            formData._id = this.props.course._id;
             return formData;
         }
 
@@ -193,8 +195,13 @@ var NewCourse = React.createClass({
 
     },
     _resetForm: function() {
-        this.setState(this._getEmptyFormData());
-        this.props.onFormVisibility(false);
+        if (!this.props.course) {
+            this.setState(this._getEmptyFormData());
+
+        }
+        if (this.props.onFormVisibility) {
+            this.props.onFormVisibility(false);
+        }
 
     },
     handleNewCourseFormSubmit: function(e) {
@@ -205,17 +212,35 @@ var NewCourse = React.createClass({
 
         }, this);
 
-        $.post('/api/guru/course', payload, function(course) {
-            this.props.onNewCourse(course);
-            this._resetForm();
+        if (!this.props.course) {
+            $.post('/api/guru/course', payload, function(course) {
+                this.props.onNewCourse(course);
+                this._resetForm();
+                mixpanel.track('Created new course', course);
 
-        }.bind(this));
+            }.bind(this));
 
-        mixpanel.track('Created new course');
+        } else {
+            payload._id = this.state._id;
+            $.ajax({
+                url: '/api/guru/course',
+                type: 'PUT',
+                data: payload,
+                dataType: 'json',
+                success: function(course) {
+                    this.props.onCourseEdited(course);
+                    this._resetForm();
+                    mixpanel.track('Edited course', course);
+
+                }.bind(this)
+            });
+
+        }
     },
     render: function() {
         var formDOMElements = _.keys(this.state).map(function(formItemKey) {
             var formItemValue = this.state[formItemKey];
+            if (!formItemValue.type) { return null; }
             switch (formItemValue.type) {
                 case 'textarea':
                     return (<TextArea data={formItemValue} key={formItemKey} onChange={this.handleTextFieldChange} />);
@@ -280,9 +305,16 @@ var ExistingCourseItem = React.createClass({
         this.props.onDeleteCourse(this.props.course._id);
 
     },
-    handleOnEdit: function(e) {
+    handleOnEdit: function() {
         this.setState({
             isEditMode: true
+        });
+
+    },
+    handleOnCourseEdited: function(course) {
+        this.props.onCourseChange(course);
+        this.setState({
+            isEditMode: false
         });
 
     },
@@ -290,7 +322,7 @@ var ExistingCourseItem = React.createClass({
         if (this.state.isEditMode) {
             return (
                 <li className="item">
-                    <NewCourse course={this.props.course} isVisible={true}/>
+                    <NewCourse course={this.props.course} isVisible={true} onCourseEdited={this.handleOnCourseEdited}/>
                 </li>
                 )
         }
@@ -326,7 +358,11 @@ var ExistingCourses = React.createClass({
     render: function() {
         var existingCourses = this.props.courses.map(function(course) {
             return (
-                <ExistingCourseItem course={course} onDeleteCourse={this.props.onDeleteCourse}/>
+                <ExistingCourseItem 
+                course={course} 
+                onDeleteCourse={this.props.onDeleteCourse}
+                onCourseChange={this.props.onCourseChange}
+                />
                 );
         }, this);
 
@@ -390,6 +426,16 @@ var CourseManagement = React.createClass({
 
         this.setState({courses: this.state.courses});
     },
+    handleOnCourseChange: function(courseObject) {
+        this.setState({
+            courses: this.state.courses.map(function(course) {
+                if (course._id === courseObject._id) {
+                    return courseObject;
+                } else return course;
+            }, this)
+        });
+        
+    },
     render: function() {
         var mt60    = {'margin-top': 60};
         return (
@@ -416,7 +462,11 @@ var CourseManagement = React.createClass({
                 onFormVisibility    = {this.handleFormVisibility}
                 />
                 <div className="mb-40"></div>
-                <ExistingCourses courses={this.state.courses} onDeleteCourse={this.handleOnDeleteCourse}/>
+                <ExistingCourses
+                courses         = {this.state.courses}
+                onDeleteCourse  = {this.handleOnDeleteCourse}
+                onCourseChange  = {this.handleOnCourseChange}
+                />
             </div>
             );
     }

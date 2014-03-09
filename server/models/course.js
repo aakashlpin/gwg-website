@@ -32,6 +32,14 @@ CourseSchema.statics.post = function (req, callback) {
     Course.save(callback);
 };
 
+CourseSchema.statics.put = function(req, callback) {
+    var courseQuery = {_id: req.body._id};
+    console.log(req.body);
+    var updateData = _.pick(req.body, ['name', 'description', 'target_audience', 'classes', 'fee']);
+    var updateDataOptions = {};
+    this.findOneAndUpdate(courseQuery, updateData, updateDataOptions, callback);
+};
+
 CourseSchema.statics.getByCreator = function(req, callback) {
     //if coming via a req, use that object. Else, req would correspond to a an Id
     var guruId = req.user ? req.user._id : req;

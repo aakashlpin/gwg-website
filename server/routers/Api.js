@@ -18,6 +18,11 @@ var routes = [
         middleware: [RouteUtils.ensureAuthenticated, APIController.postGuruCourseHandler]
     },
     {
+        path: '/guru/course',
+        httpMethod: 'PUT',
+        middleware: [RouteUtils.ensureAuthenticated, APIController.putGuruCourseHandler]
+    },
+    {
         path: '/guru/courses',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAuthenticated, APIController.getGuruCourseHandler]

@@ -197,8 +197,10 @@ var NewCourse = React.createClass({
     _resetForm: function() {
         if (!this.props.course) {
             this.setState(this._getEmptyFormData());
-
+        } else {
+            this.props.onCourseEditingCancelled();
         }
+
         if (this.props.onFormVisibility) {
             this.props.onFormVisibility(false);
         }
@@ -253,12 +255,29 @@ var NewCourse = React.createClass({
             }
         }.bind(this));
 
+        var getLegend = function() {
+            if (this.props.course) {
+                return 'Edit course';
+            } else {
+                return 'Add new course';
+            }
+        };
+
+        var getParentClasses = function() {
+            if (this.props.course) {
+                return '';
+            } else {
+                return 'panel panel-default pad-10';
+            }
+
+        };
+
         var formDOMParent = function() {
             if (this.props.isVisible) {
                 return (
                     <div id="courseFormContainer" className="text-left">
-                        <div className="panel panel-default pad-10">
-                            <legend>Add new course</legend>
+                        <div className={getParentClasses.call(this)}>
+                            <legend>{getLegend.call(this)}</legend>
                             <form className="form-horizontal" role="form" onSubmit={this.handleNewCourseFormSubmit}>
                                 {formDOMElements}
                                 <div className="form-group">
@@ -295,7 +314,7 @@ var ExistingCourseItem = React.createClass({
             if (!member.selected) return;
             //else return the member item
             return (
-                <li className="item capitalize">{member.id}</li>
+                <li className="item capitalize">{member.name}</li>
                 )
         }, this);
 
@@ -316,6 +335,10 @@ var ExistingCourseItem = React.createClass({
     },
     handleOnCourseEdited: function(course) {
         this.props.onCourseChange(course);
+        this.onCourseEditingCancelled();
+
+    },
+    onCourseEditingCancelled: function() {
         this.setState({
             isEditMode: false
         });
@@ -325,7 +348,12 @@ var ExistingCourseItem = React.createClass({
         if (this.state.isEditMode) {
             return (
                 <li className="item">
-                    <NewCourse course={this.props.course} isVisible={true} onCourseEdited={this.handleOnCourseEdited}/>
+                    <NewCourse
+                    course          = {this.props.course}
+                    isVisible       = {true}
+                    onCourseEdited  = {this.handleOnCourseEdited}
+                    onCourseEditingCancelled = {this.onCourseEditingCancelled}
+                    />
                 </li>
                 )
         }
@@ -336,7 +364,7 @@ var ExistingCourseItem = React.createClass({
                         <h4 className="text-item-heading">{this.props.course.name}</h4>
                         <p className="text-light">{this.props.course.description}</p>
                     </div>
-                    <div className="col-md-5">
+                    <div className="col-md-5 relative">
                         <div className="mb-10"><strong>Classes: </strong> {this.props.course.classes}</div>
                         <div className="mb-10"><strong>Fee: </strong> <i className="fa fa-rupee"></i>
                         {this.props.course.fee}
@@ -347,12 +375,12 @@ var ExistingCourseItem = React.createClass({
                             </ul>
                         </div>
 
-                        <div className="action">
-                            <a className="editCourse" onClick={this.handleOnEdit}>
-                                <i className="fa fa-pencil-square-o"></i> Edit Course
+                        <div className="course-action">
+                            <a className="editCourse mr-10" onClick={this.handleOnEdit}>
+                                <i className="fa fa-pencil-square-o"></i> Edit
                             </a>
                             <a className="deleteCourse" onClick={this.handleOnDelete}>
-                                <i className="fa fa-trash-o"></i> Delete Course
+                                <i className="fa fa-trash-o"></i> Delete
                             </a>
                         </div>
                     </div>

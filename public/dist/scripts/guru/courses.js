@@ -197,8 +197,10 @@ var NewCourse = React.createClass({displayName: 'NewCourse',
     _resetForm: function() {
         if (!this.props.course) {
             this.setState(this._getEmptyFormData());
-
+        } else {
+            this.props.onCourseEditingCancelled();
         }
+
         if (this.props.onFormVisibility) {
             this.props.onFormVisibility(false);
         }
@@ -253,12 +255,29 @@ var NewCourse = React.createClass({displayName: 'NewCourse',
             }
         }.bind(this));
 
+        var getLegend = function() {
+            if (this.props.course) {
+                return 'Edit course';
+            } else {
+                return 'Add new course';
+            }
+        };
+
+        var getParentClasses = function() {
+            if (this.props.course) {
+                return '';
+            } else {
+                return 'panel panel-default pad-10';
+            }
+
+        };
+
         var formDOMParent = function() {
             if (this.props.isVisible) {
                 return (
                     React.DOM.div( {id:"courseFormContainer", className:"text-left"}, 
-                        React.DOM.div( {className:"panel panel-default pad-10"}, 
-                            React.DOM.legend(null, "Add new course"),
+                        React.DOM.div( {className:getParentClasses.call(this)}, 
+                            React.DOM.legend(null, getLegend.call(this)),
                             React.DOM.form( {className:"form-horizontal", role:"form", onSubmit:this.handleNewCourseFormSubmit}, 
                                 formDOMElements,
                                 React.DOM.div( {className:"form-group"}, 
@@ -295,7 +314,7 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
             if (!member.selected) return;
             //else return the member item
             return (
-                React.DOM.li( {className:"item capitalize"}, member.id)
+                React.DOM.li( {className:"item capitalize"}, member.name)
                 )
         }, this);
 
@@ -316,6 +335,10 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
     },
     handleOnCourseEdited: function(course) {
         this.props.onCourseChange(course);
+        this.onCourseEditingCancelled();
+
+    },
+    onCourseEditingCancelled: function() {
         this.setState({
             isEditMode: false
         });
@@ -325,7 +348,12 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
         if (this.state.isEditMode) {
             return (
                 React.DOM.li( {className:"item"}, 
-                    NewCourse( {course:this.props.course, isVisible:true, onCourseEdited:this.handleOnCourseEdited})
+                    NewCourse(
+                    {course:           this.props.course,
+                    isVisible:        true,
+                    onCourseEdited:   this.handleOnCourseEdited,
+                    onCourseEditingCancelled:  this.onCourseEditingCancelled}
+                    )
                 )
                 )
         }
@@ -336,7 +364,7 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
                         React.DOM.h4( {className:"text-item-heading"}, this.props.course.name),
                         React.DOM.p( {className:"text-light"}, this.props.course.description)
                     ),
-                    React.DOM.div( {className:"col-md-5"}, 
+                    React.DOM.div( {className:"col-md-5 relative"}, 
                         React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Classes: " ), this.props.course.classes),
                         React.DOM.div( {className:"mb-10"}, React.DOM.strong(null, "Fee: " ), React.DOM.i( {className:"fa fa-rupee"}),
                         this.props.course.fee
@@ -347,12 +375,12 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
                             )
                         ),
 
-                        React.DOM.div( {className:"action"}, 
-                            React.DOM.a( {className:"editCourse", onClick:this.handleOnEdit}, 
-                                React.DOM.i( {className:"fa fa-pencil-square-o"}), " Edit Course "
+                        React.DOM.div( {className:"course-action"}, 
+                            React.DOM.a( {className:"editCourse mr-10", onClick:this.handleOnEdit}, 
+                                React.DOM.i( {className:"fa fa-pencil-square-o"}), " Edit "
                             ),
                             React.DOM.a( {className:"deleteCourse", onClick:this.handleOnDelete}, 
-                                React.DOM.i( {className:"fa fa-trash-o"}), " Delete Course "
+                                React.DOM.i( {className:"fa fa-trash-o"}), " Delete "
                             )
                         )
                     )

@@ -97,7 +97,7 @@ var ProfileManagement = React.createClass({
         $.getJSON('/api/guru/profile', function(data) {
             if (!data || (data && !data.extras)) return;
 
-            var localData = _.extend({}, data.extras, {username: data.username});
+            var localData = _.extend({}, data.extras);
             _.each(_.keys(localData), function(profileItem) {
                 if (this.state.data[profileItem].formElement == "textarea") {
                     this.state.data[profileItem].value = localData[profileItem].join('\n');

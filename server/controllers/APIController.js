@@ -30,6 +30,13 @@ module.exports = {
         });
 
     },
+    deleteGuruCourseHandler: function(req, res){
+        var CourseModel = models.Course;
+        CourseModel.del(req, function(err, data) {
+            res.json(data);
+        });
+
+    },
     getGuruCourseHandler: function(req, res) {
         var CourseModel = models.Course;
         CourseModel.getByCreator(req, function(err, data) {

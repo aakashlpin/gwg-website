@@ -302,7 +302,10 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
     },
     handleOnDelete: function(e) {
         e.preventDefault();
-        this.props.onDeleteCourse(this.props.course._id);
+        //TODO later change it to something more fancy
+        if (confirm("Are you sure you want to delete this course?")) {
+            this.props.onDeleteCourse(this.props.course._id);
+        }
 
     },
     handleOnEdit: function() {
@@ -344,8 +347,14 @@ var ExistingCourseItem = React.createClass({displayName: 'ExistingCourseItem',
                             )
                         ),
 
-                        React.DOM.a( {className:"deleteCourse", onClick:this.handleOnDelete}, React.DOM.i( {className:"fa fa-trash-o"})),
-                        React.DOM.a( {className:"editCourse", onClick:this.handleOnEdit}, React.DOM.i( {className:"fa fa-pencil-square-o"}))
+                        React.DOM.div( {className:"action"}, 
+                            React.DOM.a( {className:"editCourse", onClick:this.handleOnEdit}, 
+                                React.DOM.i( {className:"fa fa-pencil-square-o"}), " Edit Course "
+                            ),
+                            React.DOM.a( {className:"deleteCourse", onClick:this.handleOnDelete}, 
+                                React.DOM.i( {className:"fa fa-trash-o"}), " Delete Course "
+                            )
+                        )
                     )
                 )
             )
@@ -359,9 +368,9 @@ var ExistingCourses = React.createClass({displayName: 'ExistingCourses',
         var existingCourses = this.props.courses.map(function(course) {
             return (
                 ExistingCourseItem( 
-                {course:course, 
-                onDeleteCourse:this.props.onDeleteCourse,
-                onCourseChange:this.props.onCourseChange}
+                    {course:course,
+                    onDeleteCourse:this.props.onDeleteCourse,
+                    onCourseChange:this.props.onCourseChange}
                 )
                 );
         }, this);
@@ -425,6 +434,15 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
         }, this);
 
         this.setState({courses: this.state.courses});
+
+        //sync
+        $.ajax({
+            url: '/api/guru/course',
+            method: 'DELETE',
+            dataType: 'json',
+            data: {_id: courseId}
+        });
+
     },
     handleOnCourseChange: function(courseObject) {
         this.setState({

@@ -302,7 +302,10 @@ var ExistingCourseItem = React.createClass({
     },
     handleOnDelete: function(e) {
         e.preventDefault();
-        this.props.onDeleteCourse(this.props.course._id);
+        //TODO later change it to something more fancy
+        if (confirm("Are you sure you want to delete this course?")) {
+            this.props.onDeleteCourse(this.props.course._id);
+        }
 
     },
     handleOnEdit: function() {
@@ -344,8 +347,14 @@ var ExistingCourseItem = React.createClass({
                             </ul>
                         </div>
 
-                        <a className="deleteCourse" onClick={this.handleOnDelete}><i className="fa fa-trash-o"></i></a>
-                        <a className="editCourse" onClick={this.handleOnEdit}><i className="fa fa-pencil-square-o"></i></a>
+                        <div className="action">
+                            <a className="editCourse" onClick={this.handleOnEdit}>
+                                <i className="fa fa-pencil-square-o"></i> Edit Course
+                            </a>
+                            <a className="deleteCourse" onClick={this.handleOnDelete}>
+                                <i className="fa fa-trash-o"></i> Delete Course
+                            </a>
+                        </div>
                     </div>
                 </div>
             </li>
@@ -359,9 +368,9 @@ var ExistingCourses = React.createClass({
         var existingCourses = this.props.courses.map(function(course) {
             return (
                 <ExistingCourseItem 
-                course={course} 
-                onDeleteCourse={this.props.onDeleteCourse}
-                onCourseChange={this.props.onCourseChange}
+                    course={course}
+                    onDeleteCourse={this.props.onDeleteCourse}
+                    onCourseChange={this.props.onCourseChange}
                 />
                 );
         }, this);
@@ -425,6 +434,15 @@ var CourseManagement = React.createClass({
         }, this);
 
         this.setState({courses: this.state.courses});
+
+        //sync
+        $.ajax({
+            url: '/api/guru/course',
+            method: 'DELETE',
+            dataType: 'json',
+            data: {_id: courseId}
+        });
+
     },
     handleOnCourseChange: function(courseObject) {
         this.setState({

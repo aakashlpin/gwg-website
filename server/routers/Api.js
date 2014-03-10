@@ -23,6 +23,11 @@ var routes = [
         middleware: [RouteUtils.ensureAuthenticated, APIController.putGuruCourseHandler]
     },
     {
+        path: '/guru/course',
+        httpMethod: 'DELETE',
+        middleware: [RouteUtils.ensureAuthenticated, APIController.deleteGuruCourseHandler]
+    },
+    {
         path: '/guru/courses',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAuthenticated, APIController.getGuruCourseHandler]

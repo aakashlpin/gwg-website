@@ -35,7 +35,8 @@ GuruSchema = new Schema({
     extras: {
         band_name: String,
         about_me: [{type: String}],
-        links: [{type: String}]
+        links: [{type: String}],
+        phone: String
     },
     soundcloud: {
         connected: {type: Boolean, default: false}, //has soundcloud been connected?
@@ -98,15 +99,6 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
             var updateOnLoginData = {}, updateOnLoginOptions = {};
             updateOnLoginData[profile.provider] = {};
             updateOnLoginData[profile.provider].access_token = accessToken;
-
-            //check for refresh token
-/*            if (refreshToken) {
-                //if exists, use it
-                updateOnLoginData[profile.provider].refresh_token = refreshToken;
-            } else if(user[profile.provider].refresh_token) {
-                //else use the existing token for db request
-                updateOnLoginData[profile.provider].refresh_token = user[profile.provider].refresh_token;
-            }*/
 
             if (profile.provider === 'facebook') {
                 updateOnLoginData.picture = '//graph.facebook.com/'+ dataOfInterest.username +'/picture';

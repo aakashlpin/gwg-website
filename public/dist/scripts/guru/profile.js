@@ -87,12 +87,6 @@ var ProfileManagement = React.createClass({displayName: 'ProfileManagement',
                     value: '',
                     formElement: 'input',
                     placeholder: '+91-9090898989'
-                },
-                username: {
-                    name: 'Username',
-                    value: '',
-                    formElement: 'input',
-                    placeholder: 'username'
                 }
             },
             isDirty: true,
@@ -103,12 +97,12 @@ var ProfileManagement = React.createClass({displayName: 'ProfileManagement',
         $.getJSON('/api/guru/profile', function(data) {
             if (!data || (data && !data.extras)) return;
 
-            data = data.extras;
-            _.each(_.keys(data), function(profileItem) {
+            var localData = _.extend({}, data.extras, {username: data.username});
+            _.each(_.keys(localData), function(profileItem) {
                 if (this.state.data[profileItem].formElement == "textarea") {
-                    this.state.data[profileItem].value = data[profileItem].join('\n');
+                    this.state.data[profileItem].value = localData[profileItem].join('\n');
                 } else {
-                    this.state.data[profileItem].value = data[profileItem];
+                    this.state.data[profileItem].value = localData[profileItem];
                 }
             }, this);
 

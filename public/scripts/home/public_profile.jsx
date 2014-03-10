@@ -84,7 +84,108 @@ BootstrapModal = React.createClass({
   }
 });
 
+Schedule = React.createClass({
+  mixins: [UserHelpers],
+  getDefaultProps: function() {
+    return {
+      reserved: []
+    };
+  },
+  getInitialState: function() {
+    return {
+      slots: []
+    };
+  },
+  componentWillMount: function() {
+    return $.getJSON('/api/public/schedule', {
+      username: this.getUserName()
+    }, (function(_this) {
+      return function(slotsRes) {
+        return _this.setState({
+          slots: slotsRes
+        });
+      };
+    })(this));
+  },
+  componentDidUpdate: function() {
+    var calendarElem;
+    calendarElem = $(this.getDOMNode()).find('.schedule-calendar');
+    return calendarElem.fullCalendar({
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      defaultView: 'month',
+      editable: false,
+      events: this.state.slots,
+      eventClick: (function(_this) {
+        return function(event) {
+          var shouldUpdate;
+          shouldUpdate = true;
+          if (event.title === 'Available') {
+            if (_this.props.reserved.length !== _this.props.classes) {
+              _this.props.reserved.push(_.pick(event, ['_id', 'start', 'end']));
+              _this.props.onScheduleChange(_this.props.reserved);
+              event.title = 'Selected';
+              event.color = '#e67e22';
+            } else {
+              shouldUpdate = false;
+              noty({
+                layout: 'topCenter',
+                text: "Max classes chosen. Save and proceed",
+                timeout: 2500,
+                type: 'warning',
+                killer: true
+              });
+              return;
+            }
+          } else {
+            _this.props.reserved = _.reject(_this.props.reserved, function(reservedSlot) {
+              return reservedSlot._id === event._id;
+            });
+            _this.props.onScheduleChange(_this.props.reserved);
+            event.title = 'Available';
+            event.color = '#3a87ad';
+          }
+          if (_this.props.reserved.length === _this.props.classes) {
+            noty({
+              layout: 'topCenter',
+              text: "w00t! " + _this.props.classes + " classes selected. Save and proceed",
+              type: 'success',
+              killer: true
+            });
+          }
+          if (shouldUpdate) {
+            $(_this.getDOMNode()).find('.schedule-classes').html(_this.props.reserved.length);
+            return calendarElem.fullCalendar('updateEvent', event);
+          }
+        };
+      })(this)
+    });
+  },
+  render: function() {
+    this.scheduleMessageId = "schedule-messages_" + this.props.courseId;
+    return (
+      <div>
+        <h5>
+          Selected
+          <span className="schedule-classes">{this.props.reserved.length}</span>
+          of
+          {this.props.classes}
+        </h5>
+        <div className="schedule-calendar"></div>
+      </div>
+      );
+  }
+});
+
 Course = React.createClass({
+  getInitialState: function() {
+    return {
+      reservedSlots: []
+    };
+  },
   reserveSlots: function() {
     $(this.getDOMNode()).find('.has-action').toggleClass('btn-primary btn-warning').find('span').html('Reserving.. ');
     return this.refs.modal.open();
@@ -93,11 +194,20 @@ Course = React.createClass({
     $(this.getDOMNode()).find('.has-action').toggleClass('btn-primary btn-warning').find('span').html('Reserve ');
     return this.refs.modal.close();
   },
+  handleOnScheduleChange: function(reservedSlots) {
+    return this.setState({
+      reservedSlots: reservedSlots
+    });
+  },
   handleModalShown: function() {
     return React.renderComponent(Schedule({
       classes: this.props.course.classes,
-      courseId: this.props.course._id
+      courseId: this.props.course._id,
+      onScheduleChange: this.handleOnScheduleChange
     }), document.getElementById(this.modalId));
+  },
+  handleConfirm: function() {
+    return console.log(this.state.reservedSlots);
   },
   render: function() {
     var audience, audienceItemDOM, modal, modalTitle;
@@ -192,98 +302,6 @@ Courses = React.createClass({
       </ul>
     </div>
     );
-  }
-});
-
-Schedule = React.createClass({
-  mixins: [UserHelpers],
-  getDefaultProps: function() {
-    return {
-      selectedClasses: 0
-    };
-  },
-  getInitialState: function() {
-    return {
-      slots: []
-    };
-  },
-  componentWillMount: function() {
-    return $.getJSON('/api/public/schedule', {
-      username: this.getUserName()
-    }, (function(_this) {
-      return function(slotsRes) {
-        return _this.setState({
-          slots: slotsRes
-        });
-      };
-    })(this));
-  },
-  componentDidUpdate: function() {
-    var calendarElem;
-    calendarElem = $(this.getDOMNode()).find('.schedule-calendar');
-    return calendarElem.fullCalendar({
-      header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'month,agendaWeek,agendaDay'
-      },
-      defaultView: 'month',
-      editable: false,
-      events: this.state.slots,
-      eventClick: (function(_this) {
-        return function(event) {
-          var shouldUpdate;
-          shouldUpdate = true;
-          if (event.title === 'Available') {
-            if (_this.props.selectedClasses !== _this.props.classes) {
-              event.title = 'Selected';
-              event.color = '#e67e22';
-              _this.props.selectedClasses += 1;
-            } else {
-              shouldUpdate = false;
-              noty({
-                layout: 'topCenter',
-                text: "Max classes chosen. Save and proceed",
-                timeout: 2500,
-                type: 'warning',
-                killer: true
-              });
-              return;
-            }
-          } else {
-            event.title = 'Available';
-            event.color = '#3a87ad';
-            _this.props.selectedClasses -= 1;
-          }
-          if (_this.props.selectedClasses === _this.props.classes) {
-            noty({
-              layout: 'topCenter',
-              text: "w00t! " + _this.props.classes + " classes selected. Save and proceed",
-              type: 'success',
-              killer: true
-            });
-          }
-          if (shouldUpdate) {
-            $(_this.getDOMNode()).find('.schedule-classes').html(_this.props.selectedClasses);
-            return calendarElem.fullCalendar('updateEvent', event);
-          }
-        };
-      })(this)
-    });
-  },
-  render: function() {
-    this.scheduleMessageId = "schedule-messages_" + this.props.courseId;
-    return (
-      <div>
-        <h5>
-          Selected
-          <span className="schedule-classes">{this.props.selectedClasses}</span>
-          of
-          {this.props.classes}
-        </h5>
-        <div className="schedule-calendar"></div>
-      </div>
-      );
   }
 });
 

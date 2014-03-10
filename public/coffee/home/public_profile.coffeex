@@ -89,9 +89,88 @@ BootstrapModal = React.createClass
 
 
 #########
+#Schedule for guru
+#########
+Schedule = React.createClass
+  mixins: [UserHelpers],
+
+  getDefaultProps: ->
+    reserved: []
+
+  getInitialState: ->
+    slots: []
+
+  componentWillMount: ->
+    $.getJSON '/api/public/schedule', {username: @getUserName()}, (slotsRes) =>
+      @setState
+        slots: slotsRes
+
+  componentDidUpdate: ->
+    calendarElem = $(@getDOMNode()).find('.schedule-calendar')
+    calendarElem.fullCalendar
+      header :
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      defaultView : 'month'
+      editable : false
+      events : @state.slots
+      eventClick : (event) =>
+        shouldUpdate = true
+
+        if event.title is 'Available'
+          if @props.reserved.length isnt @props.classes
+            # push the event in reserved slots array
+            @props.reserved.push(_.pick event, ['_id', 'start', 'end'])
+            @props.onScheduleChange @props.reserved
+
+            # ui changes
+            event.title = 'Selected'
+            event.color = '#e67e22'
+
+          else
+            shouldUpdate = false
+            noty layout: 'topCenter', text: "Max classes chosen. Save and proceed", timeout: 2500, type: 'warning', killer: true
+            return
+
+        else
+          # remove the event from reserved slots array
+          @props.reserved = _.reject @props.reserved, (reservedSlot) -> reservedSlot._id is event._id
+          @props.onScheduleChange @props.reserved
+
+          # ui changes
+          event.title = 'Available'
+          event.color = '#3a87ad'
+
+        if @props.reserved.length is @props.classes
+          noty layout: 'topCenter', text: "w00t! #{@props.classes} classes selected. Save and proceed", type: 'success', killer: true
+
+        if shouldUpdate
+          $(@getDOMNode()).find('.schedule-classes').html @props.reserved.length
+          calendarElem.fullCalendar 'updateEvent', event
+
+  render: ->
+    @scheduleMessageId = "schedule-messages_#{@props.courseId}"
+    return `(
+      <div>
+        <h5>
+          Selected
+          <span className="schedule-classes">{this.props.reserved.length}</span>
+          of
+          {this.props.classes}
+        </h5>
+        <div className="schedule-calendar"></div>
+      </div>
+      )`
+
+
+#########
 #Single Course entry
 #########
 Course = React.createClass
+  getInitialState: ->
+    reservedSlots: []
+
   reserveSlots: ->
     $ @getDOMNode()
       .find '.has-action'
@@ -110,11 +189,19 @@ Course = React.createClass
 
     @refs.modal.close()
 
+  handleOnScheduleChange: (reservedSlots) ->
+    @setState
+      reservedSlots: reservedSlots
+
   handleModalShown: ->
     React.renderComponent (Schedule {
       classes: @props.course.classes,
-      courseId: @props.course._id
+      courseId: @props.course._id,
+      onScheduleChange: @handleOnScheduleChange
     }), document.getElementById(@modalId)
+
+  handleConfirm: ->
+    console.log (@state.reservedSlots)
 
   render: ->
     @modalId = "modal_#{@props.course._id}"
@@ -168,6 +255,7 @@ Course = React.createClass
       </li>
     )`
 
+
 #########
 #Courses for guru
 #########
@@ -195,72 +283,6 @@ Courses = React.createClass
     </div>
     )`
 
-#########
-#Schedule for guru
-#########
-Schedule = React.createClass
-  mixins: [UserHelpers],
-
-  getDefaultProps: ->
-    selectedClasses: 0
-
-  getInitialState: ->
-    slots: []
-
-  componentWillMount: ->
-    $.getJSON '/api/public/schedule', {username: @getUserName()}, (slotsRes) =>
-      @setState
-        slots: slotsRes
-
-  componentDidUpdate: ->
-    calendarElem = $(@getDOMNode()).find('.schedule-calendar')
-    calendarElem.fullCalendar
-      header :
-        left: 'prev,next today',
-        center: 'title',
-        right: 'month,agendaWeek,agendaDay'
-      defaultView : 'month'
-      editable : false
-      events : @state.slots
-      eventClick : (event) =>
-        shouldUpdate = true
-
-        if event.title is 'Available'
-          if @props.selectedClasses isnt @props.classes
-            event.title = 'Selected'
-            event.color = '#e67e22'
-            @props.selectedClasses += 1
-
-          else
-            shouldUpdate = false
-            noty layout: 'topCenter', text: "Max classes chosen. Save and proceed", timeout: 2500, type: 'warning', killer: true
-            return
-
-        else
-          event.title = 'Available'
-          event.color = '#3a87ad'
-          @props.selectedClasses -= 1
-
-        if @props.selectedClasses is @props.classes
-          noty layout: 'topCenter', text: "w00t! #{@props.classes} classes selected. Save and proceed", type: 'success', killer: true
-
-        if shouldUpdate
-          $(@getDOMNode()).find('.schedule-classes').html @props.selectedClasses
-          calendarElem.fullCalendar 'updateEvent', event
-
-  render: ->
-    @scheduleMessageId = "schedule-messages_#{@props.courseId}"
-    return `(
-      <div>
-        <h5>
-          Selected
-          <span className="schedule-classes">{this.props.selectedClasses}</span>
-          of
-          {this.props.classes}
-        </h5>
-        <div className="schedule-calendar"></div>
-      </div>
-      )`
 
 ########
 #YouTube widget

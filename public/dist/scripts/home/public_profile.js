@@ -207,7 +207,16 @@ Course = React.createClass({
     }), document.getElementById(this.modalId));
   },
   handleConfirm: function() {
-    return console.log(this.state.reservedSlots);
+    var payload;
+    payload = {
+      courseId: this.props.course._id,
+      reserved: this.state.reservedSlots
+    };
+    return $.post('/api/user/schedule', payload, function(res) {
+      if (res.redirect) {
+        return window.location.replace(res.redirect);
+      }
+    });
   },
   render: function() {
     var audience, audienceItemDOM, modal, modalTitle;

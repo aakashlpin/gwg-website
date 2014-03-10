@@ -430,7 +430,7 @@ var CourseManagement = React.createClass({displayName: 'CourseManagement',
             }
         }.bind(this));
 
-        $.getJSON('/api/user', function(user) {
+        $.getJSON('/api/guru/user', function(user) {
             if (!user) return;
             this.setState({user: user});
 

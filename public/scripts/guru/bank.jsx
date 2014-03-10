@@ -187,7 +187,7 @@ var BankManagement = React.createClass({
             this.setState(this.state);
         }.bind(this));
 
-        $.getJSON('/api/user', function(user) {
+        $.getJSON('/api/guru/user', function(user) {
             if (!user) return;
 
             mixpanel.identify(user.email);

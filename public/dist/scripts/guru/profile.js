@@ -109,7 +109,7 @@ var ProfileManagement = React.createClass({displayName: 'ProfileManagement',
             this.setState({data: this.state.data});
         }.bind(this));
 
-        $.getJSON('/api/user', function(user) {
+        $.getJSON('/api/guru/user', function(user) {
             if (!user) return;
             this.setState({user: user});
 

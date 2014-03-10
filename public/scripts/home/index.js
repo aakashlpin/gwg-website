@@ -19,7 +19,7 @@ function validateEmail(email) {
 }
 
 function getRequest() {
-    return new Request('post', '/api/signup');
+    return new Request('post', '/api/public/signup');
 }
 
 function handleFormSubmit(e) {

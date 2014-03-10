@@ -201,7 +201,15 @@ Course = React.createClass
     }), document.getElementById(@modalId)
 
   handleConfirm: ->
-    console.log (@state.reservedSlots)
+    #TODO figure out if user is logged in.
+    #if is, then directly take to payments page
+    #if not, then signup, verify phone number
+    payload =
+      courseId: @props.course._id
+      reserved: @state.reservedSlots
+
+    $.post '/api/user/schedule', payload, (res) ->
+      if res.redirect then window.location.replace(res.redirect)
 
   render: ->
     @modalId = "modal_#{@props.course._id}"

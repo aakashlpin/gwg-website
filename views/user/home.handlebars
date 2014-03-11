@@ -1,1 +1,16 @@
-Logged in!
+{{> "logged_in_header"}}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <div style="margin-bottom: 20px;"></div>
+      {{> "user/logged_in_navigation"}}
+    </div>
+    <div class="col-md-9">
+      <div id="userHome">
+        <h1>Hello</h1>
+      </div>
+    </div>
+  </div>
+</div>
+{{> logged_in_footer}}

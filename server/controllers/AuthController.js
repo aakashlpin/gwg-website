@@ -20,8 +20,13 @@ module.exports = {
             var id = obj.u,
                 getRequest = {user: {_id: id}};
 
-            models.Guru.get(getRequest, [], function(err, user) {
-                done(err, user);
+            //attempt to de-serialize by guru and then by user
+            models.Guru.get(getRequest, [], function(err, guru) {
+                if (err || guru) return done(err, guru);
+
+                return models.User.get(getRequest, [], function(err, user) {
+                    return done(err, user);
+                });
             });
         });
 
@@ -97,6 +102,6 @@ module.exports = {
     passportUserGoogleAuthCallbackMiddleWare: passport.authenticate('userGoogle', { failureRedirect: '/door' }),
 
     authUserCallbackMiddleWare: function(req, res) {
-        res.redirect('/u');
+        res.redirect('/u/home');
     }
 };

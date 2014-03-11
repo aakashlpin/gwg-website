@@ -44,7 +44,7 @@ UserSchema.statics.get = function(req, fields, callback) {
 
 UserSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, callback) {
     var dataOfInterest = _.pick(profile._json,
-        ['id', 'name', 'gender', 'email', 'location', 'timezone', 'picture']
+        ['id', 'name', 'email', 'picture']
     );
 
     var self = this,
@@ -72,7 +72,6 @@ UserSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
                     callback(err);
                     return;
                 }
-                updatedUser.exists = true;    //send a note to client to not start the on-boarding experience
                 callback(null, updatedUser);
             });
 

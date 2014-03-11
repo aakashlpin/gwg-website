@@ -25,20 +25,38 @@ module.exports.initRoutes = function(app, routes) {
 };
 
 module.exports.ensureAuthenticated = function(req, res, next) {
-    if (req.isAuthenticated()) {
-        next();
-
-    } else {
-        res.redirect('/g');
+    function isGuru(user) {
+        return typeof user.is_guru === "boolean";
     }
-};
 
-module.exports.ensureUserAuthenticated = function(req, res, next) {
+    function isUser(user) {
+        return typeof user.is_user === "boolean";
+    }
+
     if (req.isAuthenticated()) {
+        //figure out if it's a guru or an user
+        if (isGuru(req.user)) {
+            //make sure the requested path doesn't have a `/u` to begin with
+            if (req.route.path.indexOf('/u') === 0) {
+                return res.redirect('/g');
+            }
+
+        } else if (isUser(req.user)) {
+            //make sure the requested path doesn't have a `/g/*` to begin with
+            if (req.route.path.indexOf('/g/') === 0) {
+                return res.redirect('/u/home');
+            }
+
+        } else {
+            //bitches be logging in?
+            //log em out
+        }
+
         next();
 
     } else {
-        res.redirect('/door');
+        console.error('UnAuthenticated request attempted');
+        res.redirect('/g');
     }
 };
 

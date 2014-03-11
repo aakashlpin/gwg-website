@@ -49,8 +49,5 @@ module.exports = {
     },
     getUserDoor: function(req, res) {
         res.render('public_door');
-    },
-    getUserHome: function(req, res) {
-        res.render('user/home');
     }
 };

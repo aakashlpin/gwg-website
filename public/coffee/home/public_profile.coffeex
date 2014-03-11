@@ -169,23 +169,24 @@ Schedule = React.createClass
 #########
 Course = React.createClass
   getInitialState: ->
-    reservedSlots: []
+    reservedSlots: [],
+    action: null
 
   reserveSlots: ->
-    $ @getDOMNode()
-      .find '.has-action'
-        .toggleClass 'btn-primary btn-warning'
-          .find 'span'
-            .html 'Reserving.. '
+    @setState
+      action: 'reserving'
 
     @refs.modal.open()
 
   handleCancel: ->
-    $ @getDOMNode()
-    .find '.has-action'
-      .toggleClass 'btn-primary btn-warning'
-        .find 'span'
-          .html 'Reserve '
+    @setState
+      action: null
+
+    @refs.modal.close()
+
+  handleOnReservationSuccess: ->
+    @setState
+      action: 'reserved'
 
     @refs.modal.close()
 
@@ -201,15 +202,36 @@ Course = React.createClass
     }), document.getElementById(@modalId)
 
   handleConfirm: ->
-    #TODO figure out if user is logged in.
     #if is, then directly take to payments page
     #if not, then signup, verify phone number
     payload =
-      courseId: @props.course._id
-      reserved: @state.reservedSlots
+      reserved:
+        courseId: @props.course._id
+        slots: @state.reservedSlots
 
-    $.post '/api/user/schedule', payload, (res) ->
-      if res.redirect then window.location.pathname = res.redirect
+    $.post '/api/user/schedule', payload, (res) =>
+      if res.err
+        noty type: 'error', layout: 'topCenter', text: res.err, timeout: 2500, killer: true
+
+      else if res.redirect
+        redirectTo = res.redirect;
+        parts = null;
+        pathname = null;
+        search = null;
+        if redirectTo.indexOf '?' > 0 then parts = redirectTo.split '?'
+        if parts
+          pathname = parts[0] #pathname contains the leading `/` as sent from the server
+          search = parts[1]
+        else
+          pathname = redirectTo
+
+        newRedirectTo = window.location.origin + pathname + (if search then ('?' + search) else '')
+        window.location.href = newRedirectTo
+
+      else if res.success
+        noty type: 'success', layout: 'topCenter', text: res.success, timeout: 2500, killer: true
+        @handleOnReservationSuccess()
+
 
   render: ->
     @modalId = "modal_#{@props.course._id}"
@@ -239,6 +261,21 @@ Course = React.createClass
         </li>
     )`
 
+    reserveBtn = ->
+      switch @state.action
+        when 'reserving'
+          `<button ref="reserveBtn" className="btn btn-warning">
+              <span>Reserving... </span><i className="fa fa-headphones"></i>
+          </button>`
+        when 'reserved'
+          `<button ref="reserveBtn" className="btn btn-success">
+              <span>Reserved </span><i className="fa fa-headphones"></i>
+          </button>`
+        else
+          `<button ref="reserveBtn" className="btn btn-primary" onClick={this.reserveSlots}>
+              <span>Reserve </span><i className="fa fa-headphones"></i>
+          </button>`
+
     return `(
       <li className="item">
         <div className="clearfix">
@@ -254,15 +291,12 @@ Course = React.createClass
             </div>
           </div>
           <div className="pull-right">
-            <button ref="reserveBtn" className="btn btn-primary has-action" onClick={this.reserveSlots}>
-              <span>Reserve </span><i className="fa fa-headphones"></i>
-            </button>
+          {reserveBtn.call(this)}
           </div>
         </div>
         {modal}
       </li>
     )`
-
 
 #########
 #Courses for guru

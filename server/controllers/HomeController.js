@@ -44,7 +44,9 @@ module.exports = {
         });
     },
     getGuruProfile: function(req, res) {
-        res.render('public_profile', req.guruRecord);
+        var renderObject = req.guruRecord;
+        if (req.user) {_.extend(renderObject, {user: req.user})}
+        res.render('public_profile', renderObject);
 
     },
     getUserDoor: function(req, res) {

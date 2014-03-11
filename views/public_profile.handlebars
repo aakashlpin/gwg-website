@@ -6,6 +6,14 @@
         <img class="navbar-logo" src="/images/nav-logo-bold.png" alt="Guitar With Guru"/>
       </a>
     </div>
+
+    <div class="nav navbar-nav navbar-right">
+      {{#if user}}
+        <a href="/u/home" class="navbar-text">Hi, {{user.name}}</a>
+      {{else}}
+        <a href="/door" class="navbar-text">Sign up</a>
+      {{/if}}
+    </div>
   </div>
 </nav>
 <div class="container" style="padding-top: 120px;">
@@ -60,6 +68,6 @@
 <script src="//connect.soundcloud.com/sdk.js"></script>
 <script src="/bower_components/blueimp-gallery/js/jquery.blueimp-gallery.min.js"></script>
 <script src="/bower_components/fullcalendar/fullcalendar.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.8.0/react.min.js"></script>
-<!--<script src="/bower_components/react/react.js"></script>-->
-<script src="/dist/scripts/home/public_profile.js?v=1"></script>
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.8.0/react.min.js"></script>-->
+<script src="/bower_components/react/react.js"></script>
+<script src="/dist/scripts/home/public_profile.js"></script>

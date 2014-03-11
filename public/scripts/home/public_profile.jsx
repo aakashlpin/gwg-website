@@ -183,15 +183,26 @@ Schedule = React.createClass({
 Course = React.createClass({
   getInitialState: function() {
     return {
-      reservedSlots: []
+      reservedSlots: [],
+      action: null
     };
   },
   reserveSlots: function() {
-    $(this.getDOMNode()).find('.has-action').toggleClass('btn-primary btn-warning').find('span').html('Reserving.. ');
+    this.setState({
+      action: 'reserving'
+    });
     return this.refs.modal.open();
   },
   handleCancel: function() {
-    $(this.getDOMNode()).find('.has-action').toggleClass('btn-primary btn-warning').find('span').html('Reserve ');
+    this.setState({
+      action: null
+    });
+    return this.refs.modal.close();
+  },
+  handleOnReservationSuccess: function() {
+    this.setState({
+      action: 'reserved'
+    });
     return this.refs.modal.close();
   },
   handleOnScheduleChange: function(reservedSlots) {
@@ -209,17 +220,53 @@ Course = React.createClass({
   handleConfirm: function() {
     var payload;
     payload = {
-      courseId: this.props.course._id,
-      reserved: this.state.reservedSlots
-    };
-    return $.post('/api/user/schedule', payload, function(res) {
-      if (res.redirect) {
-        return window.location.pathname = res.redirect;
+      reserved: {
+        courseId: this.props.course._id,
+        slots: this.state.reservedSlots
       }
-    });
+    };
+    return $.post('/api/user/schedule', payload, (function(_this) {
+      return function(res) {
+        var newRedirectTo, parts, pathname, redirectTo, search;
+        if (res.err) {
+          return noty({
+            type: 'error',
+            layout: 'topCenter',
+            text: res.err,
+            timeout: 2500,
+            killer: true
+          });
+        } else if (res.redirect) {
+          redirectTo = res.redirect;
+          parts = null;
+          pathname = null;
+          search = null;
+          if (redirectTo.indexOf('?' > 0)) {
+            parts = redirectTo.split('?');
+          }
+          if (parts) {
+            pathname = parts[0];
+            search = parts[1];
+          } else {
+            pathname = redirectTo;
+          }
+          newRedirectTo = window.location.origin + pathname + (search ? '?' + search : '');
+          return window.location.href = newRedirectTo;
+        } else if (res.success) {
+          noty({
+            type: 'success',
+            layout: 'topCenter',
+            text: res.success,
+            timeout: 2500,
+            killer: true
+          });
+          return _this.handleOnReservationSuccess();
+        }
+      };
+    })(this));
   },
   render: function() {
-    var audience, audienceItemDOM, modal, modalTitle;
+    var audience, audienceItemDOM, modal, modalTitle, reserveBtn;
     this.modalId = "modal_" + this.props.course._id;
     modalTitle = "Reserve slots - " + this.props.course.name;
     modal = <BootstrapModal
@@ -252,6 +299,22 @@ Course = React.createClass({
         }
       };
     })(this));
+    reserveBtn = function() {
+      switch (this.state.action) {
+        case 'reserving':
+          return <button ref="reserveBtn" className="btn btn-warning">
+              <span>Reserving... </span><i className="fa fa-headphones"></i>
+          </button>;
+        case 'reserved':
+          return <button ref="reserveBtn" className="btn btn-success">
+              <span>Reserved </span><i className="fa fa-headphones"></i>
+          </button>;
+        default:
+          return <button ref="reserveBtn" className="btn btn-primary" onClick={this.reserveSlots}>
+              <span>Reserve </span><i className="fa fa-headphones"></i>
+          </button>;
+      }
+    };
     return (
       <li className="item">
         <div className="clearfix">
@@ -267,9 +330,7 @@ Course = React.createClass({
             </div>
           </div>
           <div className="pull-right">
-            <button ref="reserveBtn" className="btn btn-primary has-action" onClick={this.reserveSlots}>
-              <span>Reserve </span><i className="fa fa-headphones"></i>
-            </button>
+          {reserveBtn.call(this)}
           </div>
         </div>
         {modal}

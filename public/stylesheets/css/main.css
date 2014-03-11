@@ -7983,7 +7983,6 @@ button.close {
   position: fixed;
   z-index: 999999;
   overflow: hidden;
-  background: #fff;
   opacity: 0;
   display: none;
   direction: ltr;
@@ -7997,7 +7996,7 @@ button.close {
   z-index: auto;
   margin: 1em auto;
   /* Set the carousel width/height ratio to 16/9: */
-  padding-bottom: 56.25%;
+  padding-bottom: 61%;
   box-shadow: 0 0 10px #000;
   -ms-touch-action: pan-y;
   touch-action: pan-y;
@@ -8027,6 +8026,11 @@ button.close {
   float: left;
   height: 100%;
   text-align: center;
+  border-top: 3px solid #b7a85c;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-bottom: 2px solid #ccc;
+  background: #fff;
   -webkit-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
   -moz-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
   -ms-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -8034,7 +8038,7 @@ button.close {
   transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000376}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000382}}
 .blueimp-gallery,
 .blueimp-gallery > .slides > .slide > .slide-content {
   -webkit-transition: opacity 0.5s linear;
@@ -8044,28 +8048,28 @@ button.close {
   transition: opacity 0.5s linear;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000383}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000389}}
 .blueimp-gallery > .slides > .slide-loading {
   background: url(/images/gallery/loading.gif) center no-repeat;
   background-size: 64px 64px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000387}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000393}}
 .blueimp-gallery > .slides > .slide-loading > .slide-content {
   opacity: 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000390}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000396}}
 .blueimp-gallery > .slides > .slide-error {
   background: url(/images/gallery/error.png) center no-repeat;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000393}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000399}}
 .blueimp-gallery > .slides > .slide-error > .slide-content {
   display: none;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\0000397}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003103}}
 .blueimp-gallery > .prev,
 .blueimp-gallery > .next {
   position: absolute;
@@ -8078,16 +8082,16 @@ button.close {
   font-size: 60px;
   font-weight: 100;
   line-height: 30px;
-  color: #fff;
+  color: #6B612F;
   text-decoration: none;
-  text-shadow: 0 0 2px #000;
+  text-shadow: 0 0 2px #b7a85c;
   text-align: center;
-  background: #222;
-  background: rgba(0, 0, 0, 0.5);
+  background: #b7a85c;
+  background: rgba(183, 168, 92, 0.8);
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
-  border: 3px solid #fff;
+  border: 3px solid #b7a85c;
   -webkit-border-radius: 23px;
   -moz-border-radius: 23px;
   border-radius: 23px;
@@ -8096,28 +8100,32 @@ button.close {
   display: none;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003125}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003131}}
 .blueimp-gallery > .next {
   left: auto;
   right: 15px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003130}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003136}}
 .blueimp-gallery > .close,
 .blueimp-gallery > .title {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 10px;
+  left: 15px;
   margin: 0 40px 0 0;
   font-size: 20px;
   line-height: 30px;
-  color: #fff;
-  text-shadow: 0 0 2px #000;
+  color: #333;
   opacity: 0.8;
   display: none;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003142}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003148}}
+.blueimp-gallery > .title:hover {
+  opacity: 1;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003152}}
 .blueimp-gallery > .close {
   padding: 15px;
   right: 15px;
@@ -8128,35 +8136,34 @@ button.close {
   cursor: pointer;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003151}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003161}}
 .blueimp-gallery > .play-pause {
   position: absolute;
   right: 15px;
   bottom: 15px;
   width: 15px;
   height: 15px;
-  background: url(/images/gallery/play-pause.png) 0 0 no-repeat;
+  background: url(/images/gallery/play-pause-dark.png) 0 0 no-repeat;
   cursor: pointer;
   opacity: 0.5;
   display: none;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003162}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003172}}
 .blueimp-gallery-playing > .play-pause {
   background-position: -15px 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003169}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003178}}
 .blueimp-gallery > .prev:hover,
 .blueimp-gallery > .next:hover,
 .blueimp-gallery > .close:hover,
-.blueimp-gallery > .title:hover,
 .blueimp-gallery > .play-pause:hover {
   color: #fff;
   opacity: 1;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003177}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003186}}
 .blueimp-gallery-controls > .prev,
 .blueimp-gallery-controls > .next,
 .blueimp-gallery-controls > .close,
@@ -8171,7 +8178,7 @@ button.close {
   transform: translateZ(0);
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003190}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003199}}
 .blueimp-gallery-single > .prev,
 .blueimp-gallery-left > .prev,
 .blueimp-gallery-single > .next,
@@ -8180,7 +8187,7 @@ button.close {
   display: none;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003197}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003206}}
 .blueimp-gallery > .slides > .slide > .slide-content,
 .blueimp-gallery > .prev,
 .blueimp-gallery > .next,
@@ -8194,31 +8201,26 @@ button.close {
 }
 
 /* Replace PNGs with SVGs for capable browsers (excluding IE<9) */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003206}}
+                                                                  /*
 body:last-child .blueimp-gallery > .slides > .slide-error {
   background-image: url(/images/gallery/error.svg);
 }
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003209}}
 body:last-child .blueimp-gallery > .play-pause {
   width: 20px;
   height: 20px;
   background-size: 40px 20px;
   background-image: url(/images/gallery/play-pause.svg);
 }
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003215}}
 body:last-child .blueimp-gallery-playing > .play-pause {
   background-position: -20px 0;
-}
-
+}*/
 /* IE7 fixes */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003220}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003229}}
 * + html .blueimp-gallery > .slides > .slide {
   min-height: 300px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003223}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery\.scss}line{font-family:\00003232}}
 * + html .blueimp-gallery > .slides > .slide > .slide-content {
   position: relative;
 }
@@ -8282,7 +8284,7 @@ body:last-child .blueimp-gallery-playing > .play-pause {
   margin: -64px auto 0;
   width: 128px;
   height: 128px;
-  background: url(/images/gallery/video-play.png) center no-repeat;
+  background: url(/images/gallery/video-play-dark.png) center no-repeat;
   opacity: 0.8;
   cursor: pointer;
 }
@@ -8315,11 +8317,10 @@ body:last-child .blueimp-gallery-playing > .play-pause {
 }
 
 /* Replace PNGs with SVGs for capable browsers (excluding IE<9) */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery-video\.scss}line{font-family:\0000376}}
+                                                                  /*
 body:last-child .blueimp-gallery > .slides > .slide > .video-content:not(.video-loading) > a {
   background-image: url(/images/gallery/video-play.svg);
-}
-
+}*/
 /* IE7 fixes */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/_blueimp-gallery-video\.scss}line{font-family:\0000381}}
 * + html .blueimp-gallery > .slides > .slide > .video-content {
@@ -11898,29 +11899,31 @@ img.bg {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003534}}
 .schedule-container {
   background: #fff;
-  box-shadow: inset 0 1px 6px 1px rgba(0, 0, 0, 0.3);
   padding: 15px;
-  border-radius: 3px;
+  border-top: 3px solid #b7a85c;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-bottom: 2px solid #ccc;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003542}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003544}}
 .list-guru-courses > li {
   padding: 30px 5px;
   border-bottom: 1px solid #ddd;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003545}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003547}}
 .list-guru-courses > li:last-child {
   border-bottom: none;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003549}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003551}}
 .list-guru-courses > li .item-heading {
   margin: 0 20px 0 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003553}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003555}}
 .list-guru-courses > li .guru-audience-list {
   vertical-align: bottom;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003557}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003559}}
 .list-guru-courses > li .audience-item {
   display: inline-block;
   width: 30px;
@@ -11931,16 +11934,16 @@ img.bg {
   text-shadow: 0 1px 0px rgba(0, 0, 0, 0.5);
   background: #f1c40f;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003567}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003569}}
 .list-guru-courses > li .audience-item.beg {
   background: #40d47e;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003571}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003573}}
 .list-guru-courses > li .audience-item.adv {
   background: #e46a6b;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003577}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003579}}
 .course-action {
   position: absolute;
   top: -8px;

@@ -50,7 +50,7 @@
   margin: -64px auto 0;
   width: 128px;
   height: 128px;
-  background: url(/images/gallery/video-play.png) center no-repeat;
+  background: url(/images/gallery/video-play-dark.png) center no-repeat;
   opacity: 0.8;
   cursor: pointer;
 }
@@ -72,10 +72,10 @@
   background-size: 64px 64px;
 }
 
-/* Replace PNGs with SVGs for capable browsers (excluding IE<9) */
+/* Replace PNGs with SVGs for capable browsers (excluding IE<9) *//*
 body:last-child .blueimp-gallery > .slides > .slide > .video-content:not(.video-loading) > a {
   background-image: url(/images/gallery/video-play.svg);
-}
+}*/
 
 /* IE7 fixes */
 *+html .blueimp-gallery > .slides > .slide > .video-content {

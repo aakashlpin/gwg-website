@@ -214,7 +214,7 @@ Course = React.createClass({
     };
     return $.post('/api/user/schedule', payload, function(res) {
       if (res.redirect) {
-        return window.location.replace(res.redirect);
+        return window.location.pathname = res.redirect;
       }
     });
   },

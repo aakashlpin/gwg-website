@@ -33,6 +33,15 @@ module.exports.ensureAuthenticated = function(req, res, next) {
     }
 };
 
+module.exports.ensureUserAuthenticated = function(req, res, next) {
+    if (req.isAuthenticated()) {
+        next();
+
+    } else {
+        res.redirect('/door');
+    }
+};
+
 module.exports.getNameSpacedRoutes = function(namespace, routes) {
     return _.map(routes, function(route) {
         route.path = '/' + namespace + route.path;

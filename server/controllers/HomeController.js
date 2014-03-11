@@ -46,5 +46,8 @@ module.exports = {
     getGuruProfile: function(req, res) {
         res.render('public_profile', req.guruRecord);
 
+    },
+    getUserDoor: function(req, res) {
+        res.render('public_door');
     }
 };

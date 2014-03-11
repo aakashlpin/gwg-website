@@ -209,7 +209,7 @@ Course = React.createClass
       reserved: @state.reservedSlots
 
     $.post '/api/user/schedule', payload, (res) ->
-      if res.redirect then window.location.replace(res.redirect)
+      if res.redirect then window.location.pathname = res.redirect
 
   render: ->
     @modalId = "modal_#{@props.course._id}"

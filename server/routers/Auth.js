@@ -21,6 +21,16 @@ var routes = [
         path: '/google/callback',
         httpMethod: 'GET',
         middleware: [AuthController.passportGoogleAuthCallbackMiddleWare, AuthController.authCallbackMiddleWare]
+    },
+    {
+        path: '/user/google',
+        httpMethod: 'GET',
+        middleware: [AuthController.passportUserGoogleAuthMiddleWare]
+    },
+    {
+        path: '/user/google/callback',
+        httpMethod: 'GET',
+        middleware: [AuthController.passportUserGoogleAuthCallbackMiddleWare, AuthController.authUserCallbackMiddleWare]
     }
 ];
 

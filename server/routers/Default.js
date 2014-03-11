@@ -33,6 +33,11 @@ var routes = [
         middleware: [HomeController.getUserDoor]
     },
     {
+        path: '/u',
+        httpMethod: 'GET',
+        middleware: [HomeController.getUserHome]
+    },
+    {
         path: '/:username',
         httpMethod: 'GET',
         middleware: [HomeController.validateUserNameRoute, HomeController.getGuruProfile]

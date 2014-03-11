@@ -32,7 +32,7 @@ module.exports = {
             }, commonStrategyHandler
         ));
 
-        passport.use(new GoogleStrategy({
+        passport.use('guruGoogle', new GoogleStrategy({
                 clientID: config.google.clientID,
                 clientSecret: config.google.clientSecret,
                 callbackURL: config.google.host + "/auth/google/callback"
@@ -48,6 +48,23 @@ module.exports = {
                 });
             });
         }
+
+        passport.use('userGoogle', new GoogleStrategy({
+                clientID: config.google.clientID,
+                clientSecret: config.google.clientSecret,
+                callbackURL: config.google.host + "/auth/user/google/callback"
+            }, userStrategyHandler
+        ));
+
+        function userStrategyHandler (accessToken, refreshToken, profile, done) {
+            process.nextTick(function() {
+                var User = models.User;
+                User.findOrCreate(accessToken, refreshToken, profile, function(err, user) {
+                    if (err) return done(err);
+                    done(null, user);
+                });
+            });
+        }
     },
     //single line middleware(s)
     //declaring here to have single point of reference to passport
@@ -56,14 +73,13 @@ module.exports = {
     passportFBAuthMiddleWare: passport.authenticate('facebook', { scope: ['email'] }),
     passportFBAuthCallbackMiddleWare: passport.authenticate('facebook', { failureRedirect: '/g' }),
 
-    // passport google
-    passportGoogleAuthMiddleWare: passport.authenticate('google', {
+    // passport google for gurus
+    passportGoogleAuthMiddleWare: passport.authenticate('guruGoogle', {
         scope: 'https://www.googleapis.com/auth/userinfo.email ' +
             'https://www.googleapis.com/auth/userinfo.profile ' +
             'https://www.googleapis.com/auth/youtube.readonly'
-//        , accessType: 'offline'
-    }),    //sending this option gives back a refresh token
-    passportGoogleAuthCallbackMiddleWare: passport.authenticate('google', { failureRedirect: '/g' }),
+    }),
+    passportGoogleAuthCallbackMiddleWare: passport.authenticate('guruGoogle', { failureRedirect: '/g' }),
 
     authCallbackMiddleWare: function(req, res) {
         if (req.user.exists) {
@@ -71,5 +87,16 @@ module.exports = {
         } else {
             res.redirect('/g/profile');
         }
+    },
+
+    // passport google for users
+    passportUserGoogleAuthMiddleWare: passport.authenticate('userGoogle', {
+        scope: 'https://www.googleapis.com/auth/userinfo.email ' +
+            'https://www.googleapis.com/auth/userinfo.profile '
+    }),
+    passportUserGoogleAuthCallbackMiddleWare: passport.authenticate('userGoogle', { failureRedirect: '/door' }),
+
+    authUserCallbackMiddleWare: function(req, res) {
+        res.redirect('/u');
     }
 };

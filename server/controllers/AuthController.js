@@ -102,6 +102,16 @@ module.exports = {
     passportUserGoogleAuthCallbackMiddleWare: passport.authenticate('userGoogle', { failureRedirect: '/door' }),
 
     authUserCallbackMiddleWare: function(req, res) {
-        res.redirect('/u/home');
+        if (req.session.reserved) {
+            //sign up was done after the user selected some schedule
+            //use this data and clear off the session var
+            var reserved = req.session.reserved;
+            delete req.session.reserved;
+
+            //redirect back to the url that was requested before auth
+            //TODO make a db call to store the reserved slots for the user
+            //TODO append a param to redirect URL to indicate success
+            res.redirect(reserved.url);
+        }
     }
 };

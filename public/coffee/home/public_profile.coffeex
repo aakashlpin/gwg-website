@@ -208,6 +208,7 @@ Course = React.createClass
       reserved:
         courseId: @props.course._id
         slots: @state.reservedSlots
+        url: window.location.href
 
     $.post '/api/user/schedule', payload, (res) =>
       if res.err

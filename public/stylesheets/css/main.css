@@ -8030,7 +8030,7 @@ button.close {
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
   border-bottom: 2px solid #ccc;
-  background: #fff;
+  background: #f1f1e5;
   -webkit-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
   -moz-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
   -ms-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);

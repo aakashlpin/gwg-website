@@ -222,7 +222,8 @@ Course = React.createClass({
     payload = {
       reserved: {
         courseId: this.props.course._id,
-        slots: this.state.reservedSlots
+        slots: this.state.reservedSlots,
+        url: window.location.href
       }
     };
     return $.post('/api/user/schedule', payload, (function(_this) {

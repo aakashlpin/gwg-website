@@ -3,7 +3,7 @@ var models = require('../models'),
 
 module.exports = {
     postUserScheduleHandler: function(req, res) {
-        var data = _.pick(req.body.reserved, ['courseId', 'slots']);
+        var data = _.pick(req.body.reserved, ['courseId', 'slots', 'url']);
         if (!data.courseId || !data.slots) {
             res.json({err: 'Invalid request'});
             return;

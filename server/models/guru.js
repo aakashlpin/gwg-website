@@ -180,8 +180,13 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
             noSlots: true
         } ];
 
-        var data = new self(dataOfInterest);
-        data.save(callback);
+        getNewUserName(dataOfInterest, function(username) {
+            //if the dataOfInterest already has a username (when coming via facebook)
+            //then we simply return back the same username
+            dataOfInterest.username = username;
+            var data = new self(dataOfInterest);
+            data.save(callback);
+        });
     });
 };
 
@@ -249,6 +254,10 @@ GuruSchema.statics.migrationAssignUserName = function(callback) {
 Guru = mongoose.model('Guru', GuruSchema);
 
 function getNewUserName (guru, cb) {
+    if (guru.username) {
+        return guru.username;
+    }
+
     var email = guru.email,
         name = guru.name;
 

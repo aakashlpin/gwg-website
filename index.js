@@ -1,3 +1,5 @@
+require('newrelic');
+
 var express     = require( 'express' ),
     exphbs      = require( 'express3-handlebars' ),
     config      = require( 'config' ),

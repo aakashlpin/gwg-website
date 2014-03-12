@@ -3,7 +3,8 @@ var mongoose = require('mongoose'),
     Mixed = Schema.Types.Mixed,
     ObjectId = Schema.ObjectId,
     config = require ('config'),
-    Course = require('./course');
+    Course = require('./course'),
+    async  = require('async');
 
 _ = require('underscore');
 
@@ -224,6 +225,58 @@ GuruSchema.statics.getByUserName = function(username, callback) {
 
 };
 
+GuruSchema.statics.migrationAssignUserName = function(callback) {
+    this.find({}, function(err, gurus) {
+        async.each(gurus, function(guru, eachCb) {
+            if (!guru.username) {
+                getNewUserName(guru, function(username) {
+                    this.update({_id: guru._id}, {username: username}, {}, function(err, updated) {
+                        eachCb(err);
+                    });
+
+                }.bind(this));
+
+            } else {
+                eachCb();
+            }
+
+        }.bind(this), function(err) {
+            callback(err);
+        });
+    }.bind(this));
+};
+
 Guru = mongoose.model('Guru', GuruSchema);
+
+function getNewUserName (guru, cb) {
+    var email = guru.email,
+        name = guru.name;
+
+    Guru.find({}, function(err, gurus) {
+        var existingUserNames = [];
+        gurus.forEach(function(guru) {
+            if (guru.username) {
+                existingUserNames.push(guru.username);
+            }
+        });
+
+        var usernameChoices = [email.split('@')[0], name.toLowerCase().replace(/\s/g, '.')];
+        var conflictingUserNames = _.intersection(usernameChoices, existingUserNames);
+        if (conflictingUserNames.length === usernameChoices.length) {
+            //generate another username
+            var bigRandomNumber = Math.floor(Math.random()*100000);
+            cb(usernameChoices[1] + '.' + bigRandomNumber);
+
+        } else if (conflictingUserNames.length) {
+            //if at-least one name was found common
+            var availableUserNames = _.difference(usernameChoices, conflictingUserNames);
+            cb(availableUserNames[0]);
+
+        } else {
+            cb(usernameChoices[0]);
+
+        }
+    });
+}
 
 module.exports = Guru;

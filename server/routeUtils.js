@@ -1,4 +1,5 @@
-var _ = require('underscore');
+var _ = require('underscore'),
+    config = require('config');
 
 module.exports.initRoutes = function(app, routes) {
     _.each(routes, function(route) {
@@ -58,6 +59,15 @@ module.exports.ensureAuthenticated = function(req, res, next) {
         console.error('UnAuthenticated request attempted');
         res.redirect('/g');
     }
+};
+
+module.exports.ensureAdmin = function(req, res, next) {
+    if (!req.isAuthenticated() || config.admin.emails.indexOf(req.user.email) < 0 ) {
+        res.redirect('/');
+        return;
+    }
+
+    next();
 };
 
 module.exports.getNameSpacedRoutes = function(namespace, routes) {

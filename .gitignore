@@ -4,3 +4,4 @@ assets/stylesheets/bower_components
 public/bower_components
 .idea
 .module-cache
+newrelic_agent.log

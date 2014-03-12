@@ -45,19 +45,16 @@ UserSchema.statics.put = function(req, fields, callback) {
 
 };
 
-UserSchema.statics.putReservations = function(req, callback) {
-    var id, update, data, options;
-    id = req.user._id;
+UserSchema.statics.putReservations = function(userId, reservedObj, callback) {
+    var id, update, options;
+    id = userId;
 
     if (!id) return callback('Cannot update without user id');
 
     update = {_id: id};
-    data = _.pick(req.body, 'reserved');
-
     options = {};
 
-    this.update(update, {$push: {"reservations": data.reserved}}, options, callback);
-
+    this.update(update, {$push: {"reservations": reservedObj}}, options, callback);
 };
 
 UserSchema.statics.get = function(req, fields, callback) {

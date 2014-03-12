@@ -1,8 +1,9 @@
-var config          = require( 'config' ),
-    passport        = require( 'passport' ),
-    FBStrategy      = require( 'passport-facebook' ),
-    GoogleStrategy  = require( 'passport-google-oauth' ).OAuth2Strategy,
-    models          = require( '../models' )
+var config              = require( 'config' ),
+    passport            = require( 'passport' ),
+    FBStrategy          = require( 'passport-facebook' ),
+    GoogleStrategy      = require( 'passport-google-oauth' ).OAuth2Strategy,
+    models              = require( '../models'),
+    APIUserController   = require( './APIUserController' )
     ;
 
 
@@ -108,10 +109,17 @@ module.exports = {
             var reserved = req.session.reserved;
             delete req.session.reserved;
 
-            //redirect back to the url that was requested before auth
-            //TODO make a db call to store the reserved slots for the user
-            //TODO append a param to redirect URL to indicate success
-            res.redirect(reserved.url);
+            APIUserController.saveReservationData(req.user._id, reserved, function(err, saved) {
+                if (err) {
+                    reserved.url += '?err=' + err;
+
+                } else {
+                    reserved.url += '?courseId=' + reserved.courseId;
+                }
+
+                //redirect back to the url that was requested before auth
+                res.redirect(reserved.url);
+            });
         }
     }
 };

@@ -255,7 +255,8 @@ Guru = mongoose.model('Guru', GuruSchema);
 
 function getNewUserName (guru, cb) {
     if (guru.username) {
-        return guru.username;
+        cb(guru.username);
+        return;
     }
 
     var email = guru.email,

@@ -187,6 +187,25 @@ Course = React.createClass({
       action: null
     };
   },
+  componentWillMount: function() {
+    var courseId, courseIdProp, propsArray, propsString, windowSearchQuery;
+    windowSearchQuery = window.location.search;
+    if (windowSearchQuery) {
+      propsString = windowSearchQuery.substr(1, windowSearchQuery.length);
+      propsArray = propsString.split('&');
+      courseIdProp = _.find(propsArray, function(propItem) {
+        return propItem.indexOf('courseId') === 0;
+      });
+      if (courseIdProp) {
+        courseId = (courseIdProp.split('='))[1];
+        if (courseId === this.props.course._id) {
+          return this.setState({
+            action: 'reserved'
+          });
+        }
+      }
+    }
+  },
   reserveSlots: function() {
     this.setState({
       action: 'reserving'

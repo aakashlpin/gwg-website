@@ -172,6 +172,20 @@ Course = React.createClass
     reservedSlots: [],
     action: null
 
+  componentWillMount: ->
+    #if the server replies back with a courseId that has just been reserved,
+    #then set the course as reserved
+    windowSearchQuery = window.location.search
+    if windowSearchQuery
+      propsString   = windowSearchQuery.substr 1, windowSearchQuery.length
+      propsArray    = propsString.split '&'
+      courseIdProp  = _.find propsArray, (propItem) -> propItem.indexOf('courseId') == 0
+      if courseIdProp
+        courseId = (courseIdProp.split '=')[1]
+        if courseId is @props.course._id
+          @setState
+            action: 'reserved'
+
   reserveSlots: ->
     @setState
       action: 'reserving'

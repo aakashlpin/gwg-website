@@ -40,5 +40,13 @@ ReservationSchema.statics.putReservations = function(reservedObj, callback) {
     });
 };
 
+ReservationSchema.statics.getByStudent = function(studentId, callback) {
+    this.find({studentId: studentId}).lean().exec(callback);
+};
+
+ReservationSchema.statics.getByGuru = function(guruId, callback) {
+    this.find({guruId: guruId}).lean().exec(callback);
+};
+
 Reservation = mongoose.model('Reservation', ReservationSchema);
 module.exports = Reservation;

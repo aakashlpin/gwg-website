@@ -42,6 +42,29 @@ UserSchema.statics.get = function(req, fields, callback) {
     this.findOne({_id: req.user._id}, fieldObject, callback);
 };
 
+UserSchema.statics.getById = function(userId, fields, callback) {
+    if (typeof fields === 'function') {
+        callback = fields;
+        fields = [];
+    }
+
+    if (!_.isArray(fields)) {
+        //if just one field passed in instead of an array
+        fields = [fields];
+    }
+
+    if (!userId) {
+        return callback('Cannot get without user id');
+    }
+
+    var fetchObject = {};
+    _.each(fields, function(field) {
+        fetchObject[field] = 1;
+    });
+
+    this.findById(userId, fetchObject).lean().exec(callback);
+};
+
 UserSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, callback) {
     var dataOfInterest = _.pick(profile._json,
         ['id', 'name', 'email', 'picture']

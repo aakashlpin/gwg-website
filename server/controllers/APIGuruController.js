@@ -1,4 +1,6 @@
-var models = require('../models');
+var models = require('../models'),
+    async = require('async'),
+    _ = require('underscore');
 
 module.exports = {
     getUserHandler: function(req, res) {
@@ -110,5 +112,79 @@ module.exports = {
             res.json(data);
         });
 
+    },
+    getGuruReservationsHandler: function(req, res) {
+        var ReservationModel    = models.Reservation,
+            CourseModel         = models.Course,
+            StudentModel        = models.User;
+
+        ReservationModel.getByGuru(req.user._id, function(err, allReservations) {
+            //foreach reservation, split the slots array to get individual time slots
+            var reservations    = [],
+                courses         = [],
+                courseIds       = [],
+                students        = [],
+                studentIds      = [];
+
+            allReservations.forEach(function(reservationItem) {
+                var extendWith = _.pick(reservationItem, ['studentId', 'guruId', 'courseId']);
+                extendWith.studentId    = extendWith.studentId.toHexString();
+                extendWith.guruId       = extendWith.guruId.toHexString();
+                extendWith.courseId     = extendWith.courseId.toHexString();
+
+                courseIds.push(extendWith.courseId);
+                studentIds.push(extendWith.studentId);
+
+                reservationItem.slots.forEach(function(slotItem) {
+                    reservations.push(_.extend(slotItem, extendWith));
+                });
+            });
+
+            courseIds   = _.unique(courseIds);
+            studentIds  = _.unique(studentIds);
+
+            async.parallel([
+                function(parallelCb) {
+                    //ensure courseObject for this courseId has been fetched
+                    async.each(courseIds, function(courseId, courseCb) {
+                        CourseModel.getById(courseId, function(err, courseObject) {
+                            courses.push(courseObject);
+                            courseCb();
+                        });
+                    }, function() {
+                        parallelCb();
+                    });
+
+                },
+                function(parallelCb) {
+                    //ensure userObject for this studentId has been fetched
+                    async.each(studentIds, function(studentId, studentCb) {
+                        StudentModel.getById(studentId, function(err, studentObject) {
+                            students.push(studentObject);
+                            studentCb();
+                        });
+
+                    }, function() {
+                        parallelCb();
+                    });
+
+                }
+            ], function(parallelErr) {
+                if (parallelErr) {
+                    res.json({
+                        err: parallelErr
+                    });
+                    return;
+                }
+
+                res.json({
+                    reservations: reservations,
+                    courses: courses,
+                    students: students
+                })
+
+            });
+
+        })
     }
 };

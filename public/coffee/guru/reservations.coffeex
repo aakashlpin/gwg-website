@@ -1,2 +1,48 @@
 `/*** @jsx React.DOM */`
 
+
+ReservationManager = React.createClass
+  getInitialState: ->
+    reservations: []
+
+  componentWillMount: ->
+    $.getJSON '/api/guru/reservations', (reservations) =>
+      console.log(reservations);
+#      @setState
+#        reservations: reservations
+
+
+  getInitialDOM: ->
+    head = ->
+      `(<div>
+          <h3>Reservations</h3>
+          <p className="text-light gwg-callout gwg-callout-info">
+          List of upcoming reservations for your courses
+          </p>
+        </div>
+      )`
+
+    body = ->
+      @state.reservations.map (reservation) ->
+        `(<div>
+          {reservation.courseId}
+          </div>
+        )`
+
+    if not @state.reservations.length
+      return `(
+          <div>{head.call(this)}</div>
+      )`
+
+    else
+      return `(
+          <div>
+          {head.call(this)}
+          {body.call(this)}
+          </div>
+      )`
+
+  render: ->
+    @getInitialDOM()
+
+React.renderComponent (ReservationManager {}), document.getElementById('reservationsContent')

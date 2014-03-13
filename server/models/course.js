@@ -33,10 +33,6 @@ CourseSchema.statics.post = function (req, callback) {
 };
 
 CourseSchema.statics.getById = function(courseId, fields, callback) {
-    if (!courseId) {
-        return callback('Cannot get without course id');
-    }
-
     if (typeof fields === 'function') {
         callback = fields;
         fields = [];
@@ -47,12 +43,16 @@ CourseSchema.statics.getById = function(courseId, fields, callback) {
         fields = [fields];
     }
 
+    if (!courseId) {
+        return callback('Cannot get without course id');
+    }
+
     var fetchObject = {};
     _.each(fields, function(field) {
         fetchObject[field] = 1;
     });
 
-    this.findById(courseId, fetchObject, callback);
+    this.findById(courseId, fetchObject).lean().exec(callback);
 };
 
 CourseSchema.statics.put = function(req, callback) {

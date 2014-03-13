@@ -81,6 +81,11 @@ var routes = [
         path: '/accounts',
         httpMethod: 'POST',
         middleware: [RouteUtils.ensureAuthenticated, APIGuruController.postGuruAccountHandler]
+    },
+    {
+        path: '/reservations',
+        httpMethod: 'GET',
+        middleware: [RouteUtils.ensureAuthenticated, APIGuruController.getGuruReservationsHandler]
     }
 ];
 

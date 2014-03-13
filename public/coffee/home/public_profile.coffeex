@@ -328,19 +328,26 @@ Courses = React.createClass
       @setState
         courses: coursesRes
 
-  render: ->
+  getInitialDOM: ->
     courses = @state.courses.map (course) ->
       (Course {course:course})
 
-    return `(
-    <div className="schedule-container">
-      <h4 className="text-heading">Learn</h4>
-      <ul className="list-guru-courses list-unstyled">
-      {courses}
-      </ul>
-    </div>
-    )`
+    if @state.courses.length
+      return `(
+      <div className="schedule-container">
+        <h4 className="text-heading">Learn</h4>
+        <ul className="list-guru-courses list-unstyled">
+        {courses}
+        </ul>
+      </div>
+      )`
+    else
+      return `(
+      <div></div>
+      )`
 
+  render: ->
+    return `(<div>{this.getInitialDOM.call(this)}</div>)`
 
 ########
 #YouTube widget
@@ -373,23 +380,30 @@ Youtube = React.createClass
     #reject the videos that have been mapped as false
     videoArray = _.reject videoArray, (videoItem) -> !videoItem
 
-    blueimp.Gallery videoArray,
-      container: '#blueimp-video-carousel'
-      carousel: true
+    if videoArray.length
+      blueimp.Gallery videoArray,
+        container: '#blueimp-video-carousel'
+        carousel: true
+
+  getInitialDOM: ->
+    if @state.youtube.length
+      return `(
+        <div>
+          <h3 className="text-heading text-center mb-30">On Youtube</h3>
+          <div id="blueimp-video-carousel" className="blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel">
+            <div className="slides"></div>
+            <h3 className="title"></h3>
+            <a className="prev">‹</a>
+            <a className="next">›</a>
+            <a className="play-pause"></a>
+          </div>
+        </div>
+      )`
+    else
+      return `(<div></div>)`
 
   render: ->
-    `(
-    <div>
-    <h3 className="text-heading text-center mb-30">On Youtube</h3>
-      <div id="blueimp-video-carousel" className="blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel">
-        <div className="slides"></div>
-        <h3 className="title"></h3>
-        <a className="prev">‹</a>
-        <a className="next">›</a>
-        <a className="play-pause"></a>
-      </div>
-    </div>
-  )`
+    `(<div>{this.getInitialDOM.call(this)}</div>)`
 
 
 ########
@@ -405,14 +419,6 @@ SoundCloud = React.createClass
       permalink_url: ''
       is_shown: false
 
-  render: ->
-    `(
-      <div>
-        <h3 className="text-heading text-center mb-30">On SoundCloud</h3>
-        <div id="embedSoundCloudWidget"></div>
-      </div>
-    )`
-
   componentWillMount: ->
     username = @getUserName()
     $.getJSON '/api/public/soundcloud', username: username , (soundCloudRes) =>
@@ -422,8 +428,21 @@ SoundCloud = React.createClass
   componentDidUpdate: ->
     container = $(@getDOMNode()).find('#embedSoundCloudWidget')
     if @state.soundcloud.connected
-#    then SC.oEmbed @state.soundcloud.permalink_url, (embed) -> container.html(embed.html)
-    then SC.oEmbed "https://soundcloud.com/mad-orange-fireworks", (embed) -> container.html(embed.html)
+      SC.oEmbed @state.soundcloud.permalink_url, (embed) -> container.html(embed.html)
+
+  getInitialDOM: ->
+    if @state.soundcloud.connected
+      `(
+        <div>
+          <h3 className="text-heading text-center mb-30">On SoundCloud</h3>
+          <div id="embedSoundCloudWidget"></div>
+        </div>
+      )`
+    else
+      `(<div></div>)`
+
+  render: ->
+    `(<div>{this.getInitialDOM.call(this)}</div>)`
 
 
 ########

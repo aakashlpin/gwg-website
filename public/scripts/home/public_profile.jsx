@@ -380,21 +380,30 @@ Courses = React.createClass({
       };
     })(this));
   },
-  render: function() {
+  getInitialDOM: function() {
     var courses;
     courses = this.state.courses.map(function(course) {
       return Course({
         course: course
       });
     });
-    return (
-    <div className="schedule-container">
-      <h4 className="text-heading">Learn</h4>
-      <ul className="list-guru-courses list-unstyled">
-      {courses}
-      </ul>
-    </div>
-    );
+    if (this.state.courses.length) {
+      return (
+      <div className="schedule-container">
+        <h4 className="text-heading">Learn</h4>
+        <ul className="list-guru-courses list-unstyled">
+        {courses}
+        </ul>
+      </div>
+      );
+    } else {
+      return (
+      <div></div>
+      );
+    }
+  },
+  render: function() {
+    return (<div>{this.getInitialDOM.call(this)}</div>);
   }
 });
 
@@ -436,24 +445,33 @@ Youtube = React.createClass({
     videoArray = _.reject(videoArray, function(videoItem) {
       return !videoItem;
     });
-    return blueimp.Gallery(videoArray, {
-      container: '#blueimp-video-carousel',
-      carousel: true
-    });
+    if (videoArray.length) {
+      return blueimp.Gallery(videoArray, {
+        container: '#blueimp-video-carousel',
+        carousel: true
+      });
+    }
+  },
+  getInitialDOM: function() {
+    if (this.state.youtube.length) {
+      return (
+        <div>
+          <h3 className="text-heading text-center mb-30">On Youtube</h3>
+          <div id="blueimp-video-carousel" className="blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel">
+            <div className="slides"></div>
+            <h3 className="title"></h3>
+            <a className="prev">‹</a>
+            <a className="next">›</a>
+            <a className="play-pause"></a>
+          </div>
+        </div>
+      );
+    } else {
+      return (<div></div>);
+    }
   },
   render: function() {
-    return (
-    <div>
-    <h3 className="text-heading text-center mb-30">On Youtube</h3>
-      <div id="blueimp-video-carousel" className="blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel">
-        <div className="slides"></div>
-        <h3 className="title"></h3>
-        <a className="prev">‹</a>
-        <a className="next">›</a>
-        <a className="play-pause"></a>
-      </div>
-    </div>
-  );
+    return (<div>{this.getInitialDOM.call(this)}</div>);
   }
 });
 
@@ -467,14 +485,6 @@ SoundCloud = React.createClass({
         is_shown: false
       }
     };
-  },
-  render: function() {
-    return (
-      <div>
-        <h3 className="text-heading text-center mb-30">On SoundCloud</h3>
-        <div id="embedSoundCloudWidget"></div>
-      </div>
-    );
   },
   componentWillMount: function() {
     var username;
@@ -493,10 +503,25 @@ SoundCloud = React.createClass({
     var container;
     container = $(this.getDOMNode()).find('#embedSoundCloudWidget');
     if (this.state.soundcloud.connected) {
-      return SC.oEmbed("https://soundcloud.com/mad-orange-fireworks", function(embed) {
+      return SC.oEmbed(this.state.soundcloud.permalink_url, function(embed) {
         return container.html(embed.html);
       });
     }
+  },
+  getInitialDOM: function() {
+    if (this.state.soundcloud.connected) {
+      return (
+        <div>
+          <h3 className="text-heading text-center mb-30">On SoundCloud</h3>
+          <div id="embedSoundCloudWidget"></div>
+        </div>
+      );
+    } else {
+      return (<div></div>);
+    }
+  },
+  render: function() {
+    return (<div>{this.getInitialDOM.call(this)}</div>);
   }
 });
 

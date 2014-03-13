@@ -380,21 +380,30 @@ Courses = React.createClass({
       };
     })(this));
   },
-  render: function() {
+  getInitialDOM: function() {
     var courses;
     courses = this.state.courses.map(function(course) {
       return Course({
         course: course
       });
     });
-    return (
-    React.DOM.div( {className:"schedule-container"}, 
-      React.DOM.h4( {className:"text-heading"}, "Learn"),
-      React.DOM.ul( {className:"list-guru-courses list-unstyled"}, 
-      courses
+    if (this.state.courses.length) {
+      return (
+      React.DOM.div( {className:"schedule-container"}, 
+        React.DOM.h4( {className:"text-heading"}, "Learn"),
+        React.DOM.ul( {className:"list-guru-courses list-unstyled"}, 
+        courses
+        )
       )
-    )
-    );
+      );
+    } else {
+      return (
+      React.DOM.div(null)
+      );
+    }
+  },
+  render: function() {
+    return (React.DOM.div(null, this.getInitialDOM.call(this)));
   }
 });
 
@@ -436,24 +445,33 @@ Youtube = React.createClass({
     videoArray = _.reject(videoArray, function(videoItem) {
       return !videoItem;
     });
-    return blueimp.Gallery(videoArray, {
-      container: '#blueimp-video-carousel',
-      carousel: true
-    });
+    if (videoArray.length) {
+      return blueimp.Gallery(videoArray, {
+        container: '#blueimp-video-carousel',
+        carousel: true
+      });
+    }
+  },
+  getInitialDOM: function() {
+    if (this.state.youtube.length) {
+      return (
+        React.DOM.div(null, 
+          React.DOM.h3( {className:"text-heading text-center mb-30"}, "On Youtube"),
+          React.DOM.div( {id:"blueimp-video-carousel", className:"blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel"}, 
+            React.DOM.div( {className:"slides"}),
+            React.DOM.h3( {className:"title"}),
+            React.DOM.a( {className:"prev"}, "‹"),
+            React.DOM.a( {className:"next"}, "›"),
+            React.DOM.a( {className:"play-pause"})
+          )
+        )
+      );
+    } else {
+      return (React.DOM.div(null));
+    }
   },
   render: function() {
-    return (
-    React.DOM.div(null, 
-    React.DOM.h3( {className:"text-heading text-center mb-30"}, "On Youtube"),
-      React.DOM.div( {id:"blueimp-video-carousel", className:"blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel"}, 
-        React.DOM.div( {className:"slides"}),
-        React.DOM.h3( {className:"title"}),
-        React.DOM.a( {className:"prev"}, "‹"),
-        React.DOM.a( {className:"next"}, "›"),
-        React.DOM.a( {className:"play-pause"})
-      )
-    )
-  );
+    return (React.DOM.div(null, this.getInitialDOM.call(this)));
   }
 });
 
@@ -467,14 +485,6 @@ SoundCloud = React.createClass({
         is_shown: false
       }
     };
-  },
-  render: function() {
-    return (
-      React.DOM.div(null, 
-        React.DOM.h3( {className:"text-heading text-center mb-30"}, "On SoundCloud"),
-        React.DOM.div( {id:"embedSoundCloudWidget"})
-      )
-    );
   },
   componentWillMount: function() {
     var username;
@@ -493,10 +503,25 @@ SoundCloud = React.createClass({
     var container;
     container = $(this.getDOMNode()).find('#embedSoundCloudWidget');
     if (this.state.soundcloud.connected) {
-      return SC.oEmbed("https://soundcloud.com/mad-orange-fireworks", function(embed) {
+      return SC.oEmbed(this.state.soundcloud.permalink_url, function(embed) {
         return container.html(embed.html);
       });
     }
+  },
+  getInitialDOM: function() {
+    if (this.state.soundcloud.connected) {
+      return (
+        React.DOM.div(null, 
+          React.DOM.h3( {className:"text-heading text-center mb-30"}, "On SoundCloud"),
+          React.DOM.div( {id:"embedSoundCloudWidget"})
+        )
+      );
+    } else {
+      return (React.DOM.div(null));
+    }
+  },
+  render: function() {
+    return (React.DOM.div(null, this.getInitialDOM.call(this)));
   }
 });
 

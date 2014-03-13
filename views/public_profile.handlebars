@@ -30,9 +30,11 @@
       </div>
 
       <p class="guru-about-me">
-        <i class="fa fa-quote-left" style="margin-right: 10px;"></i>
-        {{extras.about_me}}
-        <i class="fa fa-quote-right" style="margin-left: 10px;"></i>
+        {{#if extras.about_me}}
+          <i class="fa fa-quote-left" style="margin-right: 10px;"></i>
+          {{extras.about_me}}
+          <i class="fa fa-quote-right" style="margin-left: 10px;"></i>
+        {{/if}}
       </p>
     </div>
     <div class="col-md-7">

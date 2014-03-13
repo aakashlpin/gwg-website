@@ -1,6 +1,5 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    Mixed = Schema.Types.Mixed,
     ObjectId = Schema.ObjectId,
     Guru = require('./guru');
 
@@ -31,6 +30,29 @@ CourseSchema.statics.post = function (req, callback) {
 
     Course = new this(data);
     Course.save(callback);
+};
+
+CourseSchema.statics.getById = function(courseId, fields, callback) {
+    if (!courseId) {
+        return callback('Cannot get without course id');
+    }
+
+    if (typeof fields === 'function') {
+        callback = fields;
+        fields = [];
+    }
+
+    if (!_.isArray(fields)) {
+        //if just one field passed in instead of an array
+        fields = [fields];
+    }
+
+    var fetchObject = {};
+    _.each(fields, function(field) {
+        fetchObject[field] = 1;
+    });
+
+    this.findById(courseId, fetchObject, callback);
 };
 
 CourseSchema.statics.put = function(req, callback) {

@@ -4,14 +4,7 @@ var mongoose = require('mongoose'),
 
 _ = require('underscore');
 
-var User, UserSchema, SlotSchema;
-
-SlotSchema = new Schema({
-    start: { type: Date, required: true },
-    end: { type: Date, required: true },
-    cancelled: { type: Boolean, default: false },
-    completed: { type: Boolean, default: false }
-});
+var User, UserSchema;
 
 UserSchema = new Schema({
     id: String,
@@ -23,12 +16,7 @@ UserSchema = new Schema({
     picture: String,
     google: {
         access_token: {type: String}
-    },
-    reservations: [{
-        courseId: Schema.ObjectId,
-        slots: [SlotSchema],
-        paid: { type: Boolean, default: false }
-    }]
+    }
 });
 
 UserSchema.statics.put = function(req, fields, callback) {
@@ -43,18 +31,6 @@ UserSchema.statics.put = function(req, fields, callback) {
 
     this.update(update, data, options, callback);
 
-};
-
-UserSchema.statics.putReservations = function(userId, reservedObj, callback) {
-    var id, update, options;
-    id = userId;
-
-    if (!id) return callback('Cannot update without user id');
-
-    update = {_id: id};
-    options = {};
-
-    this.update(update, {$push: {"reservations": reservedObj}}, options, callback);
 };
 
 UserSchema.statics.get = function(req, fields, callback) {

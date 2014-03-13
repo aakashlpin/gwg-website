@@ -230,6 +230,15 @@ GuruSchema.statics.getByUserName = function(username, callback) {
 
 };
 
+GuruSchema.statics.getByObject = function(findQuery, getFields, callback) {
+    if (typeof getFields === 'function') {
+        callback = getFields;
+        getFields = {};
+    }
+
+    this.findOne(findQuery, getFields, callback);
+};
+
 GuruSchema.statics.migrationAssignUserName = function(callback) {
     this.find({}, function(err, gurus) {
         async.each(gurus, function(guru, eachCb) {

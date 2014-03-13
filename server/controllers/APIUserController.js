@@ -1,9 +1,33 @@
 var models = require('../models'),
     _ = require('underscore');
 
-function saveReservationData (userId, reserved, cb) {
-    var UserModel = models.User;
-    UserModel.putReservations(userId, reserved, cb);
+function saveReservationData (studentId, reserved, cb) {
+    var ReservationModel = models.Reservation,
+        CourseModel = models.Course;
+
+    //assign the userId as the studentId
+    reserved.studentId = studentId;
+
+    //get the guruId for the incoming courseId
+    CourseModel.getById(reserved.courseId, '_creator', function(err, creatorObject) {
+        //assign the guruId to the reservation object
+        if (err) {
+            console.log(err);
+            cb(err);
+            return;
+        }
+
+        reserved.guruId = creatorObject._creator;
+        ReservationModel.putReservations(reserved, function(err, reservationObject) {
+            if (err) {
+                console.log(err);
+                cb(err);
+                return;
+            }
+
+            cb(err, reservationObject);
+        });
+    });
 }
 
 module.exports = {

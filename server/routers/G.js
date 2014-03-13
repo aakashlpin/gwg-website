@@ -26,6 +26,11 @@ var routes = [
         path: '/apps',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAuthenticated, GuruController.getAppsHandler]
+    },
+    {
+        path: '/reservations',
+        httpMethod: 'GET',
+        middleware: [RouteUtils.ensureAuthenticated, GuruController.getReservationsHandler]
     }
 ];
 

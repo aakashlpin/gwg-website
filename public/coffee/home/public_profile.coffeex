@@ -324,6 +324,7 @@ Courses = React.createClass
 
   componentWillMount: ->
     $.getJSON '/api/public/courses', {username: @getUserName()}, (coursesRes) =>
+      if not _.isArray coursesRes then coursesRes = []
       @setState
         courses: coursesRes
 

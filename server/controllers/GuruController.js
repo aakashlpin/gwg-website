@@ -13,5 +13,8 @@ module.exports = {
     },
     getAppsHandler: function(req, res) {
         res.render('guru_apps', {user: req.user});
+    },
+    getReservationsHandler: function(req, res) {
+        res.render('guru_reservations', {user: req.user});
     }
 };

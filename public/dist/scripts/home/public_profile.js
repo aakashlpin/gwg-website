@@ -1,1 +1,507 @@
-var BootstrapButton,BootstrapModal,Course,Courses,Schedule,SoundCloud,UserHelpers,Youtube;UserHelpers={getUserName:function(){return window.location.pathname.split("/")[1]}},BootstrapButton=React.createClass({render:function(){return this.transferPropsTo(React.DOM.a({role:"button",className:"btn"},this.props.children))}}),BootstrapModal=React.createClass({componentDidMount:function(){return $(this.getDOMNode()).modal({backdrop:"static",show:!1}).on("shown.bs.modal",this.handleModalShown).on("hidden.bs.modal",this.handleModalClose)},close:function(){return $(this.getDOMNode()).modal("hide")},open:function(){return $(this.getDOMNode()).modal("show")},render:function(){var a,b;return b=null,a=null,this.props.confirm&&(b=BootstrapButton({onClick:this.handleConfirm,className:"btn-primary"},this.props.confirm)),this.props.cancel&&(a=BootstrapButton({onClick:this.handleCancel},this.props.cancel)),React.DOM.div({className:"modal fade"},React.DOM.div({className:"modal-dialog modal-md"},React.DOM.div({className:"modal-content"},React.DOM.div({className:"modal-header"},React.DOM.h3({className:"m-0"},this.props.title)),React.DOM.div({className:"modal-body",id:this.props.id}),React.DOM.div({className:"modal-footer"},a,b))))},handleModalClose:function(){return $(this.getDOMNode()).find(".modal-body").empty()},handleModalShown:function(){var a;return"function"==typeof(a=this.props).onShown?a.onShown():void 0},handleCancel:function(){var a;return"function"==typeof(a=this.props).onCancel?a.onCancel():void 0},handleConfirm:function(){var a;return"function"==typeof(a=this.props).onConfirm?a.onConfirm():void 0}}),Schedule=React.createClass({mixins:[UserHelpers],getDefaultProps:function(){return{reserved:[]}},getInitialState:function(){return{slots:[]}},componentWillMount:function(){return $.getJSON("/api/public/schedule",{username:this.getUserName()},function(a){return function(b){return a.setState({slots:b})}}(this))},componentDidUpdate:function(){var a;return a=$(this.getDOMNode()).find(".schedule-calendar"),a.fullCalendar({header:{left:"prev,next today",center:"title",right:"month,agendaWeek,agendaDay"},defaultView:"month",editable:!1,events:this.state.slots,eventClick:function(b){return function(c){var d;if(d=!0,"Available"===c.title){if(b.props.reserved.length===b.props.classes)return d=!1,void noty({layout:"topCenter",text:"Max classes chosen. Save and proceed",timeout:2500,type:"warning",killer:!0});b.props.reserved.push(_.pick(c,["_id","start","end"])),b.props.onScheduleChange(b.props.reserved),c.title="Selected",c.color="#e67e22"}else b.props.reserved=_.reject(b.props.reserved,function(a){return a._id===c._id}),b.props.onScheduleChange(b.props.reserved),c.title="Available",c.color="#3a87ad";return b.props.reserved.length===b.props.classes&&noty({layout:"topCenter",text:"w00t! "+b.props.classes+" classes selected. Save and proceed",type:"success",killer:!0}),d?($(b.getDOMNode()).find(".schedule-classes").html(b.props.reserved.length),a.fullCalendar("updateEvent",c)):void 0}}(this)})},render:function(){return this.scheduleMessageId="schedule-messages_"+this.props.courseId,React.DOM.div(null,React.DOM.h5(null," Selected ",React.DOM.span({className:"schedule-classes"},this.props.reserved.length)," of ",this.props.classes),React.DOM.div({className:"schedule-calendar"}))}}),Course=React.createClass({getInitialState:function(){return{reservedSlots:[],action:null}},componentWillMount:function(){var a,b,c,d,e;return e=window.location.search,e&&(d=e.substr(1,e.length),c=d.split("&"),b=_.find(c,function(a){return 0===a.indexOf("courseId")}),b&&(a=b.split("=")[1],a===this.props.course._id))?this.setState({action:"reserved"}):void 0},reserveSlots:function(){return this.setState({action:"reserving"}),this.refs.modal.open()},handleCancel:function(){return this.setState({action:null}),this.refs.modal.close()},handleOnReservationSuccess:function(){return this.setState({action:"reserved"}),this.refs.modal.close()},handleOnScheduleChange:function(a){return this.setState({reservedSlots:a})},handleModalShown:function(){return React.renderComponent(Schedule({classes:this.props.course.classes,courseId:this.props.course._id,onScheduleChange:this.handleOnScheduleChange}),document.getElementById(this.modalId))},handleConfirm:function(){var a;return a={reserved:{courseId:this.props.course._id,slots:this.state.reservedSlots,url:window.location.href}},$.post("/api/user/schedule",a,function(a){return function(b){var c,d,e,f,g;return b.err?noty({type:"error",layout:"topCenter",text:b.err,timeout:2500,killer:!0}):b.redirect?(f=b.redirect,d=null,e=null,g=null,f.indexOf(!1)&&(d=f.split("?")),d?(e=d[0],g=d[1]):e=f,c=window.location.origin+e+(g?"?"+g:""),window.location.href=c):b.success?(noty({type:"success",layout:"topCenter",text:b.success,timeout:2500,killer:!0}),a.handleOnReservationSuccess()):void 0}}(this))},render:function(){var a,b,c,d,e;return this.modalId="modal_"+this.props.course._id,d="Reserve slots - "+this.props.course.name,c=BootstrapModal({ref:"modal",confirm:"Done",cancel:"Go back",onConfirm:this.handleConfirm,onCancel:this.handleCancel,onShown:this.handleModalShown,title:d,id:this.modalId}),b=function(a){return"beg"===a?React.DOM.span({className:"audience-item beg",title:"Level: Beginner"},"B"):"inter"===a?React.DOM.span({className:"audience-item inter",title:"Level: Intermediate"},"I"):React.DOM.span({className:"audience-item adv",title:"Level: Advanced"},"A")},a=this.props.course.target_audience.map(function(){return function(a){return a.selected?React.DOM.li({className:"item"},b(a.id)):void 0}}(this)),e=function(){switch(this.state.action){case"reserving":return React.DOM.button({ref:"reserveBtn",className:"btn btn-warning"},React.DOM.span(null,"Reserving... "),React.DOM.i({className:"fa fa-headphones"}));case"reserved":return React.DOM.button({ref:"reserveBtn",className:"btn btn-success"},React.DOM.span(null,"Reserved "),React.DOM.i({className:"fa fa-headphones"}));default:return React.DOM.button({ref:"reserveBtn",className:"btn btn-primary",onClick:this.reserveSlots},React.DOM.span(null,"Reserve "),React.DOM.i({className:"fa fa-headphones"}))}},React.DOM.li({className:"item"},React.DOM.div({className:"clearfix"},React.DOM.div({className:"pull-left"},React.DOM.h4({className:"item-heading display-ib"},this.props.course.name),React.DOM.ul({className:"l-h-list display-ib guru-audience-list"},a),React.DOM.div(null,React.DOM.h5({className:"text-charcoal"},"Sessions: ",React.DOM.strong(null,this.props.course.classes)," | Fee : ",React.DOM.strong(null,React.DOM.i({className:"fa fa-rupee"}),this.props.course.fee)))),React.DOM.div({className:"pull-right"},e.call(this))),c)}}),Courses=React.createClass({mixins:[UserHelpers],getInitialState:function(){return{courses:[]}},componentWillMount:function(){return $.getJSON("/api/public/courses",{username:this.getUserName()},function(a){return function(b){return a.setState({courses:b})}}(this))},render:function(){var a;return a=this.state.courses.map(function(a){return Course({course:a})}),React.DOM.div({className:"schedule-container"},React.DOM.h4({className:"text-heading"},"Learn"),React.DOM.ul({className:"list-guru-courses list-unstyled"},a))}}),Youtube=React.createClass({mixins:[UserHelpers],getInitialState:function(){return{youtube:[]}},componentWillMount:function(){var a;return a=this.getUserName(),$.getJSON("/api/public/youtube",{username:a},function(a){return function(b){return a.setState({youtube:b})}}(this))},componentDidUpdate:function(){var a;return a=this.state.youtube.map(function(a){return a.enabled?{title:a.title,href:"http://www.youtube.com/watch?v="+a.videoId,type:"text/html",youtube:a.videoId,poster:"https://img.youtube.com/vi/"+a.videoId+"/0.jpg"}:!1}),a=_.reject(a,function(a){return!a}),blueimp.Gallery(a,{container:"#blueimp-video-carousel",carousel:!0})},render:function(){return React.DOM.div(null,React.DOM.h3({className:"text-heading text-center mb-30"},"On Youtube"),React.DOM.div({id:"blueimp-video-carousel",className:"blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel"},React.DOM.div({className:"slides"}),React.DOM.h3({className:"title"}),React.DOM.a({className:"prev"},"‹"),React.DOM.a({className:"next"},"›"),React.DOM.a({className:"play-pause"})))}}),SoundCloud=React.createClass({mixins:[UserHelpers],getInitialState:function(){return{soundcloud:{connected:!1,permalink_url:"",is_shown:!1}}},render:function(){return React.DOM.div(null,React.DOM.h3({className:"text-heading text-center mb-30"},"On SoundCloud"),React.DOM.div({id:"embedSoundCloudWidget"}))},componentWillMount:function(){var a;return a=this.getUserName(),$.getJSON("/api/public/soundcloud",{username:a},function(a){return function(b){return a.setState({soundcloud:b})}}(this))},componentDidUpdate:function(){var a;return a=$(this.getDOMNode()).find("#embedSoundCloudWidget"),this.state.soundcloud.connected?SC.oEmbed("https://soundcloud.com/mad-orange-fireworks",function(b){return a.html(b.html)}):void 0}}),React.renderComponent(SoundCloud({}),document.getElementById("widget-soundcloud")),React.renderComponent(Youtube({}),document.getElementById("widget-youtube")),React.renderComponent(Courses({}),document.getElementById("widget-courses"));
+/*** @jsx React.DOM */;
+var BootstrapButton, BootstrapModal, Course, Courses, Schedule, SoundCloud, UserHelpers, Youtube;
+
+UserHelpers = {
+  getUserName: function() {
+    return window.location.pathname.split('/')[1];
+  }
+};
+
+BootstrapButton = React.createClass({
+  render: function() {
+    return this.transferPropsTo(
+      React.DOM.a( {role:"button", className:"btn"}, 
+        this.props.children
+      )
+    );;
+  }
+});
+
+BootstrapModal = React.createClass({
+  componentDidMount: function() {
+    return $(this.getDOMNode()).modal({
+      backdrop: 'static',
+      show: false
+    }).on('shown.bs.modal', this.handleModalShown).on('hidden.bs.modal', this.handleModalClose);
+  },
+  close: function() {
+    return $(this.getDOMNode()).modal('hide');
+  },
+  open: function() {
+    return $(this.getDOMNode()).modal('show');
+  },
+  render: function() {
+    var cancelButton, confirmButton;
+    confirmButton = null;
+    cancelButton = null;
+    if (this.props.confirm) {
+      confirmButton = 
+      BootstrapButton(
+        {onClick:this.handleConfirm,
+        className:"btn-primary"}, 
+        this.props.confirm
+      );
+    }
+    if (this.props.cancel) {
+      cancelButton = 
+      BootstrapButton(
+        {onClick:this.handleCancel}, 
+        this.props.cancel
+      );
+    }
+    return (
+      React.DOM.div( {className:"modal fade"}, 
+        React.DOM.div( {className:"modal-dialog modal-md"}, 
+          React.DOM.div( {className:"modal-content"}, 
+            React.DOM.div( {className:"modal-header"}, 
+              React.DOM.h3( {className:"m-0"}, this.props.title)
+            ),
+            React.DOM.div( {className:"modal-body",  id:this.props.id}
+            ),
+            React.DOM.div( {className:"modal-footer"}, 
+              cancelButton,
+              confirmButton
+            )
+          )
+        )
+      )
+    );
+  },
+  handleModalClose: function() {
+    return $(this.getDOMNode()).find('.modal-body').empty();
+  },
+  handleModalShown: function() {
+    var _base;
+    return typeof (_base = this.props).onShown === "function" ? _base.onShown() : void 0;
+  },
+  handleCancel: function() {
+    var _base;
+    return typeof (_base = this.props).onCancel === "function" ? _base.onCancel() : void 0;
+  },
+  handleConfirm: function() {
+    var _base;
+    return typeof (_base = this.props).onConfirm === "function" ? _base.onConfirm() : void 0;
+  }
+});
+
+Schedule = React.createClass({
+  mixins: [UserHelpers],
+  getDefaultProps: function() {
+    return {
+      reserved: []
+    };
+  },
+  getInitialState: function() {
+    return {
+      slots: []
+    };
+  },
+  componentWillMount: function() {
+    return $.getJSON('/api/public/schedule', {
+      username: this.getUserName()
+    }, (function(_this) {
+      return function(slotsRes) {
+        return _this.setState({
+          slots: slotsRes
+        });
+      };
+    })(this));
+  },
+  componentDidUpdate: function() {
+    var calendarElem;
+    calendarElem = $(this.getDOMNode()).find('.schedule-calendar');
+    return calendarElem.fullCalendar({
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      defaultView: 'month',
+      editable: false,
+      events: this.state.slots,
+      eventClick: (function(_this) {
+        return function(event) {
+          var shouldUpdate;
+          shouldUpdate = true;
+          if (event.title === 'Available') {
+            if (_this.props.reserved.length !== _this.props.classes) {
+              _this.props.reserved.push(_.pick(event, ['_id', 'start', 'end']));
+              _this.props.onScheduleChange(_this.props.reserved);
+              event.title = 'Selected';
+              event.color = '#e67e22';
+            } else {
+              shouldUpdate = false;
+              noty({
+                layout: 'topCenter',
+                text: "Max classes chosen. Save and proceed",
+                timeout: 2500,
+                type: 'warning',
+                killer: true
+              });
+              return;
+            }
+          } else {
+            _this.props.reserved = _.reject(_this.props.reserved, function(reservedSlot) {
+              return reservedSlot._id === event._id;
+            });
+            _this.props.onScheduleChange(_this.props.reserved);
+            event.title = 'Available';
+            event.color = '#3a87ad';
+          }
+          if (_this.props.reserved.length === _this.props.classes) {
+            noty({
+              layout: 'topCenter',
+              text: "w00t! " + _this.props.classes + " classes selected. Save and proceed",
+              type: 'success',
+              killer: true
+            });
+          }
+          if (shouldUpdate) {
+            $(_this.getDOMNode()).find('.schedule-classes').html(_this.props.reserved.length);
+            return calendarElem.fullCalendar('updateEvent', event);
+          }
+        };
+      })(this)
+    });
+  },
+  render: function() {
+    this.scheduleMessageId = "schedule-messages_" + this.props.courseId;
+    return (
+      React.DOM.div(null, 
+        React.DOM.h5(null, 
+          " Selected ",
+          React.DOM.span( {className:"schedule-classes"}, this.props.reserved.length),
+          " of ",
+          this.props.classes
+        ),
+        React.DOM.div( {className:"schedule-calendar"})
+      )
+      );
+  }
+});
+
+Course = React.createClass({
+  getInitialState: function() {
+    return {
+      reservedSlots: [],
+      action: null
+    };
+  },
+  componentWillMount: function() {
+    var courseId, courseIdProp, propsArray, propsString, windowSearchQuery;
+    windowSearchQuery = window.location.search;
+    if (windowSearchQuery) {
+      propsString = windowSearchQuery.substr(1, windowSearchQuery.length);
+      propsArray = propsString.split('&');
+      courseIdProp = _.find(propsArray, function(propItem) {
+        return propItem.indexOf('courseId') === 0;
+      });
+      if (courseIdProp) {
+        courseId = (courseIdProp.split('='))[1];
+        if (courseId === this.props.course._id) {
+          return this.setState({
+            action: 'reserved'
+          });
+        }
+      }
+    }
+  },
+  reserveSlots: function() {
+    this.setState({
+      action: 'reserving'
+    });
+    return this.refs.modal.open();
+  },
+  handleCancel: function() {
+    this.setState({
+      action: null
+    });
+    return this.refs.modal.close();
+  },
+  handleOnReservationSuccess: function() {
+    this.setState({
+      action: 'reserved'
+    });
+    return this.refs.modal.close();
+  },
+  handleOnScheduleChange: function(reservedSlots) {
+    return this.setState({
+      reservedSlots: reservedSlots
+    });
+  },
+  handleModalShown: function() {
+    return React.renderComponent(Schedule({
+      classes: this.props.course.classes,
+      courseId: this.props.course._id,
+      onScheduleChange: this.handleOnScheduleChange
+    }), document.getElementById(this.modalId));
+  },
+  handleConfirm: function() {
+    var payload;
+    payload = {
+      reserved: {
+        courseId: this.props.course._id,
+        slots: this.state.reservedSlots,
+        url: window.location.href
+      }
+    };
+    return $.post('/api/user/schedule', payload, (function(_this) {
+      return function(res) {
+        var newRedirectTo, parts, pathname, redirectTo, search;
+        if (res.err) {
+          return noty({
+            type: 'error',
+            layout: 'topCenter',
+            text: res.err,
+            timeout: 2500,
+            killer: true
+          });
+        } else if (res.redirect) {
+          redirectTo = res.redirect;
+          parts = null;
+          pathname = null;
+          search = null;
+          if (redirectTo.indexOf('?' > 0)) {
+            parts = redirectTo.split('?');
+          }
+          if (parts) {
+            pathname = parts[0];
+            search = parts[1];
+          } else {
+            pathname = redirectTo;
+          }
+          newRedirectTo = window.location.origin + pathname + (search ? '?' + search : '');
+          return window.location.href = newRedirectTo;
+        } else if (res.success) {
+          noty({
+            type: 'success',
+            layout: 'topCenter',
+            text: res.success,
+            timeout: 2500,
+            killer: true
+          });
+          return _this.handleOnReservationSuccess();
+        }
+      };
+    })(this));
+  },
+  render: function() {
+    var audience, audienceItemDOM, modal, modalTitle, reserveBtn;
+    this.modalId = "modal_" + this.props.course._id;
+    modalTitle = "Reserve slots - " + this.props.course.name;
+    modal = BootstrapModal(
+      {ref:  "modal",
+      confirm:  "Done",
+      cancel:  "Go back",
+      onConfirm:  this.handleConfirm,
+      onCancel:  this.handleCancel,
+      onShown:  this.handleModalShown,
+      title:  modalTitle,
+      id:  this.modalId}
+      );
+    audienceItemDOM = function(id) {
+      if (id === "beg") {
+        return (React.DOM.span( {className:"audience-item beg", title:"Level: Beginner"}, "B"));
+      } else if (id === "inter") {
+        return (React.DOM.span( {className:"audience-item inter", title:"Level: Intermediate"}, "I"));
+      } else {
+        return (React.DOM.span( {className:"audience-item adv", title:"Level: Advanced"}, "A"));
+      }
+    };
+    audience = this.props.course.target_audience.map((function(_this) {
+      return function(audienceItem) {
+        if (audienceItem.selected) {
+          return (
+        React.DOM.li( {className:"item"}, 
+        audienceItemDOM(audienceItem.id)
+        )
+    );
+        }
+      };
+    })(this));
+    reserveBtn = function() {
+      switch (this.state.action) {
+        case 'reserving':
+          return React.DOM.button( {ref:"reserveBtn", className:"btn btn-warning"}, 
+              React.DOM.span(null, "Reserving... " ),React.DOM.i( {className:"fa fa-headphones"})
+          );
+        case 'reserved':
+          return React.DOM.button( {ref:"reserveBtn", className:"btn btn-success"}, 
+              React.DOM.span(null, "Reserved " ),React.DOM.i( {className:"fa fa-headphones"})
+          );
+        default:
+          return React.DOM.button( {ref:"reserveBtn", className:"btn btn-primary", onClick:this.reserveSlots}, 
+              React.DOM.span(null, "Reserve " ),React.DOM.i( {className:"fa fa-headphones"})
+          );
+      }
+    };
+    return (
+      React.DOM.li( {className:"item"}, 
+        React.DOM.div( {className:"clearfix"}, 
+          React.DOM.div( {className:"pull-left"}, 
+            React.DOM.h4( {className:"item-heading display-ib"}, this.props.course.name),
+            React.DOM.ul( {className:"l-h-list display-ib guru-audience-list"}, 
+              audience
+            ),
+            React.DOM.div(null, 
+              React.DOM.h5( {className:"text-charcoal"}, "Sessions: ", React.DOM.strong(null, this.props.course.classes),
+              " | Fee : ",  React.DOM.strong(null, React.DOM.i( {className:"fa fa-rupee"}), this.props.course.fee)
+              )
+            )
+          ),
+          React.DOM.div( {className:"pull-right"}, 
+          reserveBtn.call(this)
+          )
+        ),
+        modal
+      )
+    );
+  }
+});
+
+Courses = React.createClass({
+  mixins: [UserHelpers],
+  getInitialState: function() {
+    return {
+      courses: []
+    };
+  },
+  componentWillMount: function() {
+    return $.getJSON('/api/public/courses', {
+      username: this.getUserName()
+    }, (function(_this) {
+      return function(coursesRes) {
+        if (!_.isArray(coursesRes)) {
+          coursesRes = [];
+        }
+        return _this.setState({
+          courses: coursesRes
+        });
+      };
+    })(this));
+  },
+  render: function() {
+    var courses;
+    courses = this.state.courses.map(function(course) {
+      return Course({
+        course: course
+      });
+    });
+    return (
+    React.DOM.div( {className:"schedule-container"}, 
+      React.DOM.h4( {className:"text-heading"}, "Learn"),
+      React.DOM.ul( {className:"list-guru-courses list-unstyled"}, 
+      courses
+      )
+    )
+    );
+  }
+});
+
+Youtube = React.createClass({
+  mixins: [UserHelpers],
+  getInitialState: function() {
+    return {
+      youtube: []
+    };
+  },
+  componentWillMount: function() {
+    var username;
+    username = this.getUserName();
+    return $.getJSON('/api/public/youtube', {
+      username: username
+    }, (function(_this) {
+      return function(youTubeRes) {
+        return _this.setState({
+          youtube: youTubeRes
+        });
+      };
+    })(this));
+  },
+  componentDidUpdate: function() {
+    var videoArray;
+    videoArray = this.state.youtube.map(function(youtubeItem) {
+      if (youtubeItem.enabled) {
+        return {
+          title: youtubeItem.title,
+          href: "http://www.youtube.com/watch?v=" + youtubeItem.videoId,
+          type: 'text/html',
+          youtube: youtubeItem.videoId,
+          poster: "https://img.youtube.com/vi/" + youtubeItem.videoId + "/0.jpg"
+        };
+      } else {
+        return false;
+      }
+    });
+    videoArray = _.reject(videoArray, function(videoItem) {
+      return !videoItem;
+    });
+    return blueimp.Gallery(videoArray, {
+      container: '#blueimp-video-carousel',
+      carousel: true
+    });
+  },
+  render: function() {
+    return (
+    React.DOM.div(null, 
+    React.DOM.h3( {className:"text-heading text-center mb-30"}, "On Youtube"),
+      React.DOM.div( {id:"blueimp-video-carousel", className:"blueimp-gallery blueimp-gallery-controls blueimp-gallery-carousel"}, 
+        React.DOM.div( {className:"slides"}),
+        React.DOM.h3( {className:"title"}),
+        React.DOM.a( {className:"prev"}, "‹"),
+        React.DOM.a( {className:"next"}, "›"),
+        React.DOM.a( {className:"play-pause"})
+      )
+    )
+  );
+  }
+});
+
+SoundCloud = React.createClass({
+  mixins: [UserHelpers],
+  getInitialState: function() {
+    return {
+      soundcloud: {
+        connected: false,
+        permalink_url: '',
+        is_shown: false
+      }
+    };
+  },
+  render: function() {
+    return (
+      React.DOM.div(null, 
+        React.DOM.h3( {className:"text-heading text-center mb-30"}, "On SoundCloud"),
+        React.DOM.div( {id:"embedSoundCloudWidget"})
+      )
+    );
+  },
+  componentWillMount: function() {
+    var username;
+    username = this.getUserName();
+    return $.getJSON('/api/public/soundcloud', {
+      username: username
+    }, (function(_this) {
+      return function(soundCloudRes) {
+        return _this.setState({
+          soundcloud: soundCloudRes
+        });
+      };
+    })(this));
+  },
+  componentDidUpdate: function() {
+    var container;
+    container = $(this.getDOMNode()).find('#embedSoundCloudWidget');
+    if (this.state.soundcloud.connected) {
+      return SC.oEmbed("https://soundcloud.com/mad-orange-fireworks", function(embed) {
+        return container.html(embed.html);
+      });
+    }
+  }
+});
+
+React.renderComponent(SoundCloud({}), document.getElementById('widget-soundcloud'));
+
+React.renderComponent(Youtube({}), document.getElementById('widget-youtube'));
+
+React.renderComponent(Courses({}), document.getElementById('widget-courses'));

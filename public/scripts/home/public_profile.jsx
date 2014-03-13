@@ -371,6 +371,9 @@ Courses = React.createClass({
       username: this.getUserName()
     }, (function(_this) {
       return function(coursesRes) {
+        if (!_.isArray(coursesRes)) {
+          coursesRes = [];
+        }
         return _this.setState({
           courses: coursesRes
         });

@@ -59,7 +59,7 @@ ReservationManager = React.createClass({
     })(this);
     body = function() {
       return (React.DOM.div(null, 
-        React.DOM.table( {className:"table table-striped"}, 
+        React.DOM.table( {className:"table table-striped table-hover"}, 
           React.DOM.thead(null, 
             React.DOM.tr(null, 
               React.DOM.th(null, "On"),

@@ -123,7 +123,9 @@ Schedule = React.createClass({
         return function(event) {
           var shouldUpdate;
           shouldUpdate = true;
-          if (event.title === 'Available') {
+          if (event.title === 'Reserved') {
+            shouldUpdate = false;
+          } else if (event.title === 'Available') {
             if (_this.props.reserved.length !== _this.props.classes) {
               _this.props.reserved.push(_.pick(event, ['_id', 'start', 'end']));
               _this.props.onScheduleChange(_this.props.reserved);

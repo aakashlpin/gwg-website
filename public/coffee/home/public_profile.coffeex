@@ -118,7 +118,10 @@ Schedule = React.createClass
       eventClick : (event) =>
         shouldUpdate = true
 
-        if event.title is 'Available'
+        if event.title is 'Reserved'
+          shouldUpdate = false
+
+        else if event.title is 'Available'
           if @props.reserved.length isnt @props.classes
             # push the event in reserved slots array
             @props.reserved.push(_.pick event, ['_id', 'start', 'end'])

@@ -4,18 +4,24 @@ var ReservationManager;
 ReservationManager = React.createClass({
   getInitialState: function() {
     return {
-      reservations: []
+      reservations: [],
+      students: [],
+      courses: []
     };
   },
   componentWillMount: function() {
     return $.getJSON('/api/guru/reservations', (function(_this) {
-      return function(reservations) {
-        return console.log(reservations);
+      return function(res) {
+        return _this.setState({
+          reservations: res.reservations,
+          students: res.students,
+          courses: res.courses
+        });
       };
     })(this));
   },
-  getInitialDOM: function() {
-    var body, head;
+  render: function() {
+    var body, bodyReservations, courseName, head, studentName;
     head = function() {
       return (React.DOM.div(null, 
           React.DOM.h3(null, "Reservations"),
@@ -25,10 +31,46 @@ ReservationManager = React.createClass({
         )
       );
     };
+    courseName = (function(_this) {
+      return function(courseId) {
+        return _.find(_this.state.courses, function(course) {
+          return course._id === courseId;
+        }).name;
+      };
+    })(this);
+    studentName = (function(_this) {
+      return function(studentId) {
+        return _.find(_this.state.students, function(student) {
+          return student._id === studentId;
+        }).name;
+      };
+    })(this);
+    bodyReservations = (function(_this) {
+      return function() {
+        return _this.state.reservations.map(function(reservation) {
+          return (React.DOM.tr(null, 
+            React.DOM.td(null, moment(reservation.start).format('ddd, MMMM Do \'YY, h:mm a')),
+            React.DOM.td(null, courseName.call(this, reservation.courseId)),
+            React.DOM.td(null, studentName.call(this, reservation.studentId))
+          )
+        );
+        });
+      };
+    })(this);
     body = function() {
-      this.state.reservations.map(function(reservation) {});
       return (React.DOM.div(null, 
-        reservation.courseId
+        React.DOM.table( {className:"table table-striped"}, 
+          React.DOM.thead(null, 
+            React.DOM.tr(null, 
+              React.DOM.th(null, "On"),
+              React.DOM.th(null, "For course"),
+              React.DOM.th(null, "By student")
+            )
+          ),
+          React.DOM.tbody(null, 
+            bodyReservations.call(this)
+          )
+        )
         )
       );
     };
@@ -44,9 +86,6 @@ ReservationManager = React.createClass({
           )
       );
     }
-  },
-  render: function() {
-    return this.getInitialDOM();
   }
 });
 

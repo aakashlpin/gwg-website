@@ -1,18 +1,19 @@
 `/*** @jsx React.DOM */`
 
-
 ReservationManager = React.createClass
   getInitialState: ->
     reservations: []
+    students: []
+    courses : []
 
   componentWillMount: ->
-    $.getJSON '/api/guru/reservations', (reservations) =>
-      console.log(reservations);
-#      @setState
-#        reservations: reservations
+    $.getJSON '/api/guru/reservations', (res) =>
+      @setState
+        reservations: res.reservations
+        students: res.students
+        courses: res.courses
 
-
-  getInitialDOM: ->
+  render: ->
     head = ->
       `(<div>
           <h3>Reservations</h3>
@@ -22,12 +23,41 @@ ReservationManager = React.createClass
         </div>
       )`
 
-    body = ->
-      @state.reservations.map (reservation) ->
-        `(<div>
-          {reservation.courseId}
-          </div>
+    courseName = (courseId) =>
+      _.find @state.courses, (course) ->
+        course._id is courseId
+      .name
+
+    studentName = (studentId) =>
+      _.find @state.students, (student) ->
+        student._id is studentId
+      .name
+
+    bodyReservations = =>
+      @state.reservations.map (reservation) =>
+        `(<tr>
+            <td>{moment(reservation.start).format('ddd, MMMM Do \'YY, h:mm a')}</td>
+            <td>{courseName.call(this, reservation.courseId)}</td>
+            <td>{studentName.call(this, reservation.studentId)}</td>
+          </tr>
         )`
+
+    body = ->
+      `(<div>
+        <table className="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>On</th>
+              <th>For course</th>
+              <th>By student</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bodyReservations.call(this)}
+          </tbody>
+        </table>
+        </div>
+      )`
 
     if not @state.reservations.length
       return `(
@@ -42,7 +72,5 @@ ReservationManager = React.createClass
           </div>
       )`
 
-  render: ->
-    @getInitialDOM()
 
 React.renderComponent (ReservationManager {}), document.getElementById('reservationsContent')

@@ -109,7 +109,7 @@ module.exports = {
             var reserved = req.session.reserved;
             delete req.session.reserved;
 
-            APIUserController.saveReservationData(req.user._id, reserved, function(err, saved) {
+            APIUserController.saveReservationData(req.user, reserved, function(err, saved) {
                 if (err) {
                     reserved.url += '?err=' + err;
 

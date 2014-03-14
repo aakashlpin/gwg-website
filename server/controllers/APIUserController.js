@@ -1,12 +1,14 @@
 var models = require('../models'),
     _ = require('underscore');
 
-function saveReservationData (studentId, reserved, cb) {
+function saveReservationData (user, reserved, cb) {
     var ReservationModel = models.Reservation,
-        CourseModel = models.Course;
+        CourseModel = models.Course,
+        GuruModel = models.Guru,
+        studentEmail = user.email;
 
     //assign the userId as the studentId
-    reserved.studentId = studentId;
+    reserved.studentId = user._id;
 
     //get the guruId for the incoming courseId
     CourseModel.getById(reserved.courseId, '_creator', function(err, creatorObject) {
@@ -18,19 +20,24 @@ function saveReservationData (studentId, reserved, cb) {
         }
 
         reserved.guruId = creatorObject._creator;
-        if (reserved.guruId.toHexString() === studentId.toHexString()) {
-            //wtf! booking your own course?
-            cb('Oops! You cannot book your own slots, right?');
-            return;
-        }
-        ReservationModel.putReservations(reserved, function(err, reservationObject) {
-            if (err) {
-                console.log(err);
-                cb(err);
+
+        GuruModel.getById(creatorObject._creator, 'email', function(err, guruObject) {
+            if (guruObject.email === studentEmail) {
+                //wtf! booking your own course?
+                cb('Oops! You cannot book your own course, right?');
                 return;
             }
 
-            cb(err, reservationObject);
+            ReservationModel.putReservations(reserved, function(err, reservationObject) {
+                if (err) {
+                    console.log(err);
+                    cb(err);
+                    return;
+                }
+
+                cb(err, reservationObject);
+            });
+
         });
     });
 }
@@ -51,7 +58,7 @@ module.exports = {
 
         } else {
             //store the damn thing and send back a success message
-            saveReservationData(req.user._id, req.body.reserved, function(err, updated) {
+            saveReservationData(req.user, req.body.reserved, function(err, updated) {
                 if (err) {
                     res.json({err: err});
                     return;

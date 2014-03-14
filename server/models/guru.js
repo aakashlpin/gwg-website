@@ -81,6 +81,30 @@ GuruSchema.statics.get = function(req, fields, callback) {
     this.findOne({_id: req.user._id}, fieldObject, callback);
 };
 
+GuruSchema.statics.getById = function(guruId, fields, callback) {
+    if (typeof fields === 'function') {
+        callback = fields;
+        fields = [];
+    }
+
+    if (!_.isArray(fields)) {
+        //if just one field passed in instead of an array
+        fields = [fields];
+    }
+
+    if (!guruId) {
+        return callback('Cannot get without guru id');
+    }
+
+    var fetchObject = {};
+    _.each(fields, function(field) {
+        fetchObject[field] = 1;
+    });
+
+    this.findById(guruId, fetchObject).lean().exec(callback);
+};
+
+
 GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, callback) {
     var dataOfInterest = _.pick(profile._json,
         ['id', 'name', 'gender', 'link', 'email', 'location', 'timezone', 'username', 'picture']

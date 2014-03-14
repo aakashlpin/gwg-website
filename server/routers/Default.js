@@ -18,6 +18,11 @@ var routes = [
         middleware: [HomeController.getGuruIndex]
     },
     {
+        path: '/u',
+        httpMethod: 'GET',
+        middleware: [HomeController.getUserIndex]
+    },
+    {
         path: '/about',
         httpMethod: 'GET',
         middleware: [HomeController.getAbout]

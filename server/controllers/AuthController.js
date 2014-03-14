@@ -120,6 +120,8 @@ module.exports = {
                 //redirect back to the url that was requested before auth
                 res.redirect(reserved.url);
             });
+        } else {
+            res.redirect('/u');
         }
     }
 };

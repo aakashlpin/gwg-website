@@ -80,7 +80,7 @@ ReservationManager = React.createClass({
       );
     } else {
       return (
-          <div>
+          <div className="has-min-height">
           {head.call(this)}
           {body.call(this)}
           </div>

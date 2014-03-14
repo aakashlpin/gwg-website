@@ -15,6 +15,14 @@ module.exports = {
             res.render('guru_home');
         }
     },
+    getUserIndex: function(req, res) {
+        if (req.isAuthenticated()) {
+            res.redirect('/u/reservations');
+
+        } else {
+            res.redirect('/door');
+        }
+    },
     getAbout: function(req, res) {
         res.render('about');
 

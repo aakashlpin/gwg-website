@@ -45,7 +45,7 @@ module.exports.ensureAuthenticated = function(req, res, next) {
         } else if (isUser(req.user)) {
             //make sure the requested path doesn't have a `/g/*` to begin with
             if (req.route.path.indexOf('/g/') === 0) {
-                return res.redirect('/u/home');
+                return res.redirect('/u');
             }
 
         } else {

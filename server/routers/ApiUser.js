@@ -6,6 +6,11 @@ var routes = [
         path: '/schedule',
         httpMethod: 'POST',
         middleware: [APIUserController.postUserScheduleHandler]
+    },
+    {
+        path: '/reservations',
+        httpMethod: 'GET',
+        middleware: [APIUserController.getUserReservationsHandler]
     }
 ];
 

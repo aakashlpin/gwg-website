@@ -1,0 +1,76 @@
+`/*** @jsx React.DOM */`
+
+ReservationManager = React.createClass
+  getInitialState: ->
+    reservations: []
+    gurus: []
+    courses : []
+
+  componentWillMount: ->
+    $.getJSON '/api/user/reservations', (res) =>
+      @setState
+        reservations: res.reservations
+        gurus: res.gurus
+        courses: res.courses
+
+  render: ->
+    head = ->
+      `(<div>
+          <h3>Reservations</h3>
+          <p className="text-light gwg-callout gwg-callout-info">
+          List of upcoming reservations you've made
+          </p>
+        </div>
+      )`
+
+    courseName = (courseId) =>
+      _.find @state.courses, (course) ->
+        course._id is courseId
+      .name
+
+    guruName = (guruId) =>
+      _.find @state.gurus, (guru) ->
+        guru._id is guruId
+      .name
+
+    bodyReservations = =>
+      @state.reservations.map (reservation) =>
+        `(<tr>
+            <td>{moment(reservation.start).format('ddd, MMMM Do \'YY, h:mm a')}</td>
+            <td>{courseName.call(this, reservation.courseId)}</td>
+            <td>{guruName.call(this, reservation.guruId)}</td>
+          </tr>
+        )`
+
+    body = ->
+      `(<div>
+        <table className="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>On</th>
+              <th>For Course</th>
+              <th>From Guru</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bodyReservations.call(this)}
+          </tbody>
+        </table>
+        </div>
+      )`
+
+    if not @state.reservations.length
+      return `(
+          <div>{head.call(this)}</div>
+      )`
+
+    else
+      return `(
+          <div>
+          {head.call(this)}
+          {body.call(this)}
+          </div>
+      )`
+
+
+React.renderComponent (ReservationManager {}), document.getElementById('reservationsContent')

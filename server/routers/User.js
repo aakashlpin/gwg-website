@@ -7,6 +7,11 @@ var routes = [
         path: '/home',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAuthenticated, UserController.getUserHome]
+    },
+    {
+        path: '/reservations',
+        httpMethod: 'GET',
+        middleware: [RouteUtils.ensureAuthenticated, UserController.getUserReservations]
     }
 ];
 

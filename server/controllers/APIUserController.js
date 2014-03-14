@@ -18,6 +18,11 @@ function saveReservationData (studentId, reserved, cb) {
         }
 
         reserved.guruId = creatorObject._creator;
+        if (reserved.guruId.toHexString() === studentId.toHexString()) {
+            //wtf! booking your own course?
+            cb('Oops! You cannot book your own slots, right?');
+            return;
+        }
         ReservationModel.putReservations(reserved, function(err, reservationObject) {
             if (err) {
                 console.log(err);

@@ -192,6 +192,25 @@ module.exports = function ( grunt ) {
                 dest: 'public/scripts',
                 ext: '.jsx'
             }
+        },
+
+        replace: {
+            dist: {
+                options: {
+                    patterns: [
+                        {
+                            match: /timestamp/g,
+                            replacement: '<%= new Date().getTime() %>'
+                        }
+                    ]
+                },
+                files: [{
+                    expand: true,                  // Enable dynamic expansion
+                    cwd: 'views/',                   // Src matches are relative to this path
+                    src: ['**/*.handlebars'],   // Actual patterns to match
+                    dest: 'views/'                  // Destination path prefix
+                }]
+            }
         }
 
     } );

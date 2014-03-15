@@ -195,15 +195,15 @@ module.exports = function ( grunt ) {
         },
 
         copy: {
-            dist: {
+            views: {
                 files: [
-                    {expand: true, src: ['views/**'], dest: 'dist/views/', filter: 'isFile'}
+                    {expand: true, src: ['views/**'], dest: 'dist', filter: 'isFile'}
                 ]
             }
         },
 
         replace: {
-            dist: {
+            cache_busting: {
                 options: {
                     patterns: [
                         {
@@ -235,10 +235,11 @@ module.exports = function ( grunt ) {
         'compass:dist',
         'autoprefixer',
         'cssmin',
+        'copy:views',
+        'replace:cache_busting',
         'imagemin',
         'react',
-        'uglify:dist',
-        'forever:restart'
+        'uglify:dist'
     ] );
 
     grunt.registerTask( 'default', [

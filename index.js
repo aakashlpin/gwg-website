@@ -28,6 +28,13 @@ app.configure(function() {
     app.use( passport.initialize() );
     app.use( passport.session() );
     app.use( app.router );
+    if (app.get('env').toLowerCase() === 'production') {
+        //dist views contain timestamped version of scripts
+        app.set('views', __dirname + '/dist/views');
+    } else {
+        app.set('views', __dirname + '/views');
+    }
+
     app.engine( 'handlebars', exphbs({defaultLayout: 'main'}) );
     app.set( 'view engine', 'handlebars' );
 

@@ -24,7 +24,7 @@ emailTemplates(templatesDir, function(err, template) {
         var locals = {
             email: 'aakash.lpin@gmail.com',
             guru_name: 'Aakash Goel',
-            image_root: 'http://guitarwith.guru/emails/welcome_guru/images',
+            image_root: 'http://cdn.guitarwith.guru/emails/welcome_guru/images',
             image_bust: '?v=' + new Date().getTime()
         };
 
@@ -36,7 +36,7 @@ emailTemplates(templatesDir, function(err, template) {
                 transport.sendMail({
                     from: 'Guitar with Guru <aakash@guitarwith.guru>',
                     to: locals.email,
-                    subject: 'Testing email 3!',
+                    subject: 'Come on Google. Please.',
                     html: html,
                     generateTextFromHTML: true,
                     text: text
@@ -51,4 +51,3 @@ emailTemplates(templatesDir, function(err, template) {
         });
     }
 });
-

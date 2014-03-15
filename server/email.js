@@ -24,7 +24,8 @@ emailTemplates(templatesDir, function(err, template) {
         var locals = {
             email: 'aakash.lpin@gmail.com',
             guru_name: 'Aakash Goel',
-            image_root: 'http://guitarwith.guru/emails/welcome_guru/images'
+            image_root: 'http://guitarwith.guru/emails/welcome_guru/images',
+            image_bust: '?v=' + new Date().getTime()
         };
 
         // Send a single email
@@ -35,7 +36,7 @@ emailTemplates(templatesDir, function(err, template) {
                 transport.sendMail({
                     from: 'Guitar with Guru <aakash@guitarwith.guru>',
                     to: locals.email,
-                    subject: 'Hey from Guitar with Guru!',
+                    subject: 'Testing email 2!',
                     html: html,
                     generateTextFromHTML: true,
                     text: text

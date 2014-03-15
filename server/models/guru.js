@@ -219,7 +219,7 @@ GuruSchema.statics.getAll = function(req, callback) {
         return callback('Unauthorized');
     }
 
-    this.find(callback);
+    this.find().lean().exec(callback);
 };
 
 GuruSchema.statics.associateAccount = function(req, callback) {

@@ -1,14 +1,10 @@
 var config = require('config'),
     async = require('async'),
-    models = require('../models');
+    models = require('../models'),
+    EmailController = require('./EmailController');
 
 module.exports = {
     getSignupsHandler: function(req, res) {
-        if (config.admin.emails.indexOf(req.user.email) < 0) {
-            res.redirect('/g');
-            return;
-        }
-
         async.parallel({
             userSignups: function(callback) {
                 var SignupModel = models.Signup;
@@ -34,5 +30,23 @@ module.exports = {
                 });
         });
 
+    },
+    welcomeAllGurusEmailHandler: function(req, res) {
+        var GuruModel = models.Guru;
+
+        GuruModel.getAll(req, function(err, gurus) {
+            gurus.forEach(function(guru) {
+                var emailObject = {
+                    user: _.pick(guru, ['name', 'email']),
+                    subject: "Welcome! Let's get you on boarded as a Guru"
+                };
+
+                EmailController.emailWelcomingGuru(emailObject, function(err, emailStatus) {
+                    console.log(err, emailStatus);
+                });
+            });
+        });
+
+        res.json({status: 'in progress'});
     }
 };

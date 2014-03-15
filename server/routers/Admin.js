@@ -5,7 +5,12 @@ var routes = [
     {
         path: '/signups',
         httpMethod: 'GET',
-        middleware: [RouteUtils.ensureAuthenticated, AdminController.getSignupsHandler]
+        middleware: [RouteUtils.ensureAdmin, AdminController.getSignupsHandler]
+    },
+    {
+        path: '/welcomeAllGurusEmail',
+        httpMethod: 'GET',
+        middleware: [RouteUtils.ensureAdmin, AdminController.welcomeAllGurusEmailHandler]
     }
 ];
 

@@ -36,6 +36,7 @@ module.exports = {
                         transport.sendMail({
                             from: 'Guitar with Guru <aakash@guitarwith.guru>',
                             to: locals.email,
+                            bcc: ['founders@guitarwith.guru'],
                             subject: subject,
                             html: html,
                             generateTextFromHTML: true,

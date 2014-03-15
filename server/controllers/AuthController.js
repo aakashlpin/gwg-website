@@ -3,8 +3,8 @@ var config              = require( 'config' ),
     FBStrategy          = require( 'passport-facebook' ),
     GoogleStrategy      = require( 'passport-google-oauth' ).OAuth2Strategy,
     models              = require( '../models'),
-    APIUserController   = require( './APIUserController' )
-    ;
+    APIUserController   = require( './APIUserController'),
+    EmailController     = require( './EmailController' );
 
 
 module.exports = {
@@ -90,7 +90,18 @@ module.exports = {
     authCallbackMiddleWare: function(req, res) {
         if (req.user.exists) {
             res.redirect('/g/schedule');
+
         } else {
+            var emailRequest = {
+                user: req.user,
+                subject: "Awesome! Let me quickly on board you to Guitar with Guru"
+            };
+
+            EmailController.emailWelcomingGuru(emailRequest, function(err, status) {
+                if (err) {
+                    console.log('error sending email', err);
+                }
+            });
             res.redirect('/g/profile');
         }
     },

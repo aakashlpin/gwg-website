@@ -56,6 +56,14 @@ module.exports = function ( grunt ) {
                     src: ['**/*.{png,jpg,gif}'],   // Actual patterns to match
                     dest: 'public/images/'                  // Destination path prefix
                 }]
+            },
+            cdn: {
+                files: [{
+                    expand: true,                  // Enable dynamic expansion
+                    cwd: 'cdn/',                   // Src matches are relative to this path
+                    src: ['**/*.{png,jpg,gif}'],   // Actual patterns to match
+                    dest: 'cdn/'                  // Destination path prefix
+                }]
             }
         },
 

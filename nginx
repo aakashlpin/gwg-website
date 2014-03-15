@@ -68,7 +68,7 @@ server {
 }
 
 server {
-  root /Users/aakashlpin/projects/gwg-website/cdn;
+  root /home/aakash/projects/gwg-website/cdn;
   try_files $uri $uri.html $uri/ @notfound;
   server_name cdn.guitarwith.guru;
   keepalive_timeout 10;

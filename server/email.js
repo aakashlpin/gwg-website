@@ -36,7 +36,7 @@ emailTemplates(templatesDir, function(err, template) {
                 transport.sendMail({
                     from: 'Guitar with Guru <aakash@guitarwith.guru>',
                     to: locals.email,
-                    subject: 'Testing email 2!',
+                    subject: 'Testing email 3!',
                     html: html,
                     generateTextFromHTML: true,
                     text: text

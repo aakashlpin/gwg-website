@@ -114,10 +114,12 @@ module.exports = {
 
                                     var momentStartString = momentString + ", " + formatTime(slot.startTime);
                                     var momentEndString = momentString + ", " + formatTime(slot.endTime);
-                                    var exactStartTimeInMoment = momentWithZone(momentStartString, formatString)
-                                        .unix();
-                                    var exactEndTimeInMoment = momentWithZone(momentEndString, formatString)
-                                        .unix();
+                                    var startTimeInMoment = momentWithZone(momentStartString, formatString);
+                                    var endTimeInMoment = momentWithZone(momentEndString, formatString);
+                                    console.log(startTimeInMoment.format());
+                                    var exactStartTimeInMoment = startTimeInMoment.unix();
+                                    console.log(exactStartTimeInMoment);
+                                    var exactEndTimeInMoment = endTimeInMoment.unix();
 
                                     var eventObject;
                                     if (reservedSlots.indexOf(momentStartString) < 0) {
@@ -139,8 +141,6 @@ module.exports = {
                                         };
 
                                     }
-
-                                    console.log(eventObject);
 
                                     events.push(eventObject);
 

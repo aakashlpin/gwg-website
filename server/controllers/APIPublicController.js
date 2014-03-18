@@ -88,7 +88,6 @@ module.exports = {
 
                     //starting tomorrow, send out the events (will increment in the loop)
                     var tomorrow = momentWithZone();
-                    console.log('initial tomorrow', tomorrow.format());
                     var NO_OF_DAYS = 30;
                     var events = [];
                     while (NO_OF_DAYS--) {
@@ -111,12 +110,10 @@ module.exports = {
                                 var slots = scheduleForDay.slots;
                                 _.each(slots, function(slot) {
                                     var momentString = momentWithZone(tomorrow).format('MMMM D YYYY');
-                                    console.log(momentString);
                                     var momentStartString = momentString + ", " + formatTime(slot.startTime);
                                     var momentEndString = momentString + ", " + formatTime(slot.endTime);
                                     var startTimeInMoment = momentWithZone(momentStartString, formatString);
                                     var endTimeInMoment = momentWithZone(momentEndString, formatString);
-                                    console.log(startTimeInMoment.format());
                                     var exactStartTimeInMoment = startTimeInMoment.unix();
                                     var exactEndTimeInMoment = endTimeInMoment.unix();
 

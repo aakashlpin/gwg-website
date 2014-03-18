@@ -83,7 +83,7 @@ module.exports = {
 
                     function momentWithZone() {
                         var timezoneOffset = - (guruRecord.timezone ? guruRecord.timezone : 5.5);
-                        return moment.apply(this, arguments).utc();
+                        return moment.apply(this, arguments).zone(timezoneOffset);
                     }
 
                     //starting tomorrow, send out the events (will increment in the loop)

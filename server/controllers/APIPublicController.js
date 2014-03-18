@@ -80,15 +80,20 @@ module.exports = {
                             }
                         });
                     });
+
+                    function momentWithZone() {
+                        return moment.apply(this, arguments).zone(guruRecord.timezone || 5.5);
+                    }
+
                     //starting tomorrow, send out the events (will increment in the loop)
-                    var tomorrow = moment();
+                    var tomorrow = momentWithZone();
                     var NO_OF_DAYS = 30;
                     var events = [];
                     while (NO_OF_DAYS--) {
-                        tomorrow = moment(tomorrow).add('days', 1);
+                        tomorrow = momentWithZone(tomorrow).add('days', 1);
                         //closure with loops 101
                         (function createEventsIIFE(tomorrow){
-                            var scheduleForDay = scheduleMap[moment(tomorrow).format('ddd').toLowerCase()];
+                            var scheduleForDay = scheduleMap[momentWithZone(tomorrow).format('ddd').toLowerCase()];
 
                             //if no slots, go back
                             if (!scheduleForDay.noSlots) {
@@ -107,9 +112,9 @@ module.exports = {
 
                                     var momentStartString = momentString + ", " + formatTime(slot.startTime);
                                     var momentEndString = momentString + ", " + formatTime(slot.endTime);
-                                    var exactStartTimeInMoment = moment(momentStartString, formatString)
+                                    var exactStartTimeInMoment = momentWithZone(momentStartString, formatString)
                                         .unix();
-                                    var exactEndTimeInMoment = moment(momentEndString, formatString)
+                                    var exactEndTimeInMoment = momentWithZone(momentEndString, formatString)
                                         .unix();
 
                                     var eventObject;

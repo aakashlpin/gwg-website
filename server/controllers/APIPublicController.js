@@ -88,6 +88,7 @@ module.exports = {
 
                     //starting tomorrow, send out the events (will increment in the loop)
                     var tomorrow = momentWithZone();
+                    console.log('initial tomorrow', tomorrow.format());
                     var NO_OF_DAYS = 30;
                     var events = [];
                     while (NO_OF_DAYS--) {

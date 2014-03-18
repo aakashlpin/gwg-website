@@ -82,7 +82,8 @@ module.exports = {
                     });
 
                     function momentWithZone() {
-                        return moment.apply(this, arguments).zone(guruRecord.timezone || 5.5);
+                        var timezoneOffset = - (guruRecord.timezone ? guruRecord.timezone : 5.5);
+                        return moment.apply(this, arguments).zone(timezoneOffset);
                     }
 
                     //starting tomorrow, send out the events (will increment in the loop)
@@ -137,6 +138,8 @@ module.exports = {
                                         };
 
                                     }
+
+                                    console.log(eventObject);
 
                                     events.push(eventObject);
 

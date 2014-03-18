@@ -110,15 +110,14 @@ module.exports = {
                                 //loop through slots property and fill in the events array.
                                 var slots = scheduleForDay.slots;
                                 _.each(slots, function(slot) {
-                                    var momentString = tomorrow.format('MMMM D YYYY');
-
+                                    var momentString = momentWithZone(tomorrow).format('MMMM D YYYY');
+                                    console.log(momentString);
                                     var momentStartString = momentString + ", " + formatTime(slot.startTime);
                                     var momentEndString = momentString + ", " + formatTime(slot.endTime);
                                     var startTimeInMoment = momentWithZone(momentStartString, formatString);
                                     var endTimeInMoment = momentWithZone(momentEndString, formatString);
                                     console.log(startTimeInMoment.format());
                                     var exactStartTimeInMoment = startTimeInMoment.unix();
-                                    console.log(exactStartTimeInMoment);
                                     var exactEndTimeInMoment = endTimeInMoment.unix();
 
                                     var eventObject;

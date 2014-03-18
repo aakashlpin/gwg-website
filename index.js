@@ -1,3 +1,4 @@
+process.env.TZ = 'Asia/Kolkata';
 require('newrelic');
 
 var express     = require( 'express' ),

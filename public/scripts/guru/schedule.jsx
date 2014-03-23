@@ -446,6 +446,22 @@ var DaysList = React.createClass({
             )
 
     },
+    handleRemoveAllSlots: function(e) {
+        if (confirm('Are you sure you want to remove all slots?')) {
+            var dataWithRemovedSlots = this.state.data.map(function(dayData) {
+                dayData.slots = [];
+                dayData.noSlots = true;
+                dayData.currentMode = 'manual';
+
+                return dayData;
+            });
+
+            this.setState({
+                data: dataWithRemovedSlots,
+                isDirty: true
+            });
+        }
+    },
     render: function() {
         var dayNodes = this.state.data.map(function(dayData) {
             var copyModeData = this.getCopyModeData(dayData);
@@ -490,9 +506,7 @@ var DaysList = React.createClass({
                 </p>
                 <p className="text-light gwg-callout gwg-callout-info">
                 Maintain the schedule below to reflect your availability.
-                </p>
-                <p className="text-light gwg-callout gwg-callout-warning">
-                When we are close to launch, we'll let you fine tune schedule for each date.
+                    <a className="pull-right" onClick={this.handleRemoveAllSlots}>Remove all slots</a>
                 </p>
                 {getChildDOM()}
             </div>

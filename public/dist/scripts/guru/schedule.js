@@ -290,7 +290,86 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
     }
 });
 
-var DaysList = React.createClass({displayName: 'DaysList',
+var UiWidgetMixin = {
+    getSubmitButton: function() {
+        if (this.state.isDirty) {
+            return (
+                React.DOM.button( {className:"btn btn-success", id:"saveSchedule", onClick:this.saveData}, 
+                " Save "
+                )
+                )
+        }
+        if (this.state.saving) {
+            return (
+                React.DOM.button( {className:"btn btn-success btn-loading"}, 
+                " Saving.. "
+                )
+                )
+        }
+        return (
+            React.DOM.button( {className:"btn btn-primary"}, 
+            " Saved "
+            )
+            )
+
+    },
+    changeUIMode: function() {
+        this.props.actionOnToggleUIMode();
+    }
+
+};
+
+var CalendarWidget = React.createClass({displayName: 'CalendarWidget',
+    mixins: [UiWidgetMixin],
+    getInitialState: function() {
+        return {
+            slots: [],
+            isDirty: false,
+            saving: false,
+            fetched: false
+        }
+
+    },
+    componentWillMount: function() {
+        $.getJSON('/api/public/schedule', {username: this.props.user.username}, function(slots) {
+           this.setState({
+               fetched: true,
+               slots: slots
+           })
+        }.bind(this));
+
+    },
+    render: function() {
+        if (!this.state.fetched) {
+            return (
+                React.DOM.div( {className:"has-min-height"}, 
+                    Loading(null )
+                )
+                )
+        }
+
+        return (
+            React.DOM.div(null, 
+                React.DOM.div( {className:"day-slots-container"}, 
+                    React.DOM.div( {className:"row"}, 
+                        React.DOM.div( {className:"clearfix"}, 
+                            React.DOM.div( {className:"pull-right"}, 
+                                React.DOM.button( {className:"btn btn-link", onClick:this.changeUIMode}, 
+                                " Edit Weekly Schedule "
+                                ),
+                                this.getSubmitButton.call(this)
+                            )
+                        )
+                    )
+                )
+            )
+            );
+
+    }
+});
+
+var WeeklyWidget = React.createClass({displayName: 'WeeklyWidget',
+    mixins: [UiWidgetMixin],
     getInitialState: function() {
         return {
             data: [],
@@ -298,9 +377,8 @@ var DaysList = React.createClass({displayName: 'DaysList',
             isDirty: false,
             saving: false,
             mostRecentChangeAt: new Date(),
-            intervalNumber: 0,
-            user: {}
-        };
+            intervalNumber: 0
+        }
     },
     componentWillMount: function() {
         $.getJSON('/api/guru/schedule', function(data) {
@@ -320,28 +398,13 @@ var DaysList = React.createClass({displayName: 'DaysList',
             });
         }.bind(this));
 
-        $.getJSON('/api/guru/user', function(user) {
-            if (!user) return;
-            this.setState({user: user});
-
-            mixpanel.identify(user.email);
-            mixpanel.people.set({
-                "$email": user.email,
-                "$name": user.name,
-                "$last_login": new Date()
-            });
-
-            mixpanel.track('Visited Schedule page');
-
-        }.bind(this));
-
     },
     componentDidMount: function() {
         //Autosave/ autosync every 3 sec
         setInterval(function() {
-                var mostRecentChangeAt = moment(this.state.mostRecentChangeAt),
-                    now = moment(),
-                    diff = now.diff(mostRecentChangeAt)
+            var mostRecentChangeAt = moment(this.state.mostRecentChangeAt),
+                now = moment(),
+                diff = now.diff(mostRecentChangeAt)
                 ;
 
             if (diff > 3000 && this.state.isDirty) {
@@ -424,29 +487,9 @@ var DaysList = React.createClass({displayName: 'DaysList',
         });
 
     },
-    getSubmitButton: function() {
-        if (this.state.isDirty) {
-            return (
-                React.DOM.button( {className:"btn btn-success", id:"saveSchedule", onClick:this.saveData}, 
-                " Save "
-                )
-                )
-        }
-        if (this.state.saving) {
-            return (
-                React.DOM.button( {className:"btn btn-success btn-loading"}, 
-                " Saving.. "
-                )
-                )
-        }
-        return (
-            React.DOM.button( {className:"btn btn-primary"}, 
-            " Saved "
-            )
-            )
-
-    },
-    handleRemoveAllSlots: function(e) {
+    handleRemoveAllSlots: function() {
+        //unused right now as it's very destructive
+        //to use it just put an <a> and call this method onClick
         if (confirm('Are you sure you want to remove all slots?')) {
             var dataWithRemovedSlots = this.state.data.map(function(dayData) {
                 dayData.slots = [];
@@ -463,6 +506,7 @@ var DaysList = React.createClass({displayName: 'DaysList',
         }
     },
     render: function() {
+        //bring up the week mode for editing
         var dayNodes = this.state.data.map(function(dayData) {
             var copyModeData = this.getCopyModeData(dayData);
             return (
@@ -472,32 +516,99 @@ var DaysList = React.createClass({displayName: 'DaysList',
                 );
         }, this);
 
-        var getChildDOM = function() {
-            if (this.state.fetched) {
-                return (
-                    React.DOM.div(null, 
-                        React.DOM.div( {className:"day-slots-container"}, 
-                            React.DOM.div( {className:"row"}, 
-                                React.DOM.div( {className:"clearfix"}, 
-                                    React.DOM.div( {className:"pull-right"}, 
-                                    this.getSubmitButton.call(this)
-                                    )
-                                )
+        if (!this.state.fetched) {
+            return (
+                React.DOM.div( {className:"has-min-height"}, 
+                    Loading(null )
+                )
+                )
+        }
+
+        return (
+            React.DOM.div(null, 
+                React.DOM.div( {className:"day-slots-container"}, 
+                    React.DOM.div( {className:"row"}, 
+                        React.DOM.div( {className:"clearfix"}, 
+                            React.DOM.div( {className:"pull-right"}, 
+                                React.DOM.button( {className:"btn btn-link", onClick:this.changeUIMode}, 
+                                " Edit on Calendar "
+                                ),
+                                this.getSubmitButton.call(this)
                             )
-                        ),
-
-                        dayNodes
+                        )
                     )
-                    );
-            } else {
-                return (
-                    React.DOM.div( {className:"has-min-height"}, 
-                        Loading(null )
-                    )
-                    );
-            }
-        }.bind(this);
+                ),
+                dayNodes
+            )
+        );
+    }
+});
 
+var DaysList = React.createClass({displayName: 'DaysList',
+    getInitialState: function() {
+        return {
+            isCalendarMode: false,
+            isUserFetched: false,
+            user: {}
+        };
+    },
+    componentWillMount: function() {
+        $.getJSON('/api/guru/user', function(user) {
+            //TODO mark it as an error and notify
+            if (!user) return;
+
+            this.setState({
+                isUserFetched: true,
+                user: user
+            });
+
+            mixpanel.identify(user.email);
+            mixpanel.people.set({
+                "$email": user.email,
+                "$name": user.name,
+                "$last_login": new Date()
+            });
+
+            mixpanel.track('Visited Schedule page');
+
+        }.bind(this));
+    },
+    handleActionOnToggleUIMode: function(isCalendarMode) {
+        this.setState({
+            isCalendarMode: isCalendarMode
+        });
+
+    },
+    getModeUI: function() {
+        if (this.state.isCalendarMode) {
+            //bring up the calendar widget for editing
+            return (
+                CalendarWidget(
+                {user:this.state.user,
+                actionOnToggleUIMode:this.handleActionOnToggleUIMode.bind(this, false)}
+                )
+            );
+
+        }
+
+        return (
+            WeeklyWidget(
+            {user:this.state.user,
+            actionOnToggleUIMode:this.handleActionOnToggleUIMode.bind(this, true)}
+            )
+        );
+    },
+    ensureUserBeforeUI: function() {
+        if (this.state.isUserFetched) {
+            return this.getModeUI();
+        }
+
+        return (
+            React.DOM.div(null)
+        );
+
+    },
+    render: function() {
         return (
             React.DOM.div( {className:"has-min-height"}, 
                 React.DOM.h3(null, "Manage Schedule"),
@@ -505,12 +616,11 @@ var DaysList = React.createClass({displayName: 'DaysList',
                 " People will make reservations against these timings. "
                 ),
                 React.DOM.p( {className:"text-light gwg-callout gwg-callout-info"}, 
-                " Maintain the schedule below to reflect your availability. ",
-                    React.DOM.a( {className:"pull-right", onClick:this.handleRemoveAllSlots}, "Remove all slots")
+                " Maintain the schedule below to reflect your availability. "
                 ),
-                getChildDOM()
+                this.ensureUserBeforeUI()
             )
-            )
+        );
     }
 });
 

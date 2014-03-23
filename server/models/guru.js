@@ -1,14 +1,17 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    Mixed = Schema.Types.Mixed,
-    ObjectId = Schema.ObjectId,
     config = require ('config'),
     Course = require('./course'),
     async  = require('async');
 
 _ = require('underscore');
 
-var Guru, GuruSchema;
+var Guru, GuruSchema, SlotSchema;
+
+SlotSchema = new Schema({
+    startTime: String,
+    endTime: String
+});
 
 GuruSchema = new Schema({
     id: String,
@@ -25,13 +28,14 @@ GuruSchema = new Schema({
     schedule: [{
         day_code: String,
         day_name: String,
-        slots: [{
-            startTime: String,
-            endTime: String
-        }],
+        slots: [ SlotSchema ],
         noSlots: Boolean,
         currentMode: String,
         selectedDayCode: String
+    }],
+    calendar_schedule: [{
+        date: Date,
+        slots: [ SlotSchema ]
     }],
     extras: {
         band_name: String,

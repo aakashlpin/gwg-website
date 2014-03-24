@@ -131,8 +131,16 @@ module.exports = {
                 //redirect back to the url that was requested before auth
                 res.redirect(reserved.url);
             });
+
+        } else if (req.session.callbackRedirectTo) {
+            res.redirect(req.session.callbackRedirectTo);
+
         } else {
             res.redirect('/u');
         }
+    },
+    setCallbackRedirectToEvents: function(req, res, next) {
+        req.session.callbackRedirectTo = '/events';
+        next();
     }
 };

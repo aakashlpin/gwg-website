@@ -31,6 +31,10 @@ p {
   font-family: $font-family-serif;
 }
 
+img {
+  max-width: 100%;
+}
+
 a.underline {
   text-decoration: underline;
 }
@@ -580,4 +584,14 @@ img.bg {
   position: absolute;
   top: -8px;
   right: 15px;
+}
+
+.hacked-event-text {
+  h4 {
+    color: #ccc;
+  }
+  h3 {
+    margin-top: 0;
+    margin-bottom: 40px;
+  }
 }

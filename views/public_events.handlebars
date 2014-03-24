@@ -1,0 +1,60 @@
+<img class="bg" src="/images/bg.jpg" alt=""/>
+<nav class="navbar navbar-fixed-top bg-brand" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">
+        <img class="navbar-logo" src="/images/nav-logo-bold.png" alt="Guitar With Guru"/>
+      </a>
+    </div>
+  </div>
+</nav>
+<div class="container" style="margin-top: 150px;">
+  <div class="row">
+    <div class="col-md-3">
+      <img src="/images/events/rahul_ranganath.jpg" alt="Rahul Ranganath"/>
+    </div>
+    <div class="col-md-4 text-white hacked-event-text">
+      <h4>Who:</h4>
+      <h3><strong>Rahul Ranganath</strong></h3>
+      <h4>Band:</h4>
+      <h3><strong>The Bicycle Days</strong></h3>
+      <h4>What:</h4>
+      <h3><strong>Country style finger picking</strong></h3>
+      <h4>When:</h4>
+      <h3><strong>Sun, 30th Mar 2014 at 04:00PM</strong></h3>
+    </div>
+    <div class="col-md-5">
+      <div class="schedule-container text-center">
+        <h3 class="text-heading mb-40"><strong>Free </strong>Live Guitar Session</h3>
+        <h4 class="mb-20">Learn, Jam and Ask Questions</h4>
+        <h4 class="mb-20">All about <strong>Country Style Finger Picking</strong></h4>
+        <h4 class="mb-40"><strong>Sunday </strong>afternoon over a <strong>Google Hangout</strong></h4>
+        {{#if user}}
+          <p class="text-primary text-left mb-20">Awesome! Spread the word and be a part of this free event!</p>
+          <div id="fb-root"></div>
+          <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1409632195960125";
+            fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));</script>
+
+          <div class="mb-20">
+            <div class="fb-like" data-href="https://www.facebook.com/guitarwithguru" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+          </div>
+
+          <a href="https://twitter.com/share" class="twitter-share-button" data-text="Free Live Guitar session on Country style finger picking by Rahul from The Bicycle Days." data-via="aakashlpin" data-size="large" data-count="none">Tweet</a>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+          <a href="https://twitter.com/GuitarWithGuru" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @GuitarWithGuru</a>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        {{else}}
+          <a href="/auth/events/google">
+            <img src="/images/sign-in-with-google.png" alt="Login with Google">
+          </a>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

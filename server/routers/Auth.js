@@ -28,6 +28,11 @@ var routes = [
         middleware: [AuthController.passportUserGoogleAuthMiddleWare]
     },
     {
+        path: '/events/google',
+        httpMethod: 'GET',
+        middleware: [AuthController.setCallbackRedirectToEvents, AuthController.passportUserGoogleAuthMiddleWare]
+    },
+    {
         path: '/user/google/callback',
         httpMethod: 'GET',
         middleware: [AuthController.passportUserGoogleAuthCallbackMiddleWare, AuthController.authUserCallbackMiddleWare]

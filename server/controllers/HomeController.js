@@ -61,5 +61,8 @@ module.exports = {
         //send the query params if found via url to the view
         //we can show different messages depending on it
         res.render('public_door', {params: req.query});
+    },
+    getEventsHandler: function(req, res) {
+        res.render('public_events', {user: req.user});
     }
 };

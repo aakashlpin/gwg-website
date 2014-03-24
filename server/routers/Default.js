@@ -38,6 +38,11 @@ var routes = [
         middleware: [HomeController.getUserDoor]
     },
     {
+        path: '/events',
+        httpMethod: 'GET',
+        middleware: [HomeController.getEventsHandler]
+    },
+    {
         path: '/:username',
         httpMethod: 'GET',
         middleware: [HomeController.validateUserNameRoute, HomeController.getGuruProfile]

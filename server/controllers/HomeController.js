@@ -63,6 +63,7 @@ module.exports = {
         res.render('public_door', {params: req.query});
     },
     getEventsHandler: function(req, res) {
-        res.render('public_events', {user: req.user});
+        var isUser = req.user ? req.user.is_user : false;
+        res.render('public_events', {isUser: isUser});
     }
 };

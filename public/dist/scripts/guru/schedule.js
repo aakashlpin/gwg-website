@@ -339,6 +339,38 @@ var CalendarWidget = React.createClass({displayName: 'CalendarWidget',
         }.bind(this));
 
     },
+    componentDidUpdate: function() {
+        var calendar = $(this.getDOMNode()).find('#calendarEditorContainer').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month, agendaWeek, agendaDay'
+            },
+            aspectRatio: 2,
+            defaultView : 'agendaWeek',
+            editable: true,
+            slotEventOverlap: false,
+            events : this.state.slots,
+            selectable: true,
+            selectHelper: true,
+            select: function(start, end, allDay) {
+                var title = prompt('Event Title:');
+                if (title) {
+                    calendar.fullCalendar('renderEvent',
+                        {
+                            title: title,
+                            start: start,
+                            end: end,
+                            allDay: allDay
+                        },
+                        true // make the event "stick"
+                    );
+                }
+                calendar.fullCalendar('unselect');
+            }
+
+        });
+    },
     render: function() {
         if (!this.state.fetched) {
             return (
@@ -361,7 +393,8 @@ var CalendarWidget = React.createClass({displayName: 'CalendarWidget',
                             )
                         )
                     )
-                )
+                ),
+                React.DOM.div( {id:"calendarEditorContainer"})
             )
             );
 

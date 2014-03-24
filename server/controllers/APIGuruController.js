@@ -4,7 +4,7 @@ var models = require('../models'),
 
 module.exports = {
     getUserHandler: function(req, res) {
-        var data = _.pick(req.user, ['email', 'alternate_email', 'name']);
+        var data = _.pick(req.user, ['email', 'alternate_email', 'name', 'username']);
         res.json(data);
 
     },

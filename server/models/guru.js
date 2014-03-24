@@ -6,12 +6,7 @@ var mongoose = require('mongoose'),
 
 _ = require('underscore');
 
-var Guru, GuruSchema, SlotSchema;
-
-SlotSchema = new Schema({
-    startTime: String,
-    endTime: String
-});
+var Guru, GuruSchema;
 
 GuruSchema = new Schema({
     id: String,
@@ -28,14 +23,21 @@ GuruSchema = new Schema({
     schedule: [{
         day_code: String,
         day_name: String,
-        slots: [ SlotSchema ],
+        slots: [{
+            startTime: String,
+            endTime: String
+        }],
         noSlots: Boolean,
         currentMode: String,
         selectedDayCode: String
     }],
     calendar_schedule: [{
         date: Date,
-        slots: [ SlotSchema ]
+        slots: [{
+            startTime: String,
+            endTime: String,
+            title: String   //useful when creating custom events
+        }]
     }],
     extras: {
         band_name: String,

@@ -563,9 +563,6 @@ var WeeklyWidget = React.createClass({
                     <div className="row">
                         <div className="clearfix">
                             <div className="pull-right">
-                                <button className="btn btn-link" onClick={this.changeUIMode}>
-                                Edit on Calendar
-                                </button>
                                 {this.getSubmitButton.call(this)}
                             </div>
                         </div>

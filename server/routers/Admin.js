@@ -7,10 +7,15 @@ var routes = [
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAdmin, AdminController.getSignupsHandler]
     },
-    {
+    /*{
         path: '/welcomeAllGurusEmail',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAdmin, AdminController.welcomeAllGurusEmailHandler]
+    }*/
+    {
+        path: '/notifyAllUsersAboutEvent',
+        httpMethod: 'GET',
+        middleware: [RouteUtils.ensureAdmin, AdminController.notifyAllUsersAboutEvent]
     }
 ];
 

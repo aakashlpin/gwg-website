@@ -36,12 +36,52 @@ module.exports = {
                         transport.sendMail({
                             from: 'Guitar with Guru <aakash@guitarwith.guru>',
                             to: locals.email,
-                            bcc: ['founders@guitarwith.guru'],
+                            bcc: 'founders@guitarwith.guru',
                             subject: subject,
                             html: html,
                             generateTextFromHTML: true,
                             text: text,
                             forceEmbeddedImages: true
+                        }, cb);
+                    }
+                });
+            }
+        });
+    },
+    emailNotifyingAboutEvent: function(email, cb) {
+        var user = email.user,
+            subject = email.subject;
+
+        emailTemplates(templatesDir, function(err, template) {
+            if (err) {
+                cb(err);
+
+            } else {
+                var transport = nodemailer.createTransport("SMTP", {
+                    service: "Gmail",
+                    auth: {
+                        user: "aakash@guitarwith.guru",
+                        pass: "t1mguitarwithgurupasswd"
+                    }
+                });
+
+                var locals = {
+                    email: user.email
+                };
+
+                template('notify_event', locals, function(err, html, text) {
+                    if (err) {
+                        cb(err);
+
+                    } else {
+                        transport.sendMail({
+                            from: 'Guitar with Guru <aakash@guitarwith.guru>',
+                            to: locals.email,
+                            bcc: 'founders@guitarwith.guru',
+                            subject: subject,
+                            html: html,
+                            generateTextFromHTML: true,
+                            text: text
                         }, cb);
                     }
                 });

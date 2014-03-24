@@ -32,6 +32,8 @@ module.exports = {
 
     },
     welcomeAllGurusEmailHandler: function(req, res) {
+        /* served as a one time use case to welcome all gurus on board
+        * not in use right now */
         var GuruModel = models.Guru;
 
         GuruModel.getAll(req, function(err, gurus) {
@@ -45,6 +47,23 @@ module.exports = {
                     console.log(err, emailStatus);
                 });
             });
+        });
+
+        res.json({status: 'in progress'});
+    },
+    notifyAllUsersAboutEvent: function(req, res) {
+        var SignupModel = models.Signup;
+        SignupModel.getAll(req, function(err, signups) {
+            signups.forEach(function(signup) {
+                var emailObject = {
+                    user: _.pick(signup, ['email']),
+                    subject: 'Free Live Guitar Session on Country style finger picking this Sunday!'
+                };
+
+                EmailController.emailNotifyingAboutEvent(emailObject, function(err, emailStatus) {
+                    console.log(err, emailStatus);
+                });
+            })
         });
 
         res.json({status: 'in progress'});

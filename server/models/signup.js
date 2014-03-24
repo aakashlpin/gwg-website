@@ -17,7 +17,7 @@ SignupSchema.statics.getAll = function(req, callback) {
         return callback('Unauthorized');
     }
 
-    this.find(callback);
+    this.find().lean().exec(callback);
 };
 
 SignupSchema.statics.post = function (req, callback) {

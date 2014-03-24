@@ -48,7 +48,7 @@ module.exports = {
             }
         });
     },
-    emailNotifyingAboutEvent: function(email, cb) {
+    emailNotifyingAboutEvent: function(email, transport, cb) {
         var user = email.user,
             subject = email.subject;
 
@@ -57,16 +57,8 @@ module.exports = {
                 cb(err);
 
             } else {
-                var transport = nodemailer.createTransport("SMTP", {
-                    service: "Gmail",
-                    auth: {
-                        user: "aakash@guitarwith.guru",
-                        pass: "t1mguitarwithgurupasswd"
-                    }
-                });
-
                 var locals = {
-                    email: user.email
+                    email: user
                 };
 
                 template('notify_event', locals, function(err, html, text) {
@@ -77,7 +69,7 @@ module.exports = {
                         transport.sendMail({
                             from: 'Guitar with Guru <aakash@guitarwith.guru>',
                             to: locals.email,
-                            bcc: 'founders@guitarwith.guru',
+//                            bcc: 'founders@guitarwith.guru',
                             subject: subject,
                             html: html,
                             generateTextFromHTML: true,

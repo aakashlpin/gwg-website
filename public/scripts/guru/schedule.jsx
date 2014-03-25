@@ -346,6 +346,15 @@ var CalendarWidget = React.createClass({
             isDirty: true
         });
     },
+    _getKeyForPayLoad: function(momentObj) {
+        var newMoment = moment(momentObj);
+        newMoment.set('hour', 0);
+        newMoment.set('minute', 0);
+        newMoment.set('second', 0);
+        newMoment.set('millisecond', 0);
+        return newMoment.toDate();
+
+    },
     saveData: function() {
         this.setState({
             isDirty: false,
@@ -353,6 +362,82 @@ var CalendarWidget = React.createClass({
         });
 
         console.log(this.props.currentStateStack);
+
+        var modifiedObject = this.props.currentStateStack;
+        var oldTimeStamps = _.keys(modifiedObject);
+        var payload = {};
+        _.each(oldTimeStamps, function(oldTimeStamp) {
+            var momentOfTs = moment(oldTimeStamp, 'X'),
+                momentOfTsKey = this._getKeyForPayLoad(momentOfTs),
+                shouldEnterRemovedSlot = true;
+
+            payload[momentOfTsKey] = payload[momentOfTsKey] || {
+                added_slots: [],
+                removed_slots: []
+            };
+
+            var modifiedEventObject = modifiedObject[oldTimeStamp];
+            if (!modifiedEventObject) {
+                //the slot has been removed
+
+            } else if (moment(oldTimeStamp, 'X').date() === moment(modifiedEventObject.start).date()) {
+                //the slot has been modified or was newly created
+                console.log('the slot has been modified or was newly created');
+                if (moment(oldTimeStamp, 'X').format('hh:mm A') === moment(modifiedEventObject.start).format('hh:mm A')) {
+                    //its a modified slot
+                    shouldEnterRemovedSlot = false;
+                }
+
+                payload[momentOfTsKey].added_slots.push({
+                    startTime: moment(modifiedEventObject.start).format('hh:mm A'),
+                    endTime: moment(modifiedEventObject.end).format('hh:mm A')
+                });
+
+            } else {
+                //the slot has been removed from one day and put in another day
+                console.log('the slot has been removed from one day and put in another day');
+                var momentOfNewDate = moment(modifiedEventObject.start),
+                    momentOfNewDateKey = this._getKeyForPayLoad(momentOfNewDate);
+
+                payload[momentOfNewDateKey] = payload[momentOfNewDateKey] || {
+                    added_slots: [],
+                    removed_slots: []
+                };
+
+                payload[momentOfNewDateKey].added_slots.push({
+                    startTime: moment(modifiedEventObject.start).format('hh:mm A'),
+                    endTime: moment(modifiedEventObject.end).format('hh:mm A')
+                })
+
+            }
+
+            if (shouldEnterRemovedSlot) {
+                payload[momentOfTsKey].removed_slots.push({
+                    startTime: momentOfTs.format('hh:mm A')
+                });
+            }
+
+        }, this);
+
+        //format the payload to be an array of objects
+        var formattedPayload = _.map(_.keys(payload), function(payloadDate) {
+            return {
+                date: payloadDate,
+                added_slots: payload[payloadDate].added_slots,
+                removed_slots: payload[payloadDate].removed_slots
+            }
+        }, this);
+
+        $.post('/api/guru/schedule', { calendar_schedule: formattedPayload }, function(res) {
+            //emulate some loading ;)
+            setTimeout(function(){
+                this.setState({
+                    saving: false
+                });
+
+            }.bind(this), 500);
+
+        }.bind(this));
 
     },
     componentDidMount: function() {
@@ -424,7 +509,9 @@ var CalendarWidget = React.createClass({
                         true // make the event "stick"
                     );
                 }
+
                 calendar.fullCalendar('unselect');
+
             }.bind(this),
             eventMouseover: function (event, jsEvent) {
                 $(this).mousemove(function (e) {

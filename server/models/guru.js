@@ -33,14 +33,13 @@ GuruSchema = new Schema({
     }],
     calendar_schedule: [{
         date: Date,
-        extra_slots: [{
+        added_slots: [{
             startTime: {type: String, required: true},
             endTime: {type: String, required: true},
             title: String   //useful when creating custom events
         }],
         removed_slots: [{
-            startTime: {type: String, required: true},
-            endTime: {type: String, required: true}
+            startTime: {type: String, required: true}
         }]
     }],
     extras: {

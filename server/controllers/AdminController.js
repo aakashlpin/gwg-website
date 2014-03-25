@@ -15,7 +15,10 @@ module.exports = {
             guruSignups: function(callback) {
                 var GuruModel = models.Guru;
                 GuruModel.getAll(req, callback);
-
+            },
+            eventRegistrations: function(callback) {
+                var UserModel = models.User;
+                UserModel.getAll(req, callback);
             }
         }, function(err, results) {
             //map each guru with his courses
@@ -28,7 +31,11 @@ module.exports = {
                     });
                 },
                 function(err, guruArrayWithCourses) {
-                    res.render('admin/signups', {users: results.userSignups, gurus: guruArrayWithCourses});
+                    res.render('admin/signups', {
+                        users: results.userSignups,
+                        gurus: guruArrayWithCourses,
+                        eventRegistrations: results.eventRegistrations
+                    });
                 });
         });
 

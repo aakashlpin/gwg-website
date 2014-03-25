@@ -321,9 +321,13 @@ var UiWidgetMixin = {
 
 var CalendarWidget = React.createClass({
     mixins: [UiWidgetMixin],
+    getDefaultProps: function() {
+        return {
+            currentStateStack: {}  //will represent new/ changed items from the weekly schedule in this calendar
+        }
+    },
     getInitialState: function() {
         return {
-            slots: [],
             isDirty: false,
             saving: false,
             fetched: false
@@ -331,15 +335,51 @@ var CalendarWidget = React.createClass({
 
     },
     componentWillMount: function() {
-        $.getJSON('/api/public/schedule', {username: this.props.user.username}, function(slots) {
-           this.setState({
-               fetched: true,
-               slots: slots
-           })
-        }.bind(this));
+        this.setState({
+            fetched: true
+        });
 
     },
-    componentDidUpdate: function() {
+    _updateCalendarChanges: function(id, object) {
+        this.props.currentStateStack[id] = object;
+        this.setState({
+            isDirty: true
+        });
+    },
+    saveData: function() {
+        this.setState({
+            isDirty: false,
+            saving: true
+        });
+
+        console.log(this.props.currentStateStack);
+
+    },
+    componentDidMount: function() {
+        var currentMousePos = {
+            x: -1,
+            y: -1
+        };
+
+        jQuery(document).on("mousemove", function (event) {
+            currentMousePos.x = event.pageX;
+            currentMousePos.y = event.pageY;
+        });
+
+        function isElemOverDiv() {
+            var trashEl = jQuery('#calendarTrash');
+
+            var ofs = trashEl.offset();
+
+            var x1 = ofs.left;
+            var x2 = ofs.left + trashEl.outerWidth(true);
+            var y1 = ofs.top;
+            var y2 = ofs.top + trashEl.outerHeight(true);
+
+            return (currentMousePos.x >= x1 && currentMousePos.x <= x2 &&
+                currentMousePos.y >= y1 && currentMousePos.y <= y2);
+        }
+
         var calendar = $(this.getDOMNode()).find('#calendarEditorContainer').fullCalendar({
             header: {
                 left: 'prev,next today',
@@ -349,27 +389,92 @@ var CalendarWidget = React.createClass({
             aspectRatio: 2,
             defaultView : 'agendaWeek',
             editable: true,
-            slotEventOverlap: false,
-            events : this.state.slots,
+            events: {
+                url: '/api/public/schedule',
+                type: 'GET',
+                data: { username: this.props.user.username }
+            },
             selectable: true,
             selectHelper: true,
+            slotEventOverlap: false,
+            dragRevertDuration: 0,
+            eventRender: function(event) {
+                //prevent modification to reserved slots
+                if (event.title.toLowerCase() == 'reserved') {
+                    event.editable = false;
+                }
+            },
             select: function(start, end, allDay) {
-                var title = prompt('Event Title:');
+                var title = prompt('Slot Title:', 'Available');
                 if (title) {
-                    calendar.fullCalendar('renderEvent',
-                        {
+                    var eventId = moment(start).unix();
+                    this._updateCalendarChanges(eventId, {
+                        title: title,
+                        start: start,
+                        end: end
+                    });
+
+                    calendar.fullCalendar('renderEvent', {
+                            id: eventId,
                             title: title,
                             start: start,
                             end: end,
-                            allDay: allDay
+                            allDay: false
                         },
                         true // make the event "stick"
                     );
                 }
                 calendar.fullCalendar('unselect');
-            }
+            }.bind(this),
+            eventMouseover: function (event, jsEvent) {
+                $(this).mousemove(function (e) {
+                    var trashEl = jQuery('#calendarTrash');
+                    if (isElemOverDiv()) {
+                        if (!trashEl.hasClass("to-trash")) {
+                            trashEl.addClass("to-trash");
+                        }
+                    } else {
+                        if (trashEl.hasClass("to-trash")) {
+                            trashEl.removeClass("to-trash");
+                        }
+
+                    }
+                });
+            },
+            eventDragStop: function (event, jsEvent, ui, view) {
+                if (isElemOverDiv()) {
+                    this._updateCalendarChanges(event.id, null);
+                    calendar.fullCalendar('removeEvents', event.id);
+
+                    var trashEl = jQuery('#calendarTrash');
+                    if (trashEl.hasClass("to-trash")) {
+                        trashEl.removeClass("to-trash");
+                    }
+                }
+            }.bind(this),
+            eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
+                this._updateCalendarChanges(event.id, {
+                    title: event.title,
+                    start: event.start,
+                    end: event.end
+                });
+
+            }.bind(this),
+            eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
+                this._updateCalendarChanges(event.id, {
+                    title: event.title,
+                    start: event.start,
+                    end: event.end
+                });
+
+            }.bind(this)
 
         });
+
+        $(this.getDOMNode()).find('#calendarEditorContainer')
+            .find('.fc-header-left')
+            .append('<div id="calendarTrash" class="calendar-trash"><i class="fa fa-trash-o"></i></div>');
+
     },
     render: function() {
         if (!this.state.fetched) {
@@ -563,6 +668,9 @@ var WeeklyWidget = React.createClass({
                     <div className="row">
                         <div className="clearfix">
                             <div className="pull-right">
+                                <button className="btn btn-link" onClick={this.changeUIMode}>
+                                Edit on Calendar
+                                </button>
                                 {this.getSubmitButton.call(this)}
                             </div>
                         </div>
@@ -577,7 +685,7 @@ var WeeklyWidget = React.createClass({
 var DaysList = React.createClass({
     getInitialState: function() {
         return {
-            isCalendarMode: false,
+            isCalendarMode: true,
             isUserFetched: false,
             user: {}
         };

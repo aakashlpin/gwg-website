@@ -175,9 +175,16 @@ var ProfileManagement = React.createClass({
             )
     },
     render: function() {
+        var profileLink = function() {
+            return '/' + this.state.user.username
+        };
+
         return (
             <div className="has-min-height">
-                <h3>Profile</h3>
+                <h3>
+                    Profile
+                    <a href={profileLink.call(this)} target="_blank"><i className="fa fa-external-link"></i></a>
+                </h3>
                 <p className="gwg-callout gwg-callout-info text-light">
                 * Tell us a bit about yourself. This will help us feature you on our homepage.
                 </p>

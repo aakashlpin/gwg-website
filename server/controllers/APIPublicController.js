@@ -45,111 +45,110 @@ module.exports = {
             ReservationModel = models.Reservation;
 
         var formatString = 'MMMM D YYYY, hh:mm A';
-        var username = req.query.username;
+        var relevantData = _.pick(req.query, ['username', 'start', 'end']);
+
+        var username = relevantData.username,
+            startMoment = relevantData.start ? moment(relevantData.start, 'X') : moment(),
+            endMoment = relevantData.end ? moment(relevantData.end, 'X') : moment().add('days', 30);
+
         if (!username || (username && !username.trim().length)) {
-            res.json({err: 'invalid request'});
+            res.json({err: 'invalid request. username missing'});
             return;
         }
 
         GuruModel.getByUserName(username, function getGuruByUserName(err, guruRecord) {
             if (err || !guruRecord) {
-                res.json({err: err ? err: 'User is a ghost. No record for user found.'});
+                res.json({err: err ? err: 'No record for ' + username + ' found.'});
+                return;
+            }
 
-            } else {
-                var schedule = guruRecord.schedule;
-                //right now, let's send out events for next 30 days
-                //later we will have to see what how often are gurus able to update their schedule
+            var schedule = guruRecord.schedule;
+            var scheduleMap = {};
+            _.each(schedule, function(scheduleItem) {
+                scheduleMap[scheduleItem.day_code.toLowerCase()] = scheduleItem;
+            });
 
-                var scheduleMap = {};
-                _.each(schedule, function(scheduleItem) {
-                    scheduleMap[scheduleItem.day_code.toLowerCase()] = scheduleItem;
+            ReservationModel.getByGuru(guruRecord._id, function getReservations(err, reservationsForGuru) {
+                if (err) {
+                    console.log('Error in getting reservations', err);
+                    reservationsForGuru = [];
+                }
+
+                var reservedSlots = [];
+                reservationsForGuru.forEach(function(reservationForGuru) {
+                    reservationForGuru.slots.forEach(function(slot) {
+                        if (!slot.completed && !slot.cancelled) {
+                            var formattedSlotStart = moment(slot.start).format(formatString);
+                            reservedSlots.push(formattedSlotStart);
+                        }
+                    });
                 });
 
-                ReservationModel.getByGuru(guruRecord._id, function getReservations(err, reservationsForGuru) {
-                    if (err) {
-                        console.log('Error in getting reservations', err);
-                        reservationsForGuru = [];
-                    }
+                //from what is requested,
+                var tomorrow = startMoment.isAfter(moment()) ? startMoment: moment();
+                var NO_OF_DAYS = endMoment.diff(tomorrow, 'days') + 1;
+                var events = [];
+                while (NO_OF_DAYS--) {
+                    //closure with loops 101
+                    (function createEventsIIFE(tomorrow){
+                        var scheduleForDay = scheduleMap[moment(tomorrow).format('ddd').toLowerCase()];
 
-                    var reservedSlots = [];
-                    reservationsForGuru.forEach(function(reservationForGuru) {
-                        reservationForGuru.slots.forEach(function(slot) {
-                            if (!slot.completed && !slot.cancelled) {
-                                var formattedSlotStart = moment(slot.start).format(formatString);
-                                reservedSlots.push(formattedSlotStart);
+                        //if no slots, go back
+                        if (!scheduleForDay.noSlots) {
+                            //this date has slots
+                            if (scheduleForDay.currentMode !== 'manual') {
+                                //find out the day that is to be copied from
+                                var copyFromDayCode = scheduleForDay.selectedDayCode;
+                                //get fresh schedule for day
+                                scheduleForDay = scheduleMap[copyFromDayCode.toLowerCase()];
                             }
-                        });
-                    });
 
-                    function momentWithZone() {
-                        var timezoneOffset = - (guruRecord.timezone ? guruRecord.timezone : 5.5);
-                        return moment.apply(this, arguments).zone(timezoneOffset);
-                    }
+                            //loop through slots property and fill in the events array.
+                            var slots = scheduleForDay.slots;
+                            _.each(slots, function(slot) {
+                                var momentString = moment(tomorrow).format('MMMM D YYYY');
+                                var momentStartString = momentString + ", " + formatTime(slot.startTime);
+                                var momentEndString = momentString + ", " + formatTime(slot.endTime);
+                                var startTimeInMoment = moment(momentStartString, formatString);
+                                var endTimeInMoment = moment(momentEndString, formatString);
+                                var exactStartTimeInMoment = startTimeInMoment.unix();
+                                var exactEndTimeInMoment = endTimeInMoment.unix();
 
-                    //starting tomorrow, send out the events (will increment in the loop)
-                    var tomorrow = momentWithZone();
-                    var NO_OF_DAYS = 30;
-                    var events = [];
-                    while (NO_OF_DAYS--) {
-                        tomorrow = momentWithZone(tomorrow).add('days', 1);
-                        //closure with loops 101
-                        (function createEventsIIFE(tomorrow){
-                            var scheduleForDay = scheduleMap[momentWithZone(tomorrow).format('ddd').toLowerCase()];
+                                var eventObject;
+                                if (reservedSlots.indexOf(momentStartString) < 0) {
+                                    eventObject = {
+                                        id: exactStartTimeInMoment,
+                                        start: exactStartTimeInMoment,
+                                        end: exactEndTimeInMoment,
+                                        allDay: false,
+                                        title: 'Available',
+                                        color: '#3a87ad'
+                                    };
 
-                            //if no slots, go back
-                            if (!scheduleForDay.noSlots) {
-                                //this date has slots
-                                if (scheduleForDay.currentMode !== 'manual') {
-                                    //find out the day that is to be copied from
-                                    var copyFromDayCode = scheduleForDay.selectedDayCode;
-                                    //get fresh schedule for day
-                                    scheduleForDay = scheduleMap[copyFromDayCode.toLowerCase()];
+                                } else {
+                                    eventObject = {
+                                        id: exactStartTimeInMoment,
+                                        start: exactStartTimeInMoment,
+                                        end: exactEndTimeInMoment,
+                                        allDay: false,
+                                        title: 'Reserved',
+                                        color: '#eee'
+                                    };
+
                                 }
 
-                                //loop through slots property and fill in the events array.
-                                var slots = scheduleForDay.slots;
-                                _.each(slots, function(slot) {
-                                    var momentString = momentWithZone(tomorrow).format('MMMM D YYYY');
-                                    var momentStartString = momentString + ", " + formatTime(slot.startTime);
-                                    var momentEndString = momentString + ", " + formatTime(slot.endTime);
-                                    var startTimeInMoment = momentWithZone(momentStartString, formatString);
-                                    var endTimeInMoment = momentWithZone(momentEndString, formatString);
-                                    var exactStartTimeInMoment = startTimeInMoment.unix();
-                                    var exactEndTimeInMoment = endTimeInMoment.unix();
+                                events.push(eventObject);
 
-                                    var eventObject;
-                                    if (reservedSlots.indexOf(momentStartString) < 0) {
-                                        eventObject = {
-                                            start: exactStartTimeInMoment,
-                                            end: exactEndTimeInMoment,
-                                            allDay: false,
-                                            title: 'Available',
-                                            color: '#3a87ad'
-                                        };
+                            });
 
-                                    } else {
-                                        eventObject = {
-                                            start: exactStartTimeInMoment,
-                                            end: exactEndTimeInMoment,
-                                            allDay: false,
-                                            title: 'Reserved',
-                                            color: '#eee'
-                                        };
+                        }
+                    })(tomorrow);
+                    tomorrow = moment(tomorrow).add('days', 1);
+                }
 
-                                    }
+                res.json(events);
 
-                                    events.push(eventObject);
-
-                                });
-
-                            }
-                        })(tomorrow);
-                    }
-
-                    res.json(events);
-
-                });
-            }
+            });
         })
     },
     getPublicCoursesHandler: function(req, res) {

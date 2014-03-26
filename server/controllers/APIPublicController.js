@@ -45,6 +45,7 @@ module.exports = {
             ReservationModel = models.Reservation;
 
         var formatString = 'MMMM D YYYY, hh:mm A';
+        var compareFormatString = 'MMMM D YYYY';
         var relevantData = _.pick(req.query, ['username', 'start', 'end']);
 
         var username = relevantData.username,
@@ -62,10 +63,20 @@ module.exports = {
                 return;
             }
 
-            var schedule = guruRecord.schedule;
-            var scheduleMap = {};
+            var schedule = guruRecord.schedule,
+                calendar_schedule = guruRecord.calendar_schedule,
+                scheduleMap = {},
+                calendarScheduleMap = {};
+
+            //index by day code
             _.each(schedule, function(scheduleItem) {
                 scheduleMap[scheduleItem.day_code.toLowerCase()] = scheduleItem;
+            });
+
+            //index by date format compareFormatString
+            _.each(calendar_schedule, function(calendarScheduleItem) {
+                var key = moment(calendarScheduleItem.date).format(compareFormatString);
+                calendarScheduleMap[key] = calendarScheduleItem;
             });
 
             ReservationModel.getByGuru(guruRecord._id, function getReservations(err, reservationsForGuru) {
@@ -93,56 +104,84 @@ module.exports = {
                     (function createEventsIIFE(tomorrow){
                         var scheduleForDay = scheduleMap[moment(tomorrow).format('ddd').toLowerCase()];
 
-                        //if no slots, go back
-                        if (!scheduleForDay.noSlots) {
-                            //this date has slots
-                            if (scheduleForDay.currentMode !== 'manual') {
-                                //find out the day that is to be copied from
-                                var copyFromDayCode = scheduleForDay.selectedDayCode;
-                                //get fresh schedule for day
-                                scheduleForDay = scheduleMap[copyFromDayCode.toLowerCase()];
+                        if (scheduleForDay.currentMode !== 'manual') {
+                            //find out the day that is to be copied from
+                            var copyFromDayCode = scheduleForDay.selectedDayCode;
+                            //get fresh schedule for day
+                            scheduleForDay = scheduleMap[copyFromDayCode.toLowerCase()];
+                        }
+
+                        //loop through slots property and fill in the events array.
+                        var slots = scheduleForDay.slots,
+                            momentString = moment(tomorrow).format(compareFormatString),
+                            calendarScheduleForDate = calendarScheduleMap[momentString],
+                            slotsToRemove = null,
+                            slotsToAdd = null,
+                            dynamicSlots;
+
+                        if (calendarScheduleForDate) {
+                            //special calendar events exist for this date
+                            //if removed_slots exist, remove from events array
+                            //if added_slots exist, add them to the events array
+                            slotsToRemove = calendarScheduleForDate.removed_slots;
+                            slotsToAdd = calendarScheduleForDate.added_slots;
+
+                            dynamicSlots = _.flatten(_.union(slotsToRemove, slotsToAdd));
+                        }
+
+                        function processSlot(slot, shouldSlotBeSkippedCheck) {
+                            var formattedStartTime = formatTime(slot.startTime),
+                                formattedEndTime = formatTime(slot.endTime);
+
+                            if (shouldSlotBeSkippedCheck) {
+                                if (shouldSlotBeSkipped(dynamicSlots, formattedStartTime)) {
+                                    return;
+                                }
                             }
 
-                            //loop through slots property and fill in the events array.
-                            var slots = scheduleForDay.slots;
-                            _.each(slots, function(slot) {
-                                var momentString = moment(tomorrow).format('MMMM D YYYY');
-                                var momentStartString = momentString + ", " + formatTime(slot.startTime);
-                                var momentEndString = momentString + ", " + formatTime(slot.endTime);
-                                var startTimeInMoment = moment(momentStartString, formatString);
-                                var endTimeInMoment = moment(momentEndString, formatString);
-                                var exactStartTimeInMoment = startTimeInMoment.unix();
-                                var exactEndTimeInMoment = endTimeInMoment.unix();
+                            var momentStartString   = momentString + ", " + formattedStartTime,
+                                momentEndString     = momentString + ", " + formattedEndTime,
+                                startTimeInMoment   = moment(momentStartString, formatString),
+                                endTimeInMoment     = moment(momentEndString, formatString),
+                                startTimeUnix       = startTimeInMoment.unix(),
+                                endTimeUnix         = endTimeInMoment.unix(),
+                                eventObject;
 
-                                var eventObject;
-                                if (reservedSlots.indexOf(momentStartString) < 0) {
-                                    eventObject = {
-                                        id: exactStartTimeInMoment,
-                                        start: exactStartTimeInMoment,
-                                        end: exactEndTimeInMoment,
-                                        allDay: false,
-                                        title: 'Available',
-                                        color: '#3a87ad'
-                                    };
+                            if (reservedSlots.indexOf(momentStartString) < 0) {
+                                eventObject = {
+                                    id: startTimeUnix,
+                                    start: startTimeUnix,
+                                    end: endTimeUnix,
+                                    allDay: false,
+                                    title: 'Available',
+                                    color: '#3a87ad'
+                                };
 
-                                } else {
-                                    eventObject = {
-                                        id: exactStartTimeInMoment,
-                                        start: exactStartTimeInMoment,
-                                        end: exactEndTimeInMoment,
-                                        allDay: false,
-                                        title: 'Reserved',
-                                        color: '#eee'
-                                    };
+                            } else {
+                                eventObject = {
+                                    id: startTimeUnix,
+                                    start: startTimeUnix,
+                                    end: endTimeUnix,
+                                    allDay: false,
+                                    title: 'Reserved',
+                                    color: '#eee'
+                                };
 
-                                }
+                            }
 
-                                events.push(eventObject);
-
-                            });
-
+                            events.push(eventObject);
                         }
+
+                        _.each(slots, function(slot) {
+                            processSlot(slot, true);
+                        });
+
+                        _.each(slotsToAdd, function(slotToAdd) {
+                            processSlot(slotToAdd, false);
+                        });
+
                     })(tomorrow);
+
                     tomorrow = moment(tomorrow).add('days', 1);
                 }
 
@@ -185,4 +224,10 @@ function formatTime(time) {
     //if input time is of format h:mm A
     //return back hh:mm A
     return time.split(' ')[0].split(':')[0].length < 2 ? '0' + time : time;
+}
+
+function shouldSlotBeSkipped(removedSlots, startTime) {
+    return _.find(removedSlots, function(removedSlot) {
+        return removedSlot.startTime === startTime;
+    }, this);
 }

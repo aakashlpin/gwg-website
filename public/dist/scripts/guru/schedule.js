@@ -17,6 +17,50 @@ var Loading = React.createClass({displayName: 'Loading',
     }
 });
 
+var UiWidgetMixin = {
+    getSubmitButton: function() {
+        if (this.state.isDirty) {
+            return (
+                React.DOM.button( {className:"btn btn-success", id:"saveSchedule", onClick:this.saveData}, 
+                " Save "
+                )
+                )
+        }
+        if (this.state.saving) {
+            return (
+                React.DOM.button( {className:"btn btn-success btn-loading"}, 
+                " Saving.. "
+                )
+                )
+        }
+        return (
+            React.DOM.button( {className:"btn btn-primary"}, 
+            " Saved "
+            )
+            )
+
+    },
+    changeUIMode: function() {
+        this.props.actionOnToggleUIMode();
+    },
+    initializeAutoSave: function() {
+        //Autosave/ autosync every 2 sec
+        setInterval(function() {
+            var mostRecentChangeAt = moment(this.state.mostRecentChangeAt),
+                now = moment(),
+                diff = now.diff(mostRecentChangeAt)
+                ;
+
+            if (diff > 2000 && this.state.isDirty) {
+                this.saveData();
+            }
+
+        }.bind(this), 1000);
+
+    }
+
+};
+
 var TimeSlotComponent = React.createClass({displayName: 'TimeSlotComponent',
     trickleDown: function(startTime, endTime) {
         this.props.data.startTime = startTime;
@@ -290,49 +334,171 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
     }
 });
 
-var UiWidgetMixin = {
-    getSubmitButton: function() {
-        if (this.state.isDirty) {
+var WeeklyWidget = React.createClass({displayName: 'WeeklyWidget',
+    mixins: [UiWidgetMixin],
+    getInitialState: function() {
+        return {
+            data: [],
+            fetched: false,
+            isDirty: false,
+            saving: false,
+            mostRecentChangeAt: new Date(),
+            intervalNumber: 0
+        }
+    },
+    componentWillMount: function() {
+        $.getJSON('/api/guru/schedule', function(data) {
+            //map each slot with a key
+            //this enables trickling down the key for updating/removing
+            _.each(data.schedule, function(scheduleItem) {
+                _.each(scheduleItem.slots, function(slotItem, index) {
+                    slotItem.key = scheduleItem.day_code + '_' + index;
+                }, this);
+
+                scheduleItem.slotIndex = scheduleItem.slots.length;
+            }, this);
+
+            this.setState({
+                data: data.schedule,
+                fetched: true
+            });
+        }.bind(this));
+
+    },
+    componentDidMount: function() {
+        this.initializeAutoSave();
+
+    },
+    saveData: function() {
+        this.setState({
+            isDirty: false,
+            saving: true
+        });
+
+        $.post('/api/guru/schedule', {schedule: this.state.data}, function(res) {
+            //emulate some loading ;)
+            setTimeout(function(){
+                this.setState({
+                    saving: false
+                });
+
+            }.bind(this), 500);
+
+        }.bind(this));
+
+        mixpanel.track('Schedule modified and saved');
+    },
+    handleOnChange: function(dayCode, properties) {
+        this.setState({
+            mostRecentChangeAt: new Date(),
+            isDirty: true,
+            data: _.map(this.state.data, function(dayObject) {
+                if (dayObject.day_code === dayCode) {
+                    for (var property in properties) {
+                        if (properties.hasOwnProperty(property)) {
+                            dayObject[property] = properties[property];
+                        }
+                    }
+                }
+
+                if (dayObject.currentMode === 'copy') {
+                    var copyModeData = this.getCopyModeData(dayObject);
+                    if (copyModeData.length) {
+                        //if the selectedDayCode is not found in the list of copy mode items
+                        if (!_.isObject(_.find(copyModeData, function(copyModeObject) {
+                            return dayObject.selectedDayCode === copyModeObject.day_code;
+                        }, this))) {
+                            //then set the first item in the list of available copy modes as selected
+                            dayObject.selectedDayCode = copyModeData[0].day_code;
+                        }
+                        dayObject.noSlots = false;
+
+                    } else {
+                        var atleastOneDayWithSlotsExists = _.find(this.state.data, function(dataObject) {
+                            return dataObject.slots.length;
+                        });
+
+                        if (!atleastOneDayWithSlotsExists) {
+                            dayObject.noSlots = true;
+                        }
+                    }
+                }
+
+                return dayObject}, this)
+        });
+
+        mixpanel.track('Schedule modified');
+    },
+    getCopyModeData: function(dayObject) {
+        if (dayObject.currentMode !== 'copy') {
+            //for the sake of returning a common data structure
+            return [];
+        }
+
+        return this.state.data.filter(function(dataDayObject) {
+            return ((!dataDayObject.noSlots)    //should not be in noSlots mode
+                && (dataDayObject.day_code !== dayObject.day_code)  //exclude the current dayObject
+                && (dataDayObject.currentMode !== 'copy')   //exclude the copy mode guys
+                );
+        });
+
+    },
+    handleRemoveAllSlots: function() {
+        //unused right now as it's very destructive
+        //to use it just put an <a> and call this method onClick
+        if (confirm('Are you sure you want to remove all slots?')) {
+            var dataWithRemovedSlots = this.state.data.map(function(dayData) {
+                dayData.slots = [];
+                dayData.noSlots = true;
+                dayData.currentMode = 'manual';
+
+                return dayData;
+            });
+
+            this.setState({
+                data: dataWithRemovedSlots,
+                isDirty: true
+            });
+        }
+    },
+    render: function() {
+        //bring up the week mode for editing
+        var dayNodes = this.state.data.map(function(dayData) {
+            var copyModeData = this.getCopyModeData(dayData);
             return (
-                React.DOM.button( {className:"btn btn-success", id:"saveSchedule", onClick:this.saveData}, 
-                " Save "
+                DayComponent( {data:dayData, key:dayData._id, onDayChange:this.handleOnChange,
+                copyModeData:copyModeData}
+                )
+                );
+        }, this);
+
+        if (!this.state.fetched) {
+            return (
+                React.DOM.div( {className:"has-min-height"}, 
+                    Loading(null )
                 )
                 )
         }
-        if (this.state.saving) {
-            return (
-                React.DOM.button( {className:"btn btn-success btn-loading"}, 
-                " Saving.. "
-                )
-                )
-        }
+
         return (
-            React.DOM.button( {className:"btn btn-primary"}, 
-            " Saved "
+            React.DOM.div(null, 
+                React.DOM.div( {className:"day-slots-container"}, 
+                    React.DOM.div( {className:"row"}, 
+                        React.DOM.div( {className:"clearfix"}, 
+                            React.DOM.div( {className:"pull-right"}, 
+                                React.DOM.button( {className:"btn btn-link", onClick:this.changeUIMode}, 
+                                " Edit on Calendar "
+                                ),
+                                this.getSubmitButton.call(this)
+                            )
+                        )
+                    )
+                ),
+                dayNodes
             )
-            )
-
-    },
-    changeUIMode: function() {
-        this.props.actionOnToggleUIMode();
-    },
-    initializeAutoSave: function() {
-        //Autosave/ autosync every 2 sec
-        setInterval(function() {
-            var mostRecentChangeAt = moment(this.state.mostRecentChangeAt),
-                now = moment(),
-                diff = now.diff(mostRecentChangeAt)
-                ;
-
-            if (diff > 2000 && this.state.isDirty) {
-                this.saveData();
-            }
-
-        }.bind(this), 1000);
-
+        );
     }
-
-};
+});
 
 var CalendarWidget = React.createClass({displayName: 'CalendarWidget',
     mixins: [UiWidgetMixin],
@@ -617,172 +783,6 @@ var CalendarWidget = React.createClass({displayName: 'CalendarWidget',
             )
             );
 
-    }
-});
-
-var WeeklyWidget = React.createClass({displayName: 'WeeklyWidget',
-    mixins: [UiWidgetMixin],
-    getInitialState: function() {
-        return {
-            data: [],
-            fetched: false,
-            isDirty: false,
-            saving: false,
-            mostRecentChangeAt: new Date(),
-            intervalNumber: 0
-        }
-    },
-    componentWillMount: function() {
-        $.getJSON('/api/guru/schedule', function(data) {
-            //map each slot with a key
-            //this enables trickling down the key for updating/removing
-            _.each(data.schedule, function(scheduleItem) {
-                _.each(scheduleItem.slots, function(slotItem, index) {
-                    slotItem.key = scheduleItem.day_code + '_' + index;
-                }, this);
-
-                scheduleItem.slotIndex = scheduleItem.slots.length;
-            }, this);
-
-            this.setState({
-                data: data.schedule,
-                fetched: true
-            });
-        }.bind(this));
-
-    },
-    componentDidMount: function() {
-        this.initializeAutoSave();
-
-    },
-    saveData: function() {
-        this.setState({
-            isDirty: false,
-            saving: true
-        });
-
-        $.post('/api/guru/schedule', {schedule: this.state.data}, function(res) {
-            //emulate some loading ;)
-            setTimeout(function(){
-                this.setState({
-                    saving: false
-                });
-
-            }.bind(this), 500);
-
-        }.bind(this));
-
-        mixpanel.track('Schedule modified and saved');
-    },
-    handleOnChange: function(dayCode, properties) {
-        this.setState({
-            mostRecentChangeAt: new Date(),
-            isDirty: true,
-            data: _.map(this.state.data, function(dayObject) {
-                if (dayObject.day_code === dayCode) {
-                    for (var property in properties) {
-                        if (properties.hasOwnProperty(property)) {
-                            dayObject[property] = properties[property];
-                        }
-                    }
-                }
-
-                if (dayObject.currentMode === 'copy') {
-                    var copyModeData = this.getCopyModeData(dayObject);
-                    if (copyModeData.length) {
-                        //if the selectedDayCode is not found in the list of copy mode items
-                        if (!_.isObject(_.find(copyModeData, function(copyModeObject) {
-                            return dayObject.selectedDayCode === copyModeObject.day_code;
-                        }, this))) {
-                            //then set the first item in the list of available copy modes as selected
-                            dayObject.selectedDayCode = copyModeData[0].day_code;
-                        }
-                        dayObject.noSlots = false;
-
-                    } else {
-                        var atleastOneDayWithSlotsExists = _.find(this.state.data, function(dataObject) {
-                            return dataObject.slots.length;
-                        });
-
-                        if (!atleastOneDayWithSlotsExists) {
-                            dayObject.noSlots = true;
-                        }
-                    }
-                }
-
-                return dayObject}, this)
-        });
-
-        mixpanel.track('Schedule modified');
-    },
-    getCopyModeData: function(dayObject) {
-        if (dayObject.currentMode !== 'copy') {
-            //for the sake of returning a common data structure
-            return [];
-        }
-
-        return this.state.data.filter(function(dataDayObject) {
-            return ((!dataDayObject.noSlots)    //should not be in noSlots mode
-                && (dataDayObject.day_code !== dayObject.day_code)  //exclude the current dayObject
-                && (dataDayObject.currentMode !== 'copy')   //exclude the copy mode guys
-                );
-        });
-
-    },
-    handleRemoveAllSlots: function() {
-        //unused right now as it's very destructive
-        //to use it just put an <a> and call this method onClick
-        if (confirm('Are you sure you want to remove all slots?')) {
-            var dataWithRemovedSlots = this.state.data.map(function(dayData) {
-                dayData.slots = [];
-                dayData.noSlots = true;
-                dayData.currentMode = 'manual';
-
-                return dayData;
-            });
-
-            this.setState({
-                data: dataWithRemovedSlots,
-                isDirty: true
-            });
-        }
-    },
-    render: function() {
-        //bring up the week mode for editing
-        var dayNodes = this.state.data.map(function(dayData) {
-            var copyModeData = this.getCopyModeData(dayData);
-            return (
-                DayComponent( {data:dayData, key:dayData._id, onDayChange:this.handleOnChange,
-                copyModeData:copyModeData}
-                )
-                );
-        }, this);
-
-        if (!this.state.fetched) {
-            return (
-                React.DOM.div( {className:"has-min-height"}, 
-                    Loading(null )
-                )
-                )
-        }
-
-        return (
-            React.DOM.div(null, 
-                React.DOM.div( {className:"day-slots-container"}, 
-                    React.DOM.div( {className:"row"}, 
-                        React.DOM.div( {className:"clearfix"}, 
-                            React.DOM.div( {className:"pull-right"}, 
-                                React.DOM.button( {className:"btn btn-link", onClick:this.changeUIMode}, 
-                                " Edit on Calendar "
-                                ),
-                                this.getSubmitButton.call(this)
-                            )
-                        )
-                    )
-                ),
-                dayNodes
-            )
-        );
     }
 });
 

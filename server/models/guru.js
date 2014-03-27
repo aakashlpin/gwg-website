@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
 
 _ = require('underscore');
 
-var Guru, GuruSchema, AddedSlotSchema, CalendarScheduleSchema;
+var Guru, GuruSchema, AddedSlotSchema, CalendarScheduleSchema, ScheduleSlotSchema;
 
 AddedSlotSchema = new Schema({
     startTime: {type: String, required: true},
@@ -25,6 +25,11 @@ CalendarScheduleSchema = new Schema({
     removed_slots: [RemovedSlotSchema]
 }, {_id: false});
 
+ScheduleSlotSchema = new Schema({
+    startTime: {type: String, required: true},
+    endTime: {type: String, required: true}
+}, {_id: false});
+
 GuruSchema = new Schema({
     id: String,
     username: String,
@@ -38,15 +43,11 @@ GuruSchema = new Schema({
     is_guru: { type: Boolean, default: true },  //updated: field to allow/ reject person as a guru
     picture: String,
     schedule: [{
-        day_code: String,
-        day_name: String,
-        slots: [{
-            startTime: String,
-            endTime: String
-        }],
-        noSlots: Boolean,
-        currentMode: String,
-        selectedDayCode: String
+        day_code: { type: String, required: true },
+        day_name: { type: String, required: true },
+        currentMode: { type: String, required: true },
+        slots: [ ScheduleSlotSchema ],  //will be required only when currentMode is set to 'manual'
+        selectedDayCode: { type: String }   //will be required only when currentMode is set to 'copy'
     }],
     calendar_schedule: [CalendarScheduleSchema],
     extras: {
@@ -248,14 +249,12 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
                 startTime: '09:00 AM',
                 endTime: '10:00 AM'
             }],
-            currentMode: 'manual',
-            noSlots: false
+            currentMode: 'manual'
         }, {
             day_code: 'tue',
             day_name: 'Tuesday',
             currentMode: 'copy',
-            selectedDayCode: 'mon',
-            noSlots: false
+            selectedDayCode: 'mon'
         }, {
             day_code: 'wed',
             day_name: 'Wednesday',
@@ -263,32 +262,27 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
                 startTime: '10:00 PM',
                 endTime: '11:00 PM'
             }],
-            currentMode: 'manual',
-            noSlots: false
+            currentMode: 'manual'
         }, {
             day_code: 'thu',
             day_name: 'Thursday',
             currentMode: 'copy',
-            selectedDayCode: 'wed',
-            noSlots: false
+            selectedDayCode: 'wed'
         }, {
             day_code: 'fri',
             day_name: 'Friday',
             currentMode: 'copy',
-            selectedDayCode: 'wed',
-            noSlots: false
+            selectedDayCode: 'wed'
         }, {
             day_code: 'sat',
             day_name: 'Saturday',
             currentMode: 'copy',
-            selectedDayCode: 'mon',
-            noSlots: false
+            selectedDayCode: 'mon'
         }, {
             day_code: 'sun',
             day_name: 'Sunday',
-            currentMode: 'manual',
-            selectedDayCode: 'mon',
-            noSlots: true
+            slots: [],
+            currentMode: 'manual'
         } ];
 
         getNewUserName(dataOfInterest, function(username) {

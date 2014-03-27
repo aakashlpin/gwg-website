@@ -172,24 +172,20 @@ var DayComponent = React.createClass({
             key: this.props.data.day_code + '_' + (++this.props.data.slotIndex)
         });
 
-        this.props.data.noSlots = false;
         this.props.data.currentMode = 'manual';
 
         this.props.onDayChange(this.props.data.day_code, {
             slots: this.props.data.slots,
-            noSlots: this.props.data.noSlots,
             currentMode: this.props.data.currentMode
         });
 
     },
     removeAllTimeSlots: function() {
         this.props.data.slots = [];
-        this.props.data.noSlots = true;
         this.props.data.currentMode = 'manual';
 
         this.props.onDayChange(this.props.data.day_code, {
             slots: this.props.data.slots,
-            noSlots: this.props.data.noSlots,
             currentMode: this.props.data.currentMode
         });
 
@@ -199,10 +195,6 @@ var DayComponent = React.createClass({
         dayObject.slots = _.reject(dayObject.slots, function(slot) {
             return (slot.key === timeSlot.key)
         });
-
-        if (!dayObject.slots.length) {
-            dayObject.noSlots = true;
-        }
 
         this.props.onDayChange(dayCode, dayObject);
 
@@ -229,8 +221,9 @@ var DayComponent = React.createClass({
 
     },
     getChild: function() {
-        if (this.props.data.currentMode === 'copy') {
-            if (!this.props.data.noSlots) {
+        switch (this.props.data.currentMode) {
+            //when in copy mode, slots property will be []
+            case 'copy':
                 var copyModeDOM = this.props.copyModeData.map(function(copyModeDataItem) {
                     return (
                         <li className="item" key={copyModeDataItem.day_code}>
@@ -250,39 +243,34 @@ var DayComponent = React.createClass({
                         <div className="l-h-list">
                             <p className="item schedule-text-middle text-light">Same as:  </p>
                             <ul className="item l-h-list guru-schedule-copy-links">
-                        {copyModeDOM}
+                                {copyModeDOM}
                             </ul>
                         </div>
                     </div>
                     );
-            } else {
-                return (
-                    <div className="copyModeContainer">
-                        <p className="schedule-text-middle">No slots</p>
-                    </div>
-                    );
 
-            }
+                break;
+            case 'manual':
+                //when in manual mode, slots being [] signifies no slots for the day
+                if (this.props.data.slots.length) {
+                    var dom = this.props.data.slots.map(function(slot) {
+                        return (
+                            <TimeSlotComponent data={slot} dayCode={this.props.data.day_code}
+                            onSlotChange={this.handleOnSlotChange}
+                            onSlotRemove={this.handleOnSlotRemove}/>
+                            )
+                    }, this);
 
-        } else {
-            if (!this.props.data.noSlots) {
-                var dom = this.props.data.slots.map(function(slot) {
+                    return (<div className="daySlotsContainer">{dom}</div>);
+
+                } else {
                     return (
-                        <TimeSlotComponent data={slot} dayCode={this.props.data.day_code}
-                        onSlotChange={this.handleOnSlotChange}
-                        onSlotRemove={this.handleOnSlotRemove}/>
-                        )
-                }, this);
-
-                return (<div className="daySlotsContainer">{dom}</div>);
-
-            } else {
-                return (
-                    <div className="copyModeContainer">
-                        <p className="schedule-text-middle">No slots</p>
-                    </div>
-                    );
-            }
+                        <div className="copyModeContainer">
+                            <p className="schedule-text-middle">No slots</p>
+                        </div>
+                        );
+                }
+                break;
         }
     },
     getRowActionItemIcon: function() {
@@ -290,7 +278,7 @@ var DayComponent = React.createClass({
             return (
                 <i className="fa fa-clock-o"></i>
                 )
-        } else if (this.props.data.noSlots) {
+        } else if (!this.props.data.slots.length) {
             return (
                 <i className="fa fa-edit"></i>
                 )
@@ -302,7 +290,7 @@ var DayComponent = React.createClass({
     getRowActionItemIconTitle: function() {
         if (this.props.data.currentMode === 'copy') {
             return "Create time slots";
-        } else if (this.props.data.noSlots) {
+        } else if (!this.props.data.slots.length) {
             return "Create slots";
         }
         return "Add new slot";
@@ -411,16 +399,11 @@ var WeeklyWidget = React.createClass({
                             //then set the first item in the list of available copy modes as selected
                             dayObject.selectedDayCode = copyModeData[0].day_code;
                         }
-                        dayObject.noSlots = false;
 
                     } else {
                         var atleastOneDayWithSlotsExists = _.find(this.state.data, function(dataObject) {
                             return dataObject.slots.length;
                         });
-
-                        if (!atleastOneDayWithSlotsExists) {
-                            dayObject.noSlots = true;
-                        }
                     }
                 }
 
@@ -436,9 +419,10 @@ var WeeklyWidget = React.createClass({
         }
 
         return this.state.data.filter(function(dataDayObject) {
-            return ((!dataDayObject.noSlots)    //should not be in noSlots mode
+            return (
+                (dataDayObject.currentMode === 'manual')    //should be in manual mode
                 && (dataDayObject.day_code !== dayObject.day_code)  //exclude the current dayObject
-                && (dataDayObject.currentMode !== 'copy')   //exclude the copy mode guys
+                && (!!dataDayObject.slots.length)   //should have slots
                 );
         });
 
@@ -449,7 +433,6 @@ var WeeklyWidget = React.createClass({
         if (confirm('Are you sure you want to remove all slots?')) {
             var dataWithRemovedSlots = this.state.data.map(function(dayData) {
                 dayData.slots = [];
-                dayData.noSlots = true;
                 dayData.currentMode = 'manual';
 
                 return dayData;

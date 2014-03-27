@@ -315,6 +315,21 @@ var UiWidgetMixin = {
     },
     changeUIMode: function() {
         this.props.actionOnToggleUIMode();
+    },
+    initializeAutoSave: function() {
+        //Autosave/ autosync every 2 sec
+        setInterval(function() {
+            var mostRecentChangeAt = moment(this.state.mostRecentChangeAt),
+                now = moment(),
+                diff = now.diff(mostRecentChangeAt)
+                ;
+
+            if (diff > 2000 && this.state.isDirty) {
+                this.saveData();
+            }
+
+        }.bind(this), 1000);
+
     }
 
 };
@@ -330,7 +345,8 @@ var CalendarWidget = React.createClass({
         return {
             isDirty: false,
             saving: false,
-            fetched: false
+            fetched: false,
+            mostRecentChangeAt: new Date()
         }
 
     },
@@ -343,7 +359,8 @@ var CalendarWidget = React.createClass({
     _updateCalendarChanges: function(id, object) {
         this.props.currentStateStack[id] = object;
         this.setState({
-            isDirty: true
+            isDirty: true,
+            mostRecentChangeAt: new Date()
         });
     },
     _getKeyForPayLoad: function(momentObj) {
@@ -360,8 +377,6 @@ var CalendarWidget = React.createClass({
             isDirty: false,
             saving: true
         });
-
-        console.log(this.props.currentStateStack);
 
         var modifiedObject = this.props.currentStateStack;
         var oldTimeStamps = _.keys(modifiedObject);
@@ -382,7 +397,6 @@ var CalendarWidget = React.createClass({
 
             } else if (moment(oldTimeStamp, 'X').date() === moment(modifiedEventObject.start).date()) {
                 //the slot has been modified or was newly created
-                console.log('the slot has been modified or was newly created');
                 if (moment(oldTimeStamp, 'X').format('hh:mm A') === moment(modifiedEventObject.start).format('hh:mm A')) {
                     //its a modified slot
                     shouldEnterRemovedSlot = false;
@@ -395,7 +409,6 @@ var CalendarWidget = React.createClass({
 
             } else {
                 //the slot has been removed from one day and put in another day
-                console.log('the slot has been removed from one day and put in another day');
                 var momentOfNewDate = moment(modifiedEventObject.start),
                     momentOfNewDateKey = this._getKeyForPayLoad(momentOfNewDate);
 
@@ -441,6 +454,8 @@ var CalendarWidget = React.createClass({
 
     },
     componentDidMount: function() {
+        this.initializeAutoSave();
+
         var currentMousePos = {
             x: -1,
             y: -1
@@ -625,18 +640,8 @@ var WeeklyWidget = React.createClass({
 
     },
     componentDidMount: function() {
-        //Autosave/ autosync every 3 sec
-        setInterval(function() {
-            var mostRecentChangeAt = moment(this.state.mostRecentChangeAt),
-                now = moment(),
-                diff = now.diff(mostRecentChangeAt)
-                ;
+        this.initializeAutoSave();
 
-            if (diff > 3000 && this.state.isDirty) {
-                this.saveData();
-            }
-
-        }.bind(this), 1000);
     },
     saveData: function() {
         this.setState({

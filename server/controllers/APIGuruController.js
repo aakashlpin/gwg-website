@@ -53,9 +53,17 @@ module.exports = {
     postGuruScheduleHandler: function(req, res) {
         var GuruModel = models.Guru;
         var pick = (function() { if (req.body.schedule) return 'schedule'; else return 'calendar_schedule' })();
-        GuruModel.put(req, pick, function(err, data) {
-            res.json(data);
-        });
+
+        if (pick === 'schedule') {
+            GuruModel.put(req, pick, function(err, data) {
+                res.json(data);
+            });
+
+        } else if (pick === 'calendar_schedule') {
+            GuruModel.updateCalendarSchedule(req, function(err, data) {
+                res.json(data);
+            });
+        }
 
     },
     getGuruScheduleHandler: function(req, res) {

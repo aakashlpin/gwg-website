@@ -2,11 +2,28 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     config = require ('config'),
     Course = require('./course'),
-    async  = require('async');
+    async  = require('async'),
+    moment = require('moment');
 
 _ = require('underscore');
 
-var Guru, GuruSchema;
+var Guru, GuruSchema, AddedSlotSchema, CalendarScheduleSchema;
+
+AddedSlotSchema = new Schema({
+    startTime: {type: String, required: true},
+    endTime: {type: String, required: true},
+    title: String   //useful when creating custom events
+}, {_id: false});
+
+RemovedSlotSchema = new Schema({
+    startTime: {type: String, required: true}
+}, {_id: false});
+
+CalendarScheduleSchema = new Schema({
+    date: Date,
+    added_slots: [AddedSlotSchema],
+    removed_slots: [RemovedSlotSchema]
+}, {_id: false});
 
 GuruSchema = new Schema({
     id: String,
@@ -31,17 +48,7 @@ GuruSchema = new Schema({
         currentMode: String,
         selectedDayCode: String
     }],
-    calendar_schedule: [{
-        date: Date,
-        added_slots: [{
-            startTime: {type: String, required: true},
-            endTime: {type: String, required: true},
-            title: String   //useful when creating custom events
-        }],
-        removed_slots: [{
-            startTime: {type: String, required: true}
-        }]
-    }],
+    calendar_schedule: [CalendarScheduleSchema],
     extras: {
         band_name: String,
         about_me: [{type: String}],
@@ -78,6 +85,77 @@ GuruSchema.statics.put = function(req, fields, callback) {
     options = {};
 
     this.update(update, data, options, callback);
+
+};
+
+GuruSchema.statics.updateCalendarSchedule = function(req, callback) {
+    var id, query, updatedCalendarSchedule;
+    id = req.user._id;
+
+    if (!id) return callback('Cannot update without user id');
+
+    query = {_id: id};
+    updatedCalendarSchedule = req.body.calendar_schedule;
+
+    var _this = this;
+    this.findOne(query).exec(function(err, record) {
+        var existingSchedule = record.calendar_schedule;
+
+        async.each(updatedCalendarSchedule, function(updatedCalendarScheduleItem, asyncCb) {
+            var existingScheduleItem = _.find(existingSchedule, function(existingScheduleItem) {
+                return moment(updatedCalendarScheduleItem.date).isSame(moment(existingScheduleItem.date))
+            });
+
+            if (!existingScheduleItem) {
+                record.update({$push: {calendar_schedule: updatedCalendarScheduleItem}}, {}, function(err, update) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    asyncCb(err);
+                });
+                return;
+            }
+
+            function removeSlotsWithSameStartTime(existingSlot) {
+                return (
+                    !!_.find(updatedCalendarScheduleItem.removed_slots, function(updatedRemovedSlot) {
+                        return updatedRemovedSlot.startTime === existingSlot.startTime;
+                    })
+                    ||
+                    !!_.find(updatedCalendarScheduleItem.added_slots, function(updatedAddedSlot) {
+                        return updatedAddedSlot.startTime === existingSlot.startTime;
+                    })
+                    )
+            }
+
+            existingScheduleItem.removed_slots = _.reject(existingScheduleItem.removed_slots, removeSlotsWithSameStartTime);
+            existingScheduleItem.added_slots = _.reject(existingScheduleItem.added_slots, removeSlotsWithSameStartTime);
+
+            existingScheduleItem.removed_slots = _.union(existingScheduleItem.removed_slots || [], updatedCalendarScheduleItem.removed_slots || []);
+            existingScheduleItem.added_slots = _.union(existingScheduleItem.added_slots || [], updatedCalendarScheduleItem.added_slots || []);
+
+            _this.update(
+                {_id: id, 'calendar_schedule.date': updatedCalendarScheduleItem.date}, {'$set': {
+                    'calendar_schedule.$.removed_slots': existingScheduleItem.removed_slots,
+                    'calendar_schedule.$.added_slots': existingScheduleItem.added_slots
+                }},
+                {},
+                function(err, updated) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    asyncCb(err);
+                });
+
+        }, function(err) {
+            if (err) {
+                console.log(err);
+            }
+            callback(err, 1);
+
+        });
+
+    });
 
 };
 

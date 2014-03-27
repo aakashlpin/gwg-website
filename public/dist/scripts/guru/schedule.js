@@ -466,7 +466,7 @@ var CalendarWidget = React.createClass({displayName: 'CalendarWidget',
             currentMousePos.y = event.pageY;
         });
 
-        function isElemOverDiv() {
+        function isEventOverTrashCan() {
             var trashEl = jQuery('#calendarTrash');
 
             var ofs = trashEl.offset();
@@ -505,33 +505,45 @@ var CalendarWidget = React.createClass({displayName: 'CalendarWidget',
                 }
             },
             select: function(start, end, allDay) {
-                var title = prompt('Slot Title:', 'Available');
-                if (title) {
-                    var eventId = moment(start).unix();
-                    this._updateCalendarChanges(eventId, {
-                        title: title,
-                        start: start,
-                        end: end
+                if (moment(start).isBefore(moment())) {
+                    noty({
+                        layout: 'topCenter',
+                        text: "Time travelling in the past?",
+                        timeout: 2500,
+                        type: 'warning',
+                        killer: true
                     });
 
-                    calendar.fullCalendar('renderEvent', {
-                            id: eventId,
+                } else {
+//                var title = prompt('Slot Title:', 'Available');
+                    var title = 'Available';
+                    if (title) {
+                        var eventId = moment(start).unix();
+                        this._updateCalendarChanges(eventId, {
                             title: title,
                             start: start,
-                            end: end,
-                            allDay: false
-                        },
-                        true // make the event "stick"
-                    );
-                }
+                            end: end
+                        });
 
+                        calendar.fullCalendar('renderEvent', {
+                                id: eventId,
+                                title: title,
+                                start: start,
+                                end: end,
+                                allDay: false
+                            },
+                            true // make the event "stick"
+                        );
+                    }
+
+                }
                 calendar.fullCalendar('unselect');
 
             }.bind(this),
             eventMouseover: function (event, jsEvent) {
                 $(this).mousemove(function (e) {
                     var trashEl = jQuery('#calendarTrash');
-                    if (isElemOverDiv()) {
+                    if (isEventOverTrashCan()) {
                         if (!trashEl.hasClass("to-trash")) {
                             trashEl.addClass("to-trash");
                         }
@@ -544,7 +556,7 @@ var CalendarWidget = React.createClass({displayName: 'CalendarWidget',
                 });
             },
             eventDragStop: function (event, jsEvent, ui, view) {
-                if (isElemOverDiv()) {
+                if (isEventOverTrashCan()) {
                     this._updateCalendarChanges(event.id, null);
                     calendar.fullCalendar('removeEvents', event.id);
 

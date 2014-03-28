@@ -65,5 +65,8 @@ module.exports = {
     getEventsHandler: function(req, res) {
         var isUser = req.user ? req.user.is_user : false;
         res.render('public_events', {isUser: isUser});
+    },
+    getTunerHandler: function(req, res) {
+        res.render('public_tuner', {layout: 'tuner'});
     }
 };

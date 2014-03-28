@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
 
 _ = require('underscore');
 
-var Guru, GuruSchema, AddedSlotSchema, CalendarScheduleSchema, ScheduleSlotSchema;
+var Guru, GuruSchema, AddedSlotSchema, CalendarScheduleSchema, ScheduleSlotSchema, initialSchedule;
 
 AddedSlotSchema = new Schema({
     startTime: {type: String, required: true},
@@ -29,6 +29,52 @@ ScheduleSlotSchema = new Schema({
     startTime: {type: String, required: true},
     endTime: {type: String, required: true}
 }, {_id: false});
+
+initialSchedule = [ {
+    day_code: 'mon',
+    day_name: 'Monday',
+    slots: [{
+        startTime: '08:00 AM',
+        endTime: '09:00 AM'
+    }, {
+        startTime: '09:00 AM',
+        endTime: '10:00 AM'
+    }],
+    currentMode: 'manual'
+}, {
+    day_code: 'tue',
+    day_name: 'Tuesday',
+    currentMode: 'copy',
+    selectedDayCode: 'mon'
+}, {
+    day_code: 'wed',
+    day_name: 'Wednesday',
+    slots: [{
+        startTime: '10:00 PM',
+        endTime: '11:00 PM'
+    }],
+    currentMode: 'manual'
+}, {
+    day_code: 'thu',
+    day_name: 'Thursday',
+    currentMode: 'copy',
+    selectedDayCode: 'wed'
+}, {
+    day_code: 'fri',
+    day_name: 'Friday',
+    currentMode: 'copy',
+    selectedDayCode: 'wed'
+}, {
+    day_code: 'sat',
+    day_name: 'Saturday',
+    currentMode: 'copy',
+    selectedDayCode: 'mon'
+}, {
+    day_code: 'sun',
+    day_name: 'Sunday',
+    slots: [],
+    currentMode: 'manual'
+} ];
 
 GuruSchema = new Schema({
     id: String,
@@ -239,51 +285,7 @@ GuruSchema.statics.findOrCreate = function(accessToken, refreshToken, profile, c
             dataOfInterest.picture = '//graph.facebook.com/'+ dataOfInterest.username +'/picture';
         }
 
-        dataOfInterest.schedule = [ {
-            day_code: 'mon',
-            day_name: 'Monday',
-            slots: [{
-                startTime: '08:00 AM',
-                endTime: '09:00 AM'
-            }, {
-                startTime: '09:00 AM',
-                endTime: '10:00 AM'
-            }],
-            currentMode: 'manual'
-        }, {
-            day_code: 'tue',
-            day_name: 'Tuesday',
-            currentMode: 'copy',
-            selectedDayCode: 'mon'
-        }, {
-            day_code: 'wed',
-            day_name: 'Wednesday',
-            slots: [{
-                startTime: '10:00 PM',
-                endTime: '11:00 PM'
-            }],
-            currentMode: 'manual'
-        }, {
-            day_code: 'thu',
-            day_name: 'Thursday',
-            currentMode: 'copy',
-            selectedDayCode: 'wed'
-        }, {
-            day_code: 'fri',
-            day_name: 'Friday',
-            currentMode: 'copy',
-            selectedDayCode: 'wed'
-        }, {
-            day_code: 'sat',
-            day_name: 'Saturday',
-            currentMode: 'copy',
-            selectedDayCode: 'mon'
-        }, {
-            day_code: 'sun',
-            day_name: 'Sunday',
-            slots: [],
-            currentMode: 'manual'
-        } ];
+        dataOfInterest.schedule = initialSchedule;
 
         getNewUserName(dataOfInterest, function(username) {
             //if the dataOfInterest already has a username (when coming via facebook)
@@ -363,6 +365,19 @@ GuruSchema.statics.migrationAssignUserName = function(callback) {
             callback(err);
         });
     }.bind(this));
+};
+
+GuruSchema.statics.migrateScheduleToNewSchema = function(callback) {
+    this.find().exec(function(err, gurus) {
+        async.each(gurus, function(guru, eachCb) {
+            guru.update({$set: {schedule: initialSchedule}}, {}, function(err, updated) {
+                eachCb(err)
+            });
+        }, function(err) {
+            callback(err);
+        });
+    });
+
 };
 
 Guru = mongoose.model('Guru', GuruSchema);

@@ -40,26 +40,6 @@ module.exports = {
         });
 
     },
-    welcomeAllGurusEmailHandler: function(req, res) {
-        /* served as a one time use case to welcome all gurus on board
-        * not in use right now */
-        var GuruModel = models.Guru;
-
-        GuruModel.getAll(req, function(err, gurus) {
-            gurus.forEach(function(guru) {
-                var emailObject = {
-                    user: _.pick(guru, ['name', 'email']),
-                    subject: "Welcome! Let's get you on boarded as a Guru"
-                };
-
-                EmailController.emailWelcomingGuru(emailObject, function(err, emailStatus) {
-                    console.log(err, emailStatus);
-                });
-            });
-        });
-
-        res.json({status: 'in progress'});
-    },
     notifyAllUsersAboutEvent: function(req, res) {
         var SignupModel = models.Signup;
         SignupModel.getAll(req, function(err, signups) {
@@ -118,5 +98,15 @@ module.exports = {
 
 
         res.json({status: 'in progress'});
+    },
+    migrateScheduleToNewSchema: function(req, res) {
+        var GuruModel = models.Guru;
+        GuruModel.migrateScheduleToNewSchema(function(err, done) {
+            if (err) {
+                res.json({error: err});
+                return;
+            }
+            res.json({status: 'ok'});
+        });
     }
 };

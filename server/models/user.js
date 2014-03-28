@@ -111,7 +111,7 @@ UserSchema.statics.getAll = function(req, callback) {
         return callback('Unauthorized');
     }
 
-    this.find(callback);
+    this.find().lean().exec(callback);
 };
 
 User = mongoose.model('User', UserSchema);

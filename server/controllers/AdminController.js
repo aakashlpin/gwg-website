@@ -41,8 +41,8 @@ module.exports = {
 
     },
     notifyAllUsersAboutEvent: function(req, res) {
-        var SignupModel = models.Signup;
-        SignupModel.getAll(req, function(err, signups) {
+        var UserModel = models.User;
+        UserModel.getAll(req, function(err, users) {
             var transport = nodemailer.createTransport("SMTP", {
                 service: "Gmail",
                 auth: {
@@ -51,43 +51,10 @@ module.exports = {
                 }
             });
 
-            var emails = [];
-            var toReject = [
-                'amogh.vaishampayan@gmail.com',
-                'monj021@gmail.com',
-                'chakri.gudboy@gmail.com',
-                'sam_dhar@hotmail.com',
-                'akshat13.modi@gmail.com',
-                'fdsfsd@xdfvxd.com',
-                'abc@abc.in',
-                'ghgfhgfhfghgfhfghgfh@gmail.com',
-                'aakash.lpin@gmail.com',
-                'mukeshanku@gmail.com',
-                'ekta.2804@gmail.com',
-                'sami@samridhishree.com',
-                'sdwivedi88@yahoo.com',
-                'tushar.jain9@yahoo.com',
-                'aram.bhusal@gmail.com',
-                'akki.angel@gmail.com',
-                'ashfaqdawood@yahoo.com',
-                'k.shikhar@yahoo.com',
-                'vin070@gmail.com',
-                'vivekpatna52@gmail.com',
-                'krushi.lr@gmail.com',
-                'jatinkhandelwal@rocketmail.com'
-            ];
-
-            signups.forEach(function(signup) {
-                emails.push(signup.email);
-
-            });
-
-            emails = _.difference(emails, toReject);
-
-            emails.forEach(function(email) {
+            users.forEach(function(user) {
                 var emailObject = {
-                    user: email,
-                    subject: 'Free Live Guitar Session on Country style finger picking this Sunday!'
+                    user: user,
+                    subject: 'Pssst. Important update | Live Guitar Session on Sunday!'
                 };
 
                 EmailController.emailNotifyingAboutEvent(emailObject, transport, function(err, emailStatus) {

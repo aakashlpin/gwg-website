@@ -6,11 +6,16 @@ var routes = [
         path: '/signups',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAdmin, AdminController.getSignupsHandler]
-    },
+    }/*,
     {
         path: '/migrateSchedule',
         httpMethod: 'GET',
         middleware: [RouteUtils.ensureAdmin, AdminController.migrateScheduleToNewSchema]
+    }*/,
+    {
+        path: '/emails/notify',
+        httpMethod: 'GET',
+        middleware: [RouteUtils.ensureAdmin, AdminController.notifyAllUsersAboutEvent]
     }
 ];
 

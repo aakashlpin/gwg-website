@@ -58,10 +58,11 @@ module.exports = {
 
             } else {
                 var locals = {
-                    email: user
+                    email: user.email,
+                    name: user.name
                 };
 
-                template('notify_event', locals, function(err, html, text) {
+                template('notify_event_attendees', locals, function(err, html, text) {
                     if (err) {
                         cb(err);
 
@@ -69,7 +70,7 @@ module.exports = {
                         transport.sendMail({
                             from: 'Guitar with Guru <aakash@guitarwith.guru>',
                             to: locals.email,
-//                            bcc: 'founders@guitarwith.guru',
+                            bcc: 'founders@guitarwith.guru',
                             subject: subject,
                             html: html,
                             generateTextFromHTML: true,

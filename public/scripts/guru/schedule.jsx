@@ -69,7 +69,6 @@ var TimeSlotComponent = React.createClass({
 
     },
     componentDidMount: function() {
-        var domNode = $(this.getDOMNode());
         var startTimeInputId = '#' + this.props.data.key + '_0',
             endTimeInputId  = '#' + this.props.data.key + '_1';
 
@@ -852,6 +851,30 @@ var DaysList = React.createClass({
 
         }.bind(this));
     },
+    componentDidUpdate: function() {
+        $(this.getDOMNode()).find('.finalDate').pickadate({
+            format: 'You are sure about !your sche!dule until dd mmm, yyyy',    //put a ! to escape reserved formatting rules
+            formatSubmit: 'yyyy/mm/dd',
+            min: 1, //sets the offset from today from which the dates should be active
+            onSet: function(context) {
+                this.handleChangeInFinalDate(context);
+            }.bind(this)
+        });
+    },
+    handleChangeInFinalDate: function(changedObject) {
+        //.select is the property set when user clicks on date
+        //thats the only property we are interested in
+        if (!changedObject.select) {
+            return;
+        }
+
+        //format unix milliseconds to js date
+        var payload = { final_date: moment(changedObject.select/1000, 'X').toDate() };
+
+        //sync
+        $.post('/api/guru/schedule', payload);
+
+    },
     handleActionOnToggleUIMode: function(isCalendarMode) {
         this.setState({
             isCalendarMode: isCalendarMode
@@ -877,26 +900,28 @@ var DaysList = React.createClass({
             />
         );
     },
+    getFinalDate: function() {
+        return moment(this.state.user.final_date).format('YYYY/MM/DD');
+
+    },
     ensureUserBeforeUI: function() {
         if (this.state.isUserFetched) {
-            return this.getModeUI();
+            return (
+                <div>
+                    <input className="input-lg finalDate form-control" type="text" id="finalDate"
+                    name="finalDate" placeholder="Until when are you sure about your schedule?"
+                    data-value={this.getFinalDate()}
+                    />
+                    {this.getModeUI()}
+                </div>
+                );
         }
-
-        return (
-            <div></div>
-        );
 
     },
     render: function() {
         return (
             <div className="has-min-height">
                 <h3>Manage Schedule</h3>
-                <p className="text-light">
-                People will make reservations against these timings.
-                </p>
-                <p className="text-light gwg-callout gwg-callout-info">
-                Maintain the schedule below to reflect your availability.
-                </p>
                 {this.ensureUserBeforeUI()}
             </div>
         );

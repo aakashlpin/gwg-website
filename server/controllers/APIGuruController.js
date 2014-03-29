@@ -1,10 +1,11 @@
 var models = require('../models'),
     async = require('async'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    moment = require('moment');
 
 module.exports = {
     getUserHandler: function(req, res) {
-        var data = _.pick(req.user, ['email', 'alternate_email', 'name', 'username']);
+        var data = _.pick(req.user, ['email', 'name', 'username', 'final_date']);
         res.json(data);
 
     },
@@ -52,18 +53,23 @@ module.exports = {
     },
     postGuruScheduleHandler: function(req, res) {
         var GuruModel = models.Guru;
-        var pick = (function() { if (req.body.schedule) return 'schedule'; else return 'calendar_schedule' })();
+        var pick = (function() {
+            if (req.body.calendar_schedule) return 'calendar_schedule';
+            else return null;
+        })();
 
-        if (pick === 'schedule') {
-            GuruModel.put(req, pick, function(err, data) {
-                res.json(data);
-            });
-
-        } else if (pick === 'calendar_schedule') {
+        if (pick) {
             GuruModel.updateCalendarSchedule(req, function(err, data) {
                 res.json(data);
             });
+
+            return;
         }
+
+        //keep adding the possible entries that can be `put`
+        GuruModel.put(req, ['schedule', 'final_date'], function(err, data) {
+            res.json(data);
+        });
 
     },
     getGuruScheduleHandler: function(req, res) {

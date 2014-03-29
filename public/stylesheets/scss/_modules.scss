@@ -13,10 +13,11 @@ $time-slot-unit-margin: 15px;
     width: $time-slot-unit-size;
   }
 
-  input[type="text"].form-control {
-    background: #fff;
-    cursor: pointer;
-  }
+}
+
+.form-control.picker__input {
+  background: #fff;
+  cursor: pointer;
 }
 
 .l-h-list {

@@ -3,11 +3,12 @@ $icon-font-path: "../../bower_components/bootstrap-sass/vendor/assets/fonts/boot
 $brand-primary: #865C33;
 $font-family-sans-serif: "droid-sans";
 $font-family-serif: "museo-slab";
-$border-radius-base: 3px;
-$border-radius-small: 2px;
+$border-radius-base: 0;
+$border-radius-small: 0;
 $border-radius-large: $border-radius-base;
 @import '../../bower_components/bootstrap-sass/vendor/assets/stylesheets/bootstrap/bootstrap';
 @import 'default';
+@import 'default.date';
 @import 'default.time';
 @import 'blueimp-gallery';
 @import 'blueimp-gallery-video';
@@ -41,6 +42,11 @@ a.underline {
 
 .block  {
   display: block;
+}
+
+.form-control {
+  box-shadow: none;
+  border: 3px solid #ccc;
 }
 
 .schedule-icon-gap {
@@ -629,14 +635,12 @@ div.calendar-trash{
 
 .no-slots {
   border: 1px solid #ddd;
-  border-radius: 5px;
   padding: 5px;
 
   transition: all 0.1s;
 
   p {
     border: 1px solid #ddd;
-    border-radius: 5px;
     padding: 0 20px;
     color: #ccc;
     text-align: center;

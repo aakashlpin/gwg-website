@@ -65,6 +65,7 @@ module.exports = {
 
             var schedule = guruRecord.schedule,
                 calendar_schedule = guruRecord.calendar_schedule,
+                finalDate = guruRecord.final_date ? moment(guruRecord.final_date) : null,
                 scheduleMap = {},
                 calendarScheduleMap = {};
 
@@ -102,6 +103,7 @@ module.exports = {
                 while (NO_OF_DAYS--) {
                     //closure with loops 101
                     (function createEventsIIFE(tomorrow){
+                        if (finalDate && tomorrow.isAfter(finalDate)) return;
                         var scheduleForDay = scheduleMap[moment(tomorrow).format('ddd').toLowerCase()];
 
                         if (scheduleForDay.currentMode !== 'manual') {

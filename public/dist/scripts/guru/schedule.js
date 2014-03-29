@@ -123,7 +123,7 @@ var TimeSlotComponent = React.createClass({displayName: 'TimeSlotComponent',
                     {className:"form-control gwg-timepicker",
                     id:this.props.data.key + '_0',
                     name:this.props.data.key + '_0',
-                    value:this.props.data.startTime,
+                    defaultValue:this.props.data.startTime,
                     'data-type':"startTime"} )
                 ),
                 React.DOM.div( {className:"item time-slot-join"}, 
@@ -134,7 +134,7 @@ var TimeSlotComponent = React.createClass({displayName: 'TimeSlotComponent',
                     {className:"form-control gwg-timepicker",
                     id:this.props.data.key + '_1',
                     name:this.props.data.key + '_1',
-                    value:this.props.data.endTime,
+                    defaultValue:this.props.data.endTime,
                     'data-type':"endTime"} )
                 ),
                 React.DOM.div( {className:"item time-slot-remove"}, 
@@ -278,6 +278,7 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
                     var dom = this.props.data.slots.map(function(slot) {
                         return (
                             TimeSlotComponent( {data:slot, dayCode:this.props.data.day_code,
+                            key:slot.key,
                             onSlotChange:this.handleOnSlotChange,
                             onSlotRemove:this.handleOnSlotRemove})
                             )
@@ -852,8 +853,8 @@ var DaysList = React.createClass({displayName: 'DaysList',
         }.bind(this));
     },
     componentDidUpdate: function() {
-        $(this.getDOMNode()).find('.finalDate').pickadate({
-            format: 'You are sure about !your sche!dule until dd mmm, yyyy',    //put a ! to escape reserved formatting rules
+        $('.finalDate').pickadate({
+            format: '!Your sche!dule will be !ma!de available only until dd mmm, yyyy',    //put a ! to escape reserved formatting rules
             formatSubmit: 'yyyy/mm/dd',
             min: 1, //sets the offset from today from which the dates should be active
             onSet: function(context) {
@@ -905,13 +906,11 @@ var DaysList = React.createClass({displayName: 'DaysList',
 
     },
     ensureUserBeforeUI: function() {
+        //this is a very tricky fix to a React Invariant Violation issue.
+        //do not un-wrap the getModeUI function call
         if (this.state.isUserFetched) {
             return (
                 React.DOM.div(null, 
-                    React.DOM.input( {className:"input-lg finalDate form-control", type:"text", id:"finalDate",
-                    name:"finalDate", placeholder:"Until when are you sure about your schedule?",
-                    'data-value':this.getFinalDate()}
-                    ),
                     this.getModeUI()
                 )
                 );
@@ -922,6 +921,10 @@ var DaysList = React.createClass({displayName: 'DaysList',
         return (
             React.DOM.div( {className:"has-min-height"}, 
                 React.DOM.h3(null, "Manage Schedule"),
+                React.DOM.input( {className:"input-lg finalDate form-control", type:"text", id:"finalDate",
+                name:"finalDate", placeholder:"Until when are you sure about your schedule?",
+                'data-value':this.getFinalDate()}
+                ),
                 this.ensureUserBeforeUI()
             )
         );

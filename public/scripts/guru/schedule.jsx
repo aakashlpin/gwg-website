@@ -297,7 +297,8 @@ var DayComponent = React.createClass({
         }
     },
     switchToCopyMode: function() {
-        console.log('o! hi!');
+        this.props.onSwitchToCopyMode(this.props.data.day_code);
+
     },
     getSwitchToCopyModeAction: function() {
         var canSwitchToCopyMode = true;
@@ -324,7 +325,7 @@ var DayComponent = React.createClass({
                 {this.getSwitchToCopyModeAction()}
                 <a className="schedule-text-middle" title="Remove All Slots"
                 onClick={this.removeAllTimeSlots}>
-                    <i className="glyphicon glyphicon-trash"></i>
+                    <i className="fa fa-trash-o"></i>
                 </a>
             </div>
             )
@@ -407,7 +408,7 @@ var WeeklyWidget = React.createClass({
             mostRecentChangeAt: new Date(),
             isDirty: true,
             data: _.map(this.state.data, function(dayObject) {
-                if (dayObject.day_code === dayCode) {
+                if (properties && (dayObject.day_code === dayCode)) {
                     for (var property in properties) {
                         if (properties.hasOwnProperty(property)) {
                             dayObject[property] = properties[property];
@@ -427,9 +428,10 @@ var WeeklyWidget = React.createClass({
                         }
 
                     } else {
-                        var atleastOneDayWithSlotsExists = _.find(this.state.data, function(dataObject) {
-                            return dataObject.slots.length;
-                        });
+                        //if no days are left to copy from, set the mode as manual with empty slots
+                        //to prevent case like Same As: <blank>
+                        dayObject.currentMode = 'manual';
+                        dayObject.slots = [];
                     }
                 }
 
@@ -470,13 +472,25 @@ var WeeklyWidget = React.createClass({
             });
         }
     },
+    handleSwitchToCopyMode: function(dayCode) {
+        this.state.data = this.state.data.map(function(dayObject) {
+            if (dayObject.day_code === dayCode) {
+                dayObject.slots = [];
+                dayObject.currentMode = 'copy';
+            }
+
+            return dayObject;
+        });
+
+        this.handleOnChange();
+    },
     render: function() {
         //bring up the week mode for editing
         var dayNodes = this.state.data.map(function(dayData) {
             var copyModeData = this.getCopyModeData(dayData);
             return (
                 <DayComponent data={dayData} key={dayData._id} onDayChange={this.handleOnChange}
-                copyModeData={copyModeData}
+                copyModeData={copyModeData} onSwitchToCopyMode={this.handleSwitchToCopyMode}
                 />
                 );
         }, this);
@@ -657,12 +671,16 @@ var CalendarWidget = React.createClass({
 
         var calendar = $(this.getDOMNode()).find('#calendarEditorContainer').fullCalendar({
             header: {
-                left: 'prev,next today',
+                left: 'month,agendaWeek',
                 center: 'title',
-                right: 'month, agendaWeek, agendaDay'
+                right: 'prev,next'
+            },
+            buttonText: {
+                month: 'Overview',
+                week: 'Create Slots'
             },
             aspectRatio: 2,
-            defaultView : 'agendaWeek',
+            defaultView : 'month',
             editable: true,
             events: {
                 url: '/api/public/schedule',
@@ -798,7 +816,7 @@ var CalendarWidget = React.createClass({
 var DaysList = React.createClass({
     getInitialState: function() {
         return {
-            isCalendarMode: true,
+            isCalendarMode: false,
             isUserFetched: false,
             user: {}
         };

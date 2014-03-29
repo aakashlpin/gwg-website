@@ -54,7 +54,7 @@ module.exports = {
             users.forEach(function(user) {
                 var emailObject = {
                     user: user,
-                    subject: 'Pssst. Important update | Live Guitar Session on Sunday!'
+                    subject: 'Oops! Tomorrow happens to be 30th.'
                 };
 
                 EmailController.emailNotifyingAboutEvent(emailObject, transport, function(err, emailStatus) {

@@ -62,7 +62,7 @@ module.exports = {
                     name: user.name
                 };
 
-                template('notify_event_attendees', locals, function(err, html, text) {
+                template('notify_apologies', locals, function(err, html, text) {
                     if (err) {
                         cb(err);
 

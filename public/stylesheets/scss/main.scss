@@ -45,6 +45,9 @@ a.underline {
 
 .schedule-icon-gap {
   margin-right: 15px!important;
+  &:last-child {
+    margin-right: 0!important;
+  }
 }
 
 /* Custom default button */
@@ -622,4 +625,33 @@ div.calendar-trash{
   p {
     margin: 0
   }
+}
+
+.no-slots {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px;
+
+  transition: all 0.1s;
+
+  p {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0 20px;
+    color: #ccc;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background: $brand-primary;
+    border-color: $brand-primary;
+    p {
+      border-color: $brand-primary;
+      color: #fff;
+
+    }
+  }
+
 }

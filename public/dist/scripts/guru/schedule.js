@@ -288,8 +288,8 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
 
                 } else {
                     return (
-                        React.DOM.div( {className:"copyModeContainer"}, 
-                            React.DOM.p( {className:"schedule-text-middle"}, "No slots")
+                        React.DOM.div( {className:"copyModeContainer no-slots", onClick:this.addTimeSlot}, 
+                            React.DOM.p( {className:"schedule-text-middle"}, "Create slots here")
                         )
                         );
                 }
@@ -315,6 +315,19 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
                 )
         }
     },
+    getDeleteAction: function() {
+        if(this.props.data.currentMode == 'manual' && !this.props.data.slots.length) {
+            return;
+        }
+
+        return (
+            React.DOM.a( {className:"schedule-text-middle", title:"Remove All Slots",
+            onClick:this.removeAllTimeSlots}, 
+                React.DOM.i( {className:"fa fa-trash-o"})
+            )
+            )
+
+    },
     getControls: function() {
         return (
             React.DOM.div( {className:"text-right"}, 
@@ -323,10 +336,7 @@ var DayComponent = React.createClass({displayName: 'DayComponent',
                 this.getRowActionItemIcon()
                 ),
                 this.getSwitchToCopyModeAction(),
-                React.DOM.a( {className:"schedule-text-middle", title:"Remove All Slots",
-                onClick:this.removeAllTimeSlots}, 
-                    React.DOM.i( {className:"fa fa-trash-o"})
-                )
+                this.getDeleteAction()
             )
             )
     },

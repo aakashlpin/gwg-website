@@ -11349,9 +11349,13 @@ a.underline {
 .schedule-icon-gap {
   margin-right: 15px !important;
 }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000348}}
+.schedule-icon-gap:last-child {
+  margin-right: 0 !important;
+}
 
 /* Custom default button */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000353}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000356}}
 .btn-default,
 .btn-default:hover,
 .btn-default:focus {
@@ -11363,7 +11367,7 @@ a.underline {
 }
 
 @media (min-width: 768px) {
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000361}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000364}}
   .navbar-nav > li > a {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -11372,29 +11376,29 @@ a.underline {
 /*
  * Base structure
  */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000371}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000374}}
 body {
   background: #fff;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000377}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000380}}
 html,
 body,
 #content {
   height: 100%;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000381}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000384}}
 .lead, .guru-band {
   margin-bottom: 45px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000385}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000388}}
 .navbar-brand {
   height: auto;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000389}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\0000392}}
 img.bg {
   /* Set rules to fill background */
   min-height: 100%;
@@ -11410,7 +11414,7 @@ img.bg {
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003107}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003110}}
 .site-wrapper {
   text-align: center;
   color: #fff;
@@ -11423,25 +11427,25 @@ img.bg {
   margin-top: 30px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003118}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003121}}
 .site-wrapper-inner {
   display: table-cell;
   vertical-align: top;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003122}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003125}}
 .cover-container {
   margin-left: auto;
   margin-right: auto;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003126}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003129}}
 .cover-heading {
   font-family: "pragmatica-web";
 }
 
 /* Padding for spacing */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003130}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003133}}
 .inner {
   padding: 30px;
 }
@@ -11449,23 +11453,23 @@ img.bg {
 /*
  * Header
  */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003138}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003141}}
 .masthead-brand {
   margin-top: 0;
   margin-bottom: 10px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003143}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003146}}
 .masthead-nav > li {
   display: inline-block;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003146}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003149}}
 .masthead-nav > li + li {
   margin-left: 20px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003149}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003152}}
 .masthead-nav > li > a {
   padding-left: 0;
   padding-right: 0;
@@ -11477,14 +11481,14 @@ img.bg {
   border-bottom: 2px solid transparent;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003159}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003162}}
 .masthead-nav > li > a:hover,
 .masthead-nav > li > a:focus {
   background-color: transparent;
   border-bottom-color: rgba(255, 255, 255, 0.25);
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003165}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003168}}
 .masthead-nav > .active > a,
 .masthead-nav > .active > a:hover,
 .masthead-nav > .active > a:focus {
@@ -11493,12 +11497,12 @@ img.bg {
 }
 
 @media (min-width: 768px) {
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003171}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003174}}
   .masthead-brand {
     float: left;
   }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003174}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003177}}
   .masthead-nav {
     float: right;
     margin-top: 20px;
@@ -11507,7 +11511,7 @@ img.bg {
 /*
  * Cover
  */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003185}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003188}}
 .cover {
   padding: 30px;
   border-radius: 10px;
@@ -11517,7 +11521,7 @@ img.bg {
 /*
  * Footer
  */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003195}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003198}}
 .mastfoot {
   color: #999;
   /* IE8 proofing */
@@ -11529,26 +11533,26 @@ img.bg {
  */
 @media (min-width: 768px) {
   /* Pull out the header and footer */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003207}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003210}}
   .masthead {
     position: fixed;
     top: 30px;
   }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003211}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003214}}
   .mastfoot {
     position: fixed;
     bottom: 0;
   }
 
   /* Start the vertical centering */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003216}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003219}}
   .site-wrapper-inner {
     vertical-align: middle;
   }
 
   /* Handle the widths */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003222}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003225}}
   .masthead,
   .mastfoot,
   .cover-container {
@@ -11557,179 +11561,179 @@ img.bg {
   }
 }
 @media (min-width: 992px) {
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003230}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003233}}
   .masthead,
   .mastfoot,
   .cover-container {
     width: 700px;
   }
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003247}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003250}}
 .m-0 {
   margin: 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003251}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003254}}
 .mb-10 {
   margin-bottom: 10px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003254}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003257}}
 .mb-20 {
   margin-bottom: 20px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003257}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003260}}
 .mb-30 {
   margin-bottom: 30px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003260}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003263}}
 .mb-40 {
   margin-bottom: 40px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003263}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003266}}
 .mb-60 {
   margin-bottom: 60px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003267}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003270}}
 .mt-0 {
   margin-top: 0px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003270}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003273}}
 .mt-20 {
   margin-top: 20px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003274}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003277}}
 .mr-10 {
   margin-right: 10px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003277}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003280}}
 .mr-20 {
   margin-right: 20px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003281}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003284}}
 .pad-10 {
   padding: 10px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003285}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003288}}
 .capitalize {
   text-transform: capitalize;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003289}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003292}}
 .inline-block {
   display: inline-block;
   vertical-align: bottom;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003294}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003297}}
 .day-slots-container {
   margin: 10px 0;
   padding: 15px 20px;
   border-radius: 3px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003300}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003303}}
 .schedule-text-middle, .guru-schedule-copy-links a {
   line-height: 34px;
   margin: 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003305}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003308}}
 .daySlotsContainer > div {
   margin-top: 10px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003307}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003310}}
 .daySlotsContainer > div:first-child {
   margin-top: 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003313}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003316}}
 .guru-schedule-copy-links a {
   text-transform: capitalize;
   color: #BBBBBB;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003318}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003321}}
 .guru-schedule-copy-links a.selected {
   text-decoration: underline;
   color: #865c33;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003326}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003329}}
 #signup-form input, #signup-form button {
   transition: 0.2s all ease-in;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003331}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003334}}
 .background-green {
   background: #2ecc71;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003334}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003337}}
 .background-red {
   background: #7f8c8d;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003338}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003341}}
 .page-block {
   padding: 40px 0 40px 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003342}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003345}}
 .gwg-callout {
   margin: 20px 0;
   padding: 20px;
   border-left: 3px solid #eee;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003348}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003351}}
 .gwg-callout-info {
   background-color: #f4f8fa;
   border-color: #5bc0de;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003353}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003356}}
 .gwg-callout-warning {
   background-color: #fcf8f2;
   border-color: #f0ad4e;
 }
 
 @media only screen and (min-width: 768px) {
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003359}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003362}}
   .has-min-height {
     min-height: 360px;
     position: relative;
   }
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003365}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003368}}
 .bg-brand {
   background: #f1f1e5;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003369}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003372}}
 .bg-white {
   background: #fff;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003373}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003376}}
 .spacious {
   padding: 20px 15px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003377}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003380}}
 .loader {
   height: 100%;
   text-align: center;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003380}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003383}}
 .loader img {
   position: absolute;
   top: 50%;
@@ -11738,17 +11742,17 @@ img.bg {
   margin-left: -20px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003388}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003391}}
 .mt--4 {
   margin-top: -4px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003392}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003395}}
 .youtube-play {
   position: relative;
   display: block;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003395}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003398}}
 .youtube-play:after {
   position: absolute;
   top: 0;
@@ -11762,7 +11766,7 @@ img.bg {
   width: 100%;
   z-index: 1000;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003409}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003412}}
 .youtube-play:before {
   transition: all 0.1s ease-in;
   z-index: 999;
@@ -11774,22 +11778,22 @@ img.bg {
   bottom: 0;
   right: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003421}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003424}}
 .youtube-play:hover:before {
   background: rgba(0, 0, 0, 0.2);
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003426}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003429}}
 .wd-gplus {
   width: 212px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003430}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003433}}
 .display-ib {
   display: inline-block;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003434}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003437}}
 .btn-loading {
   background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(0.25, rgba(0, 0, 0, 0.1)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(0, 0, 0, 0.1)), color-stop(0.75, rgba(0, 0, 0, 0.1)), color-stop(0.75, transparent), to(transparent));
   background-image: -moz-linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 75%, transparent 75%, transparent);
@@ -11800,18 +11804,18 @@ img.bg {
 }
 
 @-webkit-keyframes animate-stripes {
-  /* line 458, ../scss/main.scss */
+  /* line 461, ../scss/main.scss */
   from {
     background-position: 0 0;
   }
 
-  /* line 461, ../scss/main.scss */
+  /* line 464, ../scss/main.scss */
   to {
     background-position: -50px 0;
   }
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003466}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003469}}
 .game {
   bottom: 0;
   left: 0;
@@ -11820,7 +11824,7 @@ img.bg {
   top: 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003474}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003477}}
 .tile {
   display: block;
   padding: 6px 10px;
@@ -11831,7 +11835,7 @@ img.bg {
   margin-bottom: 4px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003484}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003487}}
 .board {
   position: absolute;
   left: 0;
@@ -11840,7 +11844,7 @@ img.bg {
   min-height: 360px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003492}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003495}}
 .tray {
   position: absolute;
   right: 0;
@@ -11851,24 +11855,24 @@ img.bg {
   padding: 10px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003501}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003504}}
 .tray .tile {
   margin: 0 0 10px 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003505}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003508}}
 .navbar-logo {
   height: 50px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003509}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003512}}
 .navbar-profile {
   background: rgba(21, 21, 21, 0.9);
   border-style: solid;
   border-color: #151515;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003515}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003518}}
 .guru-image {
   border: 2px solid #eee;
   padding: 3px;
@@ -11876,19 +11880,19 @@ img.bg {
   height: 150px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003522}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003525}}
 .guru-name {
   font-weight: 900;
   text-transform: uppercase;
   color: #b7a85c;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003528}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003531}}
 .guru-band {
   color: #6a6a68;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003533}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003536}}
 .guru-about-me {
   font-weight: 200;
   font-size: 1.6rem;
@@ -11896,7 +11900,7 @@ img.bg {
   color: #a5a5a5;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003540}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003543}}
 .schedule-container {
   background: #fff;
   padding: 15px;
@@ -11906,24 +11910,24 @@ img.bg {
   border-bottom: 2px solid #ccc;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003550}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003553}}
 .list-guru-courses > li {
   padding: 30px 5px;
   border-bottom: 1px solid #ddd;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003553}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003556}}
 .list-guru-courses > li:last-child {
   border-bottom: none;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003557}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003560}}
 .list-guru-courses > li .item-heading {
   margin: 0 20px 0 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003561}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003564}}
 .list-guru-courses > li .guru-audience-list {
   vertical-align: bottom;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003565}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003568}}
 .list-guru-courses > li .audience-item {
   display: inline-block;
   width: 30px;
@@ -11934,33 +11938,33 @@ img.bg {
   text-shadow: 0 1px 0px rgba(0, 0, 0, 0.5);
   background: #f1c40f;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003575}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003578}}
 .list-guru-courses > li .audience-item.beg {
   background: #40d47e;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003579}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003582}}
 .list-guru-courses > li .audience-item.adv {
   background: #e46a6b;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003585}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003588}}
 .course-action {
   position: absolute;
   top: -8px;
   right: 15px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003592}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003595}}
 .hacked-event-text h4 {
   color: #ccc;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003595}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003598}}
 .hacked-event-text h3 {
   margin-top: 0;
   margin-bottom: 40px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003601}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003604}}
 div.calendar-trash {
   float: left;
   padding-right: 8px;
@@ -11970,14 +11974,14 @@ div.calendar-trash {
   font-size: 22px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003610}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003613}}
 .to-trash {
   background-color: #EAEAEA;
   -webkit-border-radius: 5em;
   border-radius: 5em;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003616}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003619}}
 .static-notifier {
   position: fixed;
   top: 0;
@@ -11986,7 +11990,35 @@ div.calendar-trash {
   padding: 10px;
   text-align: center;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003622}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003625}}
 .static-notifier p {
   margin: 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003630}}
+.no-slots {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px;
+  transition: all 0.1s;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003637}}
+.no-slots p {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 0 20px;
+  color: #ccc;
+  text-align: center;
+  font-weight: bold;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003646}}
+.no-slots:hover {
+  cursor: pointer;
+  background: #865c33;
+  border-color: #865c33;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/main\.scss}line{font-family:\00003650}}
+.no-slots:hover p {
+  border-color: #865c33;
+  color: #fff;
 }

@@ -220,6 +220,29 @@ var DayComponent = React.createClass({
         });
 
     },
+    getRowActionItemIcon: function() {
+        if (this.props.data.currentMode === 'copy') {
+            return (
+                <i className="fa fa-clock-o"></i>
+                )
+        } else if (!this.props.data.slots.length) {
+            return (
+                <i className="fa fa-edit"></i>
+                )
+        }
+        return (
+            <i className="glyphicon glyphicon-plus"></i>
+            )
+    },
+    getRowActionItemIconTitle: function() {
+        if (this.props.data.currentMode === 'copy') {
+            return "Create time slots";
+        } else if (!this.props.data.slots.length) {
+            return "Create slots";
+        }
+        return "Add new slot";
+
+    },
     getChild: function() {
         switch (this.props.data.currentMode) {
             //when in copy mode, slots property will be []
@@ -273,28 +296,38 @@ var DayComponent = React.createClass({
                 break;
         }
     },
-    getRowActionItemIcon: function() {
-        if (this.props.data.currentMode === 'copy') {
-            return (
-                <i className="fa fa-clock-o"></i>
-                )
-        } else if (!this.props.data.slots.length) {
-            return (
-                <i className="fa fa-edit"></i>
-                )
-        }
-        return (
-            <i className="glyphicon glyphicon-plus"></i>
-            )
+    switchToCopyMode: function() {
+        console.log('o! hi!');
     },
-    getRowActionItemIconTitle: function() {
+    getSwitchToCopyModeAction: function() {
+        var canSwitchToCopyMode = true;
         if (this.props.data.currentMode === 'copy') {
-            return "Create time slots";
-        } else if (!this.props.data.slots.length) {
-            return "Create slots";
+            canSwitchToCopyMode = false;
         }
-        return "Add new slot";
 
+        if (canSwitchToCopyMode) {
+            return (
+                <a className="schedule-text-middle schedule-icon-gap" title="Make it same as one of other days"
+                onClick={this.switchToCopyMode}>
+                    <i className="fa fa-copy"></i>
+                </a>
+                )
+        }
+    },
+    getControls: function() {
+        return (
+            <div className="text-right">
+                <a className="schedule-text-middle schedule-icon-gap" title={this.getRowActionItemIconTitle()}
+                onClick={this.addTimeSlot}>
+                {this.getRowActionItemIcon()}
+                </a>
+                {this.getSwitchToCopyModeAction()}
+                <a className="schedule-text-middle" title="Remove All Slots"
+                onClick={this.removeAllTimeSlots}>
+                    <i className="glyphicon glyphicon-trash"></i>
+                </a>
+            </div>
+            )
     },
     render: function() {
         return (
@@ -306,15 +339,8 @@ var DayComponent = React.createClass({
                     <div className="col-sm-7">
                     {this.getChild()}
                     </div>
-                    <div className="col-sm-3 text-right">
-                        <a className="schedule-text-middle addNewSlot" title={this.getRowActionItemIconTitle()}
-                        onClick={this.addTimeSlot}>
-                        {this.getRowActionItemIcon()}
-                        </a>
-                        <a className="schedule-text-middle clearAllDaySlots" title="Remove All Slots"
-                        onClick={this.removeAllTimeSlots}>
-                            <i className="glyphicon glyphicon-trash"></i>
-                        </a>
+                    <div className="col-sm-3">
+                    {this.getControls()}
                     </div>
                 </div>
             </div>

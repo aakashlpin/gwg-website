@@ -62,7 +62,7 @@ module.exports = {
                     name: user.name
                 };
 
-                template('notify_apologies', locals, function(err, html, text) {
+                template('notify_event_attendees_final', locals, function(err, html, text) {
                     if (err) {
                         cb(err);
 
@@ -70,7 +70,6 @@ module.exports = {
                         transport.sendMail({
                             from: 'Guitar with Guru <aakash@guitarwith.guru>',
                             to: locals.email,
-                            bcc: 'founders@guitarwith.guru',
                             subject: subject,
                             html: html,
                             generateTextFromHTML: true,

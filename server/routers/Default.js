@@ -37,11 +37,11 @@ var routes = [
         httpMethod: 'GET',
         middleware: [HomeController.getUserDoor]
     },
-    {
+/*    {
         path: '/events',
         httpMethod: 'GET',
         middleware: [HomeController.getEventsHandler]
-    },
+    },*/
     {
         path: '/tuner',
         httpMethod: 'GET',

@@ -68,5 +68,8 @@ module.exports = {
     },
     getTunerHandler: function(req, res) {
         res.render('public_tuner', {layout: 'tuner'});
+    },
+    getNewIndex: function(req, res) {
+        res.render('new_home', {layout: 'new_design'});
     }
 };

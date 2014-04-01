@@ -48,6 +48,11 @@ var routes = [
         middleware: [HomeController.getTunerHandler]
     },
     {
+        path: '/new',
+        httpMethod: 'GET',
+        middleware: [HomeController.getNewIndex]
+    },
+    {
         path: '/:username',
         httpMethod: 'GET',
         middleware: [HomeController.validateUserNameRoute, HomeController.getGuruProfile]

@@ -18,7 +18,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: url(http://davidpots.com/jakeworry/030-guitar-svg-test/svg/fretboard.svg) no-repeat;
+    background: url(/images/fretboard.svg) no-repeat;
     background-size: cover;
   }
 
@@ -32,13 +32,17 @@
   }
   .dot-full  .svg-dot { fill: #27a9e1; }
   .dot-empty .svg-dot { fill: transparent; }
+  
+  [data-seq] {
+    opacity: 0;
+  }
 </style>
 <pre class="replaceMe" style="display: none">
-   ^^^  
- ||||o| 
- ||oo|| 
- |oo||| 
- |||||| 
+      ^2^5^7   
+  | | | | o8|   
+  | | o3o6| |   
+  | o1o4| | |   
+  | | | | | |   
   
 </pre>
 <div id="marketing">
@@ -93,16 +97,18 @@
     // Read the ASCII fretboard that'll be replaced
     var toReplace = $('.replaceMe').html();
     // Split the ASCII freboard text into an array of individual characters
-    toReplace = toReplace.split('');
+    toReplace = toReplace.match(/.{1,2}/g);
 
     // Go through ASCII characters, inject HTML+SVG as needed
 
     var replacement = "";
-    $.each( toReplace, function(i,el) {
+    $.each( toReplace, function(i,ele) {
+      var el = ele[0];
+      var seq = ele[1];
       if (el == "o") {
-        replacement += "<div class='dot dot-full'>"+dot+"</div>";
+        replacement += "<div class='dot dot-full' data-seq="+seq+">"+dot+"</div>";
       } else if (el == "^") {
-        replacement += "<div class='dot dot-full'>"+string_o+"</div>";
+        replacement += "<div class='dot dot-full' data-seq="+seq+">"+string_o+"</div>";
       } else if (el == "x") {
         replacement += "<div class='dot dot-full'>"+string_x+"</div>";
       } else if ((el == "|") || (el == " ")) {
@@ -112,7 +118,20 @@
 
     // Update the page with the new HTML/SVG markup
 
-    $('#fretboard').append(replacement);
+    var fretBoardDOM = $('#fretboard');
+    fretBoardDOM.append(replacement);
 
+    var inSeqElements = fretBoardDOM.find('[data-seq]'),
+        i = 0,
+        len = inSeqElements.length;
+    
+    function showNext() {
+      if (i++ <= len) {
+        fretBoardDOM.find("[data-seq="+i+"]").animate({opacity: 1}, 1000, showNext);
+      }
+    }
+    
+    setTimeout(showNext, 1000);
+    
   });
 </script>

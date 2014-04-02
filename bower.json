@@ -12,7 +12,8 @@
     "blueimp-gallery": "~2.14.0",
     "fullcalendar": "~1.6.4",
     "bootstrap-sass": "twbs/bootstrap-sass#~3.1.1",
-    "noty": "~2.2.2"
+    "noty": "~2.2.2",
+    "jquery-waypoints": "https://github.com/imakewebthings/jquery-waypoints.git#~2.0.4"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

@@ -86,6 +86,7 @@
     </div>
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="/bower_components/jquery-waypoints/waypoints.min.js"></script>
 <script>
   var dot = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 52 80" enable-background="new 0 0 52 80" xml:space="preserve">\
               <circle class="svg-dot" fill="#865C33" cx="26" cy="40" r="18"/>\
@@ -146,11 +147,12 @@
     var inSeqElements = fretBoardDOM.find('[data-seq]'),
         len = inSeqElements.length;
     
-/*    function showNext() {
+    var i = 0;
+    function showNext() {
       if (i++ <= len) {
         fretBoardDOM.find("[data-seq="+i+"]").animate({opacity: 1}, 1000, showNext);
       }
-    }*/
+    }
     
     
     var line_svg = '';
@@ -223,7 +225,12 @@
     path.style.transition = path.style.WebkitTransition =
         'stroke-dashoffset 1s ease-in';
     // Go!
-    path.style.strokeDashoffset = '0';
+    
+    var container = $('#container');
+    //when scrolling into the element, animate!
+    container.waypoint(function() {
+        path.style.strokeDashoffset = '0';
+    }, {offset: 50});
     
   });
 </script>

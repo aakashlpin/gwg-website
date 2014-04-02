@@ -7686,3 +7686,11 @@ img.bg {
   border-width: 0 0 0 10px;
   color: #865c33;
 }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\0000355}}
+.section-sub-tag {
+  font-size: 2.6rem;
+  line-height: 3.6rem;
+  color: #8c989e;
+  padding: 0 200px;
+}

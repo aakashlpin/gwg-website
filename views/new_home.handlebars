@@ -1,11 +1,11 @@
 <style>
   /* Fretboard Container/Wrapper */
 
-  #container {
-    display: inline-block;
+  #animatedFretboard {
     position: relative;
     width: 100%;
     max-width: 400px;
+    margin: 0 auto;
     background: #fff;
     border-top: 20px solid #fff;
   }
@@ -80,11 +80,24 @@
   </div>
 </div>
 <div style="margin-top: 80px;">
-    <div id="container">
-      <div id="dummy"></div>
-      <div id="fretboard"></div>
+  <div class="container">
+    <div class="row center">
+      <h2>Embark on a musical journey</h2>
+      <p class="section-sub-tag">
+        Guitar with Guru offers guided pathways through goal oriented short term courses.
+      </p>
+      <div id="animatedFretboard">
+        <div id="dummy"></div>
+        <div id="fretboard"></div>
+      </div>
+      <p class="section-sub-tag">
+        Just hop on to a track comfortable to your skill level and start learning.
+      </p>
     </div>
+  </div>
 </div>
+
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script src="/bower_components/jquery-waypoints/waypoints.min.js"></script>
 <script>
@@ -226,11 +239,11 @@
         'stroke-dashoffset 1s ease-in';
     // Go!
     
-    var container = $('#container');
+    var container = $('#animatedFretboard');
     //when scrolling into the element, animate!
     container.waypoint(function() {
         path.style.strokeDashoffset = '0';
-    }, {offset: 50});
+    }, {offset: 'bottom-in-view'});
     
   });
 </script>

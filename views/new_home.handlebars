@@ -144,7 +144,6 @@
     fretBoardDOM.append(replacement);
 
     var inSeqElements = fretBoardDOM.find('[data-seq]'),
-        i = 0,
         len = inSeqElements.length;
     
 /*    function showNext() {
@@ -153,36 +152,78 @@
       }
     }*/
     
-    var line_svg = '';
-    var lastEndPoint = {
-      x: 0,
-      y: '100%'
-    };
     
-    function createLinesDOM() {
+    var line_svg = '';
+    var getPath = function () {
+      var i = 0;
+      var lastEndPoint = {
+        x: 0,
+        y: '100%'
+      };
+      
       while (i < len) {
         var startPoint, endPoint, next = (i+1);
-        startPoint = lastEndPoint;        
+        startPoint = lastEndPoint;
         endPoint = fretBoardDOM.find("[data-seq="+next+"]").position();
-        endPoint.x = endPoint.left + 36;
-        endPoint.y = endPoint.top + 24;
+        endPoint.x = parseInt(endPoint.left + 36);
+        endPoint.y = parseInt(endPoint.top + 24);
 
-        if (next == len) {
+        if (i == 0) {
+          //first point
+          line_svg += 'M 0 ' + parseInt(fretBoardDOM.css('height'));
+        }
+        
+        else if (next == len) {
           //last point
           //interpolate the slope to the end of graph in the 4th quadrant
           var slope = (endPoint.y - startPoint.y)/ (-startPoint.x + endPoint.x);
-          endPoint.x = fretBoardDOM.css('width');
-          endPoint.y = (100 + (slope * 100) -16) + '%';
+          endPoint.x = parseInt(fretBoardDOM.css('width'));
+          endPoint.y = parseInt((100 + (slope * 100) - 16) /100 * parseFloat(fretBoardDOM.css('height')));
+
+          line_svg += ' L ' + endPoint.x + ' ' + endPoint.y;
+          
+        } else {
+          line_svg += ' L ' + endPoint.x + ' ' + endPoint.y;
         }
-        
-        line_svg += "<div class='line'>" + line(startPoint.x, startPoint.y, endPoint.x, endPoint.y) + "</div>";
+
         lastEndPoint = endPoint;
         i++;
       }
-    }
-
-    createLinesDOM();
+      
+    };
     
-    fretBoardDOM.prepend(line_svg);
+    //populate the line_svg var with path
+    getPath();
+
+    //create the actual path elem
+    var path = function(){
+      return '\
+      <div class="line">\
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" xml:space="preserve">\
+          <path fill="none" stroke="#e9f0f3" stroke-width="6" d="' + line_svg +'"/>\
+        </svg></div>'; 
+    };
+    
+    var calcPath = path();
+    
+    //prepend it to dom to put it under the dots
+    fretBoardDOM.prepend(calcPath);
+
+    path = document.querySelector('.line path');
+    var length = path.getTotalLength();
+// Clear any previous transition
+    path.style.transition = path.style.WebkitTransition =
+        'none';
+// Set up the starting positions
+    path.style.strokeDasharray = length + ' ' + length;
+    path.style.strokeDashoffset = length;
+// Trigger a layout so styles are calculated & the browser
+// picks up the starting position before animating
+    path.getBoundingClientRect();
+// Define our transition
+    path.style.transition = path.style.WebkitTransition =
+        'stroke-dashoffset 1s ease-in';
+// Go!
+    path.style.strokeDashoffset = '0';
   });
 </script>

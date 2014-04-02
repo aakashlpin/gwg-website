@@ -30,7 +30,7 @@
     display: block;
     float: left;
   }
-  .dot-full  .svg-dot { fill: #27a9e1; }
+  .dot-full  .svg-dot { fill: #865C33; }
   .dot-empty .svg-dot { fill: transparent; }
   
   [data-seq] {
@@ -72,20 +72,20 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script>
   var dot = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 52 80" enable-background="new 0 0 52 80" xml:space="preserve">\
-              <circle class="svg-dot" fill="#27AAE1" cx="26" cy="40" r="24"/>\
+              <circle class="svg-dot" fill="#865C33" cx="26" cy="40" r="18"/>\
             </svg>';
 
   var string_o = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\
    width="100%" height="100%" viewBox="0 0 52 80" enable-background="new 0 0 52 80" xml:space="preserve">\
 <g>\
-  <path fill="#27AAE1" d="M26,24c5.514,0,10,4.486,10,10s-4.486,10-10,10s-10-4.486-10-10S20.486,24,26,24 M26,16\
+  <path fill="#865C33" d="M26,24c5.514,0,10,4.486,10,10s-4.486,10-10,10s-10-4.486-10-10S20.486,24,26,24 M26,16\
     c-9.94,0-18,8.06-18,18s8.06,18,18,18s18-8.06,18-18S35.94,16,26,16L26,16z"/>\
 </g>\
 </svg>';
 
   var string_x = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\
    width="100%" height="100%" viewBox="0 0 52 80" enable-background="new 0 0 52 80" xml:space="preserve">\
-<path fill="#27AAE1" d="M41.067,43.831L31.236,34l9.831-9.831c-1.365-2.087-3.149-3.871-5.236-5.236L26,28.764l-9.831-9.831\
+<path fill="#865C33" d="M41.067,43.831L31.236,34l9.831-9.831c-1.365-2.087-3.149-3.871-5.236-5.236L26,28.764l-9.831-9.831\
   c-2.087,1.365-3.871,3.149-5.236,5.236L20.764,34l-9.831,9.831c1.365,2.087,3.149,3.871,5.236,5.236L26,39.236l9.831,9.831\
   C37.918,47.702,39.702,45.918,41.067,43.831z"/>\
 </svg>';
@@ -132,6 +132,8 @@
     }
     
     setTimeout(showNext, 1000);
+    
+    //TODO Control BPM/ Replay/ Note sound/ Chord sound 
     
   });
 </script>

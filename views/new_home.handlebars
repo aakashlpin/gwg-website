@@ -34,14 +34,30 @@
   .dot-empty .svg-dot { fill: transparent; }
   
   [data-seq] {
-    opacity: 0;
+    /*opacity: 0;*/
+    position: relative;
+  }
+  
+  .line {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%
   }
 </style>
-<pre class="replaceMe" style="display: none">
+<!--<pre class="replaceMe" style="display: none">
       ^2^5^7   
   | | | | o8|   
   | | o3o6| |   
   | o1o4| | |   
+  | | | | | |   
+  
+</pre>-->
+<pre class="replaceMe" style="display: none">
+                
+  | | | | o3|   
+  | | o2| | |   
+  | o1| | | |   
   | | | | | |   
   
 </pre>
@@ -89,6 +105,12 @@
   c-2.087,1.365-3.871,3.149-5.236,5.236L20.764,34l-9.831,9.831c1.365,2.087,3.149,3.871,5.236,5.236L26,39.236l9.831,9.831\
   C37.918,47.702,39.702,45.918,41.067,43.831z"/>\
 </svg>';
+  
+  var line = function(x1, y1, x2, y2) {
+    return '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" xml:space="preserve">\
+                  <line x1="'+x1+'" x2="'+x2+'" y1="'+y1+'" y2="'+y2+'" stroke-width="4" stroke="#e9f0f3"/>\
+                </svg>';
+  };
 
   $(document).ready(function(){
 
@@ -125,15 +147,42 @@
         i = 0,
         len = inSeqElements.length;
     
-    function showNext() {
+/*    function showNext() {
       if (i++ <= len) {
         fretBoardDOM.find("[data-seq="+i+"]").animate({opacity: 1}, 1000, showNext);
       }
+    }*/
+    
+    var line_svg = '';
+    var lastEndPoint = {
+      x: 0,
+      y: '100%'
+    };
+    
+    function createLinesDOM() {
+      while (i < len) {
+        var startPoint, endPoint, next = (i+1);
+        startPoint = lastEndPoint;        
+        endPoint = fretBoardDOM.find("[data-seq="+next+"]").position();
+        endPoint.x = endPoint.left + 36;
+        endPoint.y = endPoint.top + 24;
+
+        if (next == len) {
+          //last point
+          //interpolate the slope to the end of graph in the 4th quadrant
+          var slope = (endPoint.y - startPoint.y)/ (-startPoint.x + endPoint.x);
+          endPoint.x = fretBoardDOM.css('width');
+          endPoint.y = (100 + (slope * 100) -16) + '%';
+        }
+        
+        line_svg += "<div class='line'>" + line(startPoint.x, startPoint.y, endPoint.x, endPoint.y) + "</div>";
+        lastEndPoint = endPoint;
+        i++;
+      }
     }
+
+    createLinesDOM();
     
-    setTimeout(showNext, 1000);
-    
-    //TODO Control BPM/ Replay/ Note sound/ Chord sound 
-    
+    fretBoardDOM.prepend(line_svg);
   });
 </script>

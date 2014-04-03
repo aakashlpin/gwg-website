@@ -7,6 +7,7 @@ $border-radius-base: 0;
 $border-radius-small: 0;
 $border-radius-large: $border-radius-base;
 @import '../../bower_components/bootstrap-sass/vendor/assets/stylesheets/bootstrap/bootstrap';
+@import 'font-awesome/scss/font-awesome';
 @import "resets";
 
 #marketing {
@@ -67,7 +68,7 @@ $border-radius-large: $border-radius-base;
   
   .musician-item {
     float: left;
-    width: 20%;
+    width: 25%;
     position: relative;
     box-sizing: border-box;
     border-right: 5px solid #fff;
@@ -76,18 +77,24 @@ $border-radius-large: $border-radius-base;
     opacity: 0.6;
     
     &:hover {
-      -webkit-transform: rotateY(0);    
-//      border-color: #865c33;
+      -webkit-transform: rotateY(0);
       cursor: pointer;
       opacity: 1;
+    }
+    
+    .musician-img {
+      width: 100%;
     }
 
     .musician-name {
       position: absolute;
-      bottom: 20%;
+      top: 0;
+      padding: 15px 10px;
+      background: rgba(0,0,0,1);
       width: 100%;
       text-align: center;
       color: #fff;
+      margin: 0;
     }
     
     .musician-one-liner {
@@ -98,5 +105,32 @@ $border-radius-large: $border-radius-base;
       color: #fff;
       
     }
+  }
+
+  .musician-stats {
+    position: absolute;
+    bottom: 0px;
+    width: 50%;
+    text-align: center;
+    color: #fff; 
+    background: rgba(0,0,0,0.7);
+  }
+  
+  .musician-tracks {
+    left: 0;
+  }
+
+  .musician-courses {
+    right: 0;
+  }
+  
+  .musician-genres {
+    position: absolute;
+    bottom: 160px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background: #000;
   }
 }

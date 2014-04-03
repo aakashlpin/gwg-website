@@ -9843,30 +9843,26 @@ img.bg {
   margin: 40px 0 0 0;
   padding: 0;
   list-style-type: none;
-  -webkit-perspective: 8000px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\0000369}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\0000368}}
 .musician-list .musician-item {
   float: left;
   width: 25%;
   position: relative;
   box-sizing: border-box;
   border-right: 5px solid #fff;
-  -webkit-transition: 0.2s;
-  -webkit-transform: rotateY(20deg);
   opacity: 0.6;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\0000379}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\0000376}}
 .musician-list .musician-item:hover {
-  -webkit-transform: rotateY(0);
   cursor: pointer;
   opacity: 1;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\0000385}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\0000381}}
 .musician-list .musician-item .musician-img {
   width: 100%;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\0000389}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\0000385}}
 .musician-list .musician-item .musician-name {
   position: absolute;
   top: 0;
@@ -9877,7 +9873,7 @@ img.bg {
   color: #fff;
   margin: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003100}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\0000396}}
 .musician-list .musician-item .musician-one-liner {
   position: absolute;
   bottom: 10%;
@@ -9885,7 +9881,7 @@ img.bg {
   text-align: center;
   color: #fff;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003110}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003106}}
 .musician-list .musician-stats {
   position: absolute;
   bottom: 0px;
@@ -9894,15 +9890,15 @@ img.bg {
   color: #fff;
   background: rgba(0, 0, 0, 0.7);
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003119}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003115}}
 .musician-list .musician-tracks {
   left: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003123}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003119}}
 .musician-list .musician-courses {
   right: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003127}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003123}}
 .musician-list .musician-genres {
   position: absolute;
   bottom: 160px;
@@ -9911,4 +9907,18 @@ img.bg {
   text-align: center;
   color: #fff;
   background: #000;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003134}}
+.musician-list.is-animated {
+  -webkit-perspective: 8000px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003137}}
+.musician-list.is-animated .musician-item {
+  -webkit-transition: 0.2s;
+  -webkit-transform: rotateY(20deg);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/aakashlpin\/projects\/gwg-website\/public\/stylesheets\/scss\/new_design\.scss}line{font-family:\00003141}}
+.musician-list.is-animated .musician-item:hover {
+  -webkit-transform: rotateY(0);
 }

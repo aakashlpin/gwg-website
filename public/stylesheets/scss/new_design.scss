@@ -64,7 +64,6 @@ $border-radius-large: $border-radius-base;
   margin: 40px 0 0 0;
   padding: 0;
   list-style-type: none;
-  -webkit-perspective: 8000px;
   
   .musician-item {
     float: left;
@@ -72,12 +71,9 @@ $border-radius-large: $border-radius-base;
     position: relative;
     box-sizing: border-box;
     border-right: 5px solid #fff;
-    -webkit-transition: 0.2s;
-    -webkit-transform: rotateY(20deg);
     opacity: 0.6;
     
     &:hover {
-      -webkit-transform: rotateY(0);
       cursor: pointer;
       opacity: 1;
     }
@@ -132,5 +128,18 @@ $border-radius-large: $border-radius-base;
     text-align: center;
     color: #fff;
     background: #000;
+  }
+}
+
+.musician-list.is-animated {
+  -webkit-perspective: 8000px;
+
+  .musician-item {
+    -webkit-transition: 0.2s;
+    -webkit-transform: rotateY(20deg);
+
+    &:hover {
+      -webkit-transform: rotateY(0);
+    }
   }
 }

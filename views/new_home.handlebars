@@ -312,8 +312,13 @@
         'stroke-dashoffset 1s ease-in';
     // Go!
     
-    var container = $('#animatedFretboard');
+    var container = $('#animatedFretboard'),
+        musicianList = $('#musician-list');
     //when scrolling into the element, animate!
+    musicianList.waypoint(function() {
+      musicianList.addClass('is-animated');      
+    }, {offset: '65%'});
+    
     container.waypoint(function() {
         path.style.strokeDashoffset = '0';
     }, {offset: 'bottom-in-view'});

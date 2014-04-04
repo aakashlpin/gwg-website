@@ -5,23 +5,39 @@ var mongoose = require('mongoose'),
 
 _ = require('underscore');
 
-var Course, CourseSchema;
+var Course, CourseSchema, SessionSchema, UploadSchema;
+
+UploadSchema = new Schema({
+    name: String,   //display name of uploaded media
+    url: String,    //S3 url? 
+    type: String   //type of media -> pdf/ image / doc / music track
+    
+}, {_id: false});
+
+SessionSchema = new Schema({
+    name: String,
+    description: String,
+    reference: {
+        chords: [ String ], //C#, Bb, Ab7
+        scales: [ String ],
+        uploads: [ UploadSchema ]
+    }
+    
+}, {_id: true});
 
 CourseSchema = new Schema({
     _creator: { type: ObjectId, ref: 'Guru' },
     name: String,
     description: String,
-    target_audience: [{
-        id: String,
-        selected: Boolean,
-        name: String
-    }],
-    classes: Number,
+    target_audience: [ String ],
+    genres: [ String ],
+    sessions: [ SessionSchema ],
     fee: Number,
     deleted: { type: Boolean, default: false }
 });
 
 CourseSchema.statics.post = function (req, callback) {
+    //TODO
     var data, Course;
     data = _.pick(req.body, ['name', 'description', 'target_audience', 'classes', 'fee']);
 
